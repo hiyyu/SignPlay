@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SignPlay! – Learn sign language through play</title>
+<script>document.documentElement.className+=" js"</script>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#fff8e8;--ink:#1f1b4d;--muted:#55507f;--card:#ffffff;--line:#e6dcc0;--sun:#ffc83d;--coral:#ff6b57;--teal:#1fb5a8;--violet:#6b4ce6;--sky:#3aa0ff;--hero1:#2a2272;--hero2:#5b3fd1;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#15123a;--ink:#fff6dc;--muted:#b9b4e6;--card:#201b57;--line:#35307a;--hero1:#0f0c2e;--hero2:#2a2272}}
+:root[data-theme="dark"]{--bg:#15123a;--ink:#fff6dc;--muted:#b9b4e6;--card:#201b57;--line:#35307a;--hero1:#0f0c2e;--hero2:#2a2272}
+html{scroll-padding-top:env(safe-area-inset-top,0px);scroll-behavior:smooth}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 1.05rem/1.6 Nunito,system-ui,sans-serif}
+h1,h2,h3,.logo{font-family:"Baloo 2",system-ui,sans-serif;line-height:1.1;margin:0}
+section{padding:72px 24px}
+.wrap{max-width:1040px;margin:0 auto}
+.btn{display:inline-block;font:800 1.1rem "Baloo 2",sans-serif;padding:12px 28px;border-radius:999px;text-decoration:none;border:3px solid var(--ink);box-shadow:0 5px 0 var(--ink);transition:transform .1s,box-shadow .1s;cursor:pointer}
+.btn:hover{transform:translateY(2px);box-shadow:0 3px 0 var(--ink)}
+.btn:focus-visible,a:focus-visible,button:focus-visible{outline:3px solid var(--sky);outline-offset:3px}
+.btn.main{background:var(--sun);color:#1f1b4d}
+.btn.alt{background:#fff;color:#1f1b4d}
+/* hero */
+.hero{background:radial-gradient(circle at 80% 30%,var(--hero2),var(--hero1) 70%);color:#fff6dc;position:relative;overflow:hidden;padding-top:24px;padding-bottom:88px}
+.hero .wrap{display:grid;grid-template-columns:1.1fr .9fr;gap:24px;align-items:center}
+.top{display:flex;justify-content:flex-end;margin-bottom:12px}
+.lang{display:flex;border:3px solid #fff6dc;border-radius:999px;overflow:hidden}
+.lang button{font:800 .95rem "Baloo 2",sans-serif;background:none;color:#fff6dc;border:0;padding:4px 16px;cursor:pointer}
+.lang button[aria-pressed=true]{background:var(--sun);color:#1f1b4d}
+.hero .welcome{font:700 1.2rem "Baloo 2",sans-serif;color:var(--sun);margin:0}
+.logo{font-size:clamp(3.6rem,10vw,6.5rem);font-weight:800;letter-spacing:-1px;text-shadow:0 5px 0 rgba(0,0,0,.35)}
+.logo span:nth-child(1){color:var(--sun)}.logo span:nth-child(2){color:var(--coral)}
+.hero p.lead{font-size:1.25rem;max-width:30em;margin:12px 0 28px}
+.cta{display:flex;gap:16px;flex-wrap:wrap;align-items:center}
+.hero .btn{border-color:#0f0c2e;box-shadow:0 5px 0 #0f0c2e}
+.hero .btn.alt{background:transparent;color:#fff6dc;border-color:#fff6dc;box-shadow:none}
+.hero .wrap{position:relative}
+.hero::before{content:"";position:absolute;inset:0;background-image:radial-gradient(#fff6dc 1.5px,transparent 2px),radial-gradient(#fff6dc 1px,transparent 1.5px);background-size:90px 90px,140px 140px;background-position:0 0,40px 60px;opacity:.3;animation:pan 50s linear infinite}
+@keyframes pan{to{background-position:-900px 0,-1000px 60px}}
+@keyframes blurin{from{opacity:0;transform:translateX(-70px)}to{opacity:1;transform:none}}
+.hero .welcome,.hero .logo,.hero .lead,.hero .cta{animation:blurin 1s cubic-bezier(.2,.7,.2,1) both}
+.hero .logo{animation-delay:.15s}.hero .lead{animation-delay:.35s}.hero .cta{animation-delay:.5s}
+.ascii-box{container-type:inline-size}
+.sign{display:block;width:100%;height:auto;overflow:visible}
+.hand{transform-origin:190px 290px;animation:salute 4s ease-in-out infinite}
+@keyframes salute{0%,18%{transform:translate(-30px,6px) rotate(-14deg)}46%,76%{transform:translate(70px,-16px) rotate(16deg)}100%{transform:translate(-30px,6px) rotate(-14deg)}}
+.bubble{transform-origin:70px 94px;animation:pop 4s ease-in-out infinite}
+@keyframes pop{0%,44%{opacity:0;transform:scale(.4)}52%,76%{opacity:1;transform:scale(1)}86%,100%{opacity:0;transform:scale(.4)}}
+.swish{animation:swish 4s ease-in-out infinite}
+@keyframes swish{0%,24%{opacity:0}34%{opacity:1}48%,100%{opacity:0}}
+.face{animation:blink 4s infinite;transform-origin:180px 128px}
+@keyframes blink{0%,90%,100%{transform:scaleY(1)}94%{transform:scaleY(.1)}}
+.ascii{display:block;width:fit-content;margin:0 auto;font:800 11px/1.05 ui-monospace,Menlo,Consolas,monospace;font-size:3.9cqw;color:var(--sun);text-shadow:0 0 3px rgba(255,200,61,.9),0 0 18px rgba(255,200,61,.6);white-space:pre;overflow:hidden}
+.wave{transform-origin:180px 290px;animation:wave 4s ease-in-out infinite}
+@keyframes wave{0%,60%,100%{transform:rotate(0)}12%{transform:rotate(-14deg)}24%{transform:rotate(14deg)}36%{transform:rotate(-14deg)}48%{transform:rotate(14deg)}}
+.beam{animation:beam 4s linear infinite}
+@keyframes beam{0%{transform:translateY(0);opacity:0}10%,80%{opacity:.8}100%{transform:translateY(240px);opacity:0}}
+.rd{animation:chipA 4s infinite}
+@keyframes chipA{0%,50%{opacity:1;transform:none}58%,100%{opacity:0;transform:translateY(8px)}}
+.got{opacity:0;transform-box:fill-box;transform-origin:center;animation:chipB 4s infinite}
+@keyframes chipB{0%,56%{opacity:0;transform:translateY(10px) scale(.9)}66%,90%{opacity:1;transform:none}100%{opacity:0}}
+.js .rv{opacity:0;transform:translateX(var(--x,0)) translateY(var(--y,40px)) scale(var(--s,1));transition:opacity .7s ease,transform .8s cubic-bezier(.2,.7,.2,1);transition-delay:var(--d,0s)}
+.js .rv.in{opacity:1;transform:none}
+.rv[data-r=l]{--x:-90px;--y:0px}.rv[data-r=r]{--x:90px;--y:0px}.rv[data-r=z]{--s:.8;--y:20px}
+.ridge{position:absolute;left:0;right:0;bottom:-1px;height:56px;width:100%}
+/* modes */
+h2{font-size:clamp(2rem,5vw,3rem);text-align:center}
+.sub{text-align:center;color:var(--muted);max-width:36em;margin:10px auto 40px}
+.modes{display:grid;grid-template-columns:1fr 1fr;gap:28px}
+.mode{background:var(--card);border:4px solid var(--ink);border-radius:28px;box-shadow:0 8px 0 var(--ink);padding:0 0 28px;overflow:hidden;display:flex;flex-direction:column}
+.mode .art{height:210px;display:grid;place-items:center}
+.mode.learn .art{background:var(--teal)}.mode.quest .art{background:var(--violet)}
+.mode .art svg{height:170px;width:auto}
+.mode .body{padding:22px 28px 0;display:flex;flex-direction:column;gap:10px;flex:1;align-items:flex-start}
+.tag{font:800 .9rem "Baloo 2",sans-serif;background:var(--sun);color:#1f1b4d;border-radius:999px;padding:0 14px}
+.mode h3{font-size:1.9rem}
+.mode p{margin:0 0 12px;color:var(--muted);flex:1}
+/* levels */
+.levels{background:var(--card);border-block:4px solid var(--ink)}
+.worlds{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;align-items:end}
+.world{border:4px solid var(--ink);border-radius:24px;padding:24px;color:#1f1b4d;box-shadow:0 6px 0 var(--ink)}
+.world:nth-child(1){background:#8be3a1}.world:nth-child(2){background:var(--sun);padding-bottom:40px}.world:nth-child(3){background:#ff9a8b;padding-bottom:56px}
+.world .lv{font:800 1rem "Baloo 2",sans-serif;background:#1f1b4d;color:#fff6dc;border-radius:999px;padding:0 14px;display:inline-block}
+.world h3{font-size:1.7rem;margin:10px 0 2px}
+.world .lvl{font-weight:700;margin:0 0 8px}
+.world p{margin:0 0 14px}
+.world .st{font:800 1rem "Baloo 2",sans-serif}
+/* how */
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;counter-reset:s;position:relative}
+.step{text-align:center;padding:8px 12px}
+.step .ic{width:92px;height:92px;border-radius:50%;margin:0 auto 14px;display:grid;place-items:center;border:4px solid var(--ink);font:800 2.4rem "Baloo 2",sans-serif;color:#1f1b4d}
+.step:nth-child(1) .ic{background:var(--teal)}.step:nth-child(2) .ic{background:var(--sun)}.step:nth-child(3) .ic{background:var(--coral)}
+.step h3{font-size:1.7rem}.step p{margin:6px 0 0;color:var(--muted)}
+.note{text-align:center;font-weight:700;margin:36px auto 0;max-width:34em}
+/* progress */
+.prog{background:var(--hero1);color:#fff6dc}
+.prog h2{color:#fff6dc}.prog .sub{color:#c9c4f2}
+.panel{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.stat{background:#2a2272;border:3px solid #fff6dc;border-radius:22px;padding:22px;text-align:center}
+.stat b{display:block;font:800 3rem "Baloo 2",sans-serif;color:var(--sun);line-height:1}
+.bar{height:18px;border-radius:99px;background:#0f0c2e;border:2px solid #fff6dc;margin:14px 0 6px;overflow:hidden}
+.bar i{display:block;height:100%;width:30%;background:linear-gradient(90deg,var(--teal),var(--sun))}
+.badges{display:flex;gap:24px;justify-content:center;flex-wrap:wrap;margin-top:32px}
+.badge{display:flex;align-items:center;gap:14px;background:#fff6dc;color:#1f1b4d;border-radius:999px;padding:8px 26px 8px 8px;font-weight:700}
+.badge svg{width:52px;height:52px}
+.badge small{display:block;font-weight:400;color:#55507f;line-height:1.2}
+.go{text-align:center;margin-top:44px}
+.go .btn{border-color:#0f0c2e}
+/* footer */
+footer{background:#0f0c2e;color:#c9c4f2;padding:48px 24px calc(28px + env(safe-area-inset-bottom,0px))}
+.fgrid{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:28px}
+footer .logo{font-size:2rem;color:var(--sun)}
+footer h4{font:800 1.1rem "Baloo 2",sans-serif;color:#fff6dc;margin:0 0 8px}
+footer ul{list-style:none;margin:0;padding:0}
+footer a{color:#c9c4f2;text-decoration:none}footer a:hover{color:var(--sun)}
+.copy{border-top:1px solid #35307a;margin-top:32px;padding-top:18px;font-size:.9rem}
+@media(max-width:820px){
+.hero .wrap,.modes,.worlds,.steps,.panel{grid-template-columns:1fr}
+.ascii-box{max-width:420px;margin:0 auto}
+.fgrid{grid-template-columns:1fr 1fr}
+section{padding:56px 20px}
+.world:nth-child(n){padding-bottom:24px}
+}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.btn{transition:none}.wave,.beam{animation:none}.beam{opacity:0}.rd{animation:none;opacity:0}.got{animation:none;opacity:1}.bubble{animation:none;opacity:1}.swish,.face,.hero::before,.hero .welcome,.hero .logo,.hero .lead,.hero .cta{animation:none}}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap" style="display:block">
+    <div class="top"><div class="lang" role="group" aria-label="Language"><button id="en" aria-pressed="true">ENG</button><button id="bm" aria-pressed="false">BM</button></div></div>
+  </div>
+  <div class="wrap">
+    <div>
+      <p class="welcome" data-i="welcome">Welcome to</p>
+      <h1 class="logo" aria-label="SignPlay"><span>Sign</span><span>Play</span>!</h1>
+      <p class="lead" data-i="lead">Learn sign language by playing. Master new signs with your webcam, then use them to crack mysteries and win rewards.</p>
+      <div class="cta">
+        <a class="btn main" href="#register" data-i="register">Register free</a>
+        <a class="btn alt" href="#login" data-i="login">Login</a>
+      </div>
+    </div>
+    <div>
+      <div class="ascii-box"><svg class="sign" viewBox="0 0 360 340" role="img" aria-label="Animated hand-tracking demo: a hand waves hello, the webcam reads the sign and awards 10 XP">
+        <circle cx="180" cy="160" r="150" fill="#ffc83d" opacity=".16"/>
+        <g fill="none" stroke="#ffc83d" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"><path d="M18 56V34Q18 18 34 18H56"/><path d="M342 56V34Q342 18 326 18H304"/><path d="M18 244V266Q18 282 34 282H56"/><path d="M342 244V266Q342 282 326 282H304"/></g>
+        <g transform="translate(0,-30)"><g class="wave" stroke="#0f0c2e" stroke-width="5" stroke-linejoin="round" stroke-linecap="round">
+          <rect x="148" y="84" width="21" height="130" rx="10.5" fill="#ff6b57"/>
+          <rect x="171" y="68" width="21" height="146" rx="10.5" fill="#ffc83d"/>
+          <rect x="194" y="78" width="21" height="136" rx="10.5" fill="#1fb5a8"/>
+          <rect x="217" y="100" width="21" height="114" rx="10.5" fill="#3aa0ff"/>
+          <rect x="98" y="190" width="26" height="72" rx="13" fill="#b48cff" transform="rotate(-38 124 250)"/>
+          <rect x="146" y="176" width="94" height="106" rx="30" fill="#ff9a8b"/>
+          <rect x="160" y="270" width="66" height="56" rx="14" fill="#fff6dc"/>
+          <g stroke="none"><circle cx="176" cy="218" r="6" fill="#0f0c2e"/><circle cx="210" cy="218" r="6" fill="#0f0c2e"/><circle cx="163" cy="236" r="7" fill="#ff6b57" opacity=".55"/><circle cx="223" cy="236" r="7" fill="#ff6b57" opacity=".55"/></g>
+          <path d="M181 234Q193 248 205 234" fill="none"/>
+        </g></g>
+        <g fill="#fff6dc"><path d="M310 90l6 14 14 6-14 6-6 14-6-14-14-6 14-6z"/><path d="M46 120l4 10 10 4-10 4-4 10-4-10-10-4 10-4z"/><circle cx="326" cy="190" r="5"/><circle cx="40" cy="210" r="4"/></g>
+        <g class="rd"><rect x="60" y="298" width="240" height="38" rx="19" fill="#fff6dc"/><text x="180" y="324" text-anchor="middle" font-family="Baloo 2,sans-serif" font-weight="800" font-size="20" fill="#1f1b4d">Reading your sign…</text></g>
+        <g class="got"><rect x="60" y="298" width="240" height="38" rx="19" fill="#ffc83d"/><text x="180" y="324" text-anchor="middle" font-family="Baloo 2,sans-serif" font-weight="800" font-size="20" fill="#1f1b4d">✓ Hello! +10 XP</text></g>
+      </svg></div>
+    </div>
+  </div>
+  <svg class="ridge" viewBox="0 0 1200 56" preserveAspectRatio="none" aria-hidden="true"><path d="M0 56V30l120-22 130 26 140-30 150 28 170-26 160 24 150-20 180 22v38z" fill="var(--bg)"/></svg>
+</header>
+
+<section id="adventure">
+  <div class="wrap">
+    <h2 data-i="choose">Choose your adventure!</h2>
+    <p class="sub" data-i="chooseSub">Two ways to play. Switch between them any time.</p>
+    <div class="modes">
+      <article class="mode learn">
+        <div class="art">
+          <svg viewBox="0 0 200 170" aria-hidden="true"><g stroke="#0f0c2e" stroke-width="6" stroke-linejoin="round" stroke-linecap="round"><path d="M20 50 L100 70 L180 50 L180 140 L100 160 L20 140Z" fill="#fff6dc"/><path d="M100 70V160" fill="none"/><rect x="118" y="20" width="22" height="58" rx="11" fill="#ffc83d" transform="rotate(8 129 78)"/><rect x="142" y="26" width="22" height="52" rx="11" fill="#ff6b57" transform="rotate(20 153 78)"/><rect x="44" y="84" width="40" height="8" rx="4" fill="#1fb5a8"/><rect x="44" y="104" width="32" height="8" rx="4" fill="#3aa0ff"/></g></svg>
+        </div>
+        <div class="body">
+          <span class="tag" data-i="m1tag">Learn Mode</span>
+          <h3 data-i="m1h">Sign Language Learning</h3>
+          <p data-i="m1p">Learn sign language step by step through visual demonstrations, vocabulary lessons and webcam-based practice.</p>
+          <a class="btn main" href="#learn" data-i="m1b">Start learning</a>
+        </div>
+      </article>
+      <article class="mode quest">
+        <div class="art">
+          <svg viewBox="0 0 200 170" aria-hidden="true"><g stroke="#0f0c2e" stroke-width="6" stroke-linejoin="round" stroke-linecap="round"><rect x="20" y="90" width="110" height="70" rx="8" fill="#ffc83d"/><path d="M20 98 L75 135 L130 98" fill="none"/><circle cx="130" cy="64" r="40" fill="#fff6dc" fill-opacity=".85"/><path d="M160 94 L190 128" stroke-width="14"/><path d="M118 52 Q118 40 130 40 Q142 40 142 52 Q142 60 130 66 V72" fill="none"/><circle cx="130" cy="84" r="3" fill="#0f0c2e"/></g></svg>
+        </div>
+        <div class="body">
+          <span class="tag" data-i="m2tag">Mystery Mode</span>
+          <h3 data-i="m2h">Sign Language Mystery Quest</h3>
+          <p data-i="m2p">Become a detective! Use your sign language knowledge to decode secret messages, discover clues and solve mysteries.</p>
+          <a class="btn main" href="#quest" data-i="m2b">Solve a mystery</a>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="levels" id="levels">
+  <div class="wrap">
+    <h2 data-i="lvH">Explore the three learning levels</h2>
+    <p class="sub" data-i="lvSub">Each level is its own world. Finish one to unlock the next.</p>
+    <div class="worlds">
+      <article class="world"><span class="lv" data-i="l1n">Level 1</span><h3 data-i="l1h">Foundations</h3><p class="lvl" data-i="l1l">Beginner</p><p data-i="l1p">Learn the basics: alphabet, numbers, greetings, family, food and everyday vocabulary.</p><span class="st" data-i="l1s">Stages 1–10</span></article>
+      <article class="world"><span class="lv" data-i="l2n">Level 2</span><h3 data-i="l2h">Everyday Life</h3><p class="lvl" data-i="l2l">Intermediate</p><p data-i="l2p">Practise real-life communication involving emotions, health, shopping, school and work.</p><span class="st" data-i="l2s">Stages 11–20</span></article>
+      <article class="world"><span class="lv" data-i="l3n">Level 3</span><h3 data-i="l3h">Conversational Fluency</h3><p class="lvl" data-i="l3l">Advanced</p><p data-i="l3p">Develop conversational skills, storytelling, expressions and Deaf culture awareness.</p><span class="st" data-i="l3s">Stages 21–30</span></article>
+    </div>
+  </div>
+</section>
+
+<section id="how">
+  <div class="wrap">
+    <h2 data-i="hwH">How SignPlay works</h2>
+    <p class="sub" data-i="hwSub">Learning, computer vision and games in one loop.</p>
+    <div class="steps">
+      <div class="step"><div class="ic" aria-hidden="true">1</div><h3 data-i="s1h">Learn</h3><p data-i="s1p">Discover new signs through interactive lessons.</p></div>
+      <div class="step"><div class="ic" aria-hidden="true">2</div><h3 data-i="s2h">Practise</h3><p data-i="s2p">Perform signs using your webcam and receive feedback.</p></div>
+      <div class="step"><div class="ic" aria-hidden="true">3</div><h3 data-i="s3h">Play</h3><p data-i="s3p">Use your knowledge to solve mysteries and unlock rewards.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="prog" id="progress">
+  <div class="wrap">
+    <h2 data-i="pgH">Your adventure awaits!</h2>
+    <p class="sub" data-i="pgSub">A sample of what you will see on your dashboard.</p>
+    <div class="panel">
+      <div class="stat"><b>250 XP</b><span data-i="xp">Total experience points</span></div>
+      <div class="stat"><b>3/10</b><span data-i="stg">Stages completed</span></div>
+      <div class="stat"><b>30%</b><span data-i="l1prog">Level 1 progress</span><div class="bar" role="progressbar" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100"><i></i></div></div>
+    </div>
+    <div class="badges">
+      <div class="badge"><svg viewBox="0 0 52 52" aria-hidden="true"><circle cx="26" cy="26" r="23" fill="#ffc83d" stroke="#0f0c2e" stroke-width="3"/><path d="M26 12l4 9 10 1-7 7 2 10-9-5-9 5 2-10-7-7 10-1z" fill="#ff6b57" stroke="#0f0c2e" stroke-width="2" stroke-linejoin="round"/></svg><span>First Sign<small data-i="bd">Badge earned</small></span></div>
+      <div class="badge"><svg viewBox="0 0 52 52" aria-hidden="true"><circle cx="26" cy="26" r="23" fill="#1fb5a8" stroke="#0f0c2e" stroke-width="3"/><circle cx="23" cy="23" r="9" fill="#fff6dc" stroke="#0f0c2e" stroke-width="3"/><path d="M30 30l9 9" stroke="#0f0c2e" stroke-width="5" stroke-linecap="round"/></svg><span>Clue Finder<small data-i="bd2">Badge earned</small></span></div>
+    </div>
+    <div class="go"><a class="btn main" href="#register" data-i="register2">Start your adventure</a></div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="fgrid">
+      <div><div class="logo">SignPlay!</div><p data-i="mission">Making communication more inclusive, one sign at a time.</p></div>
+      <div><h4 data-i="fa">About</h4><ul><li><a href="#about" data-i="fa1">About SignPlay</a></li><li><a href="#mission" data-i="fa2">Our Mission</a></li></ul></div>
+      <div><h4 data-i="fe">Explore</h4><ul><li><a href="#learn" data-i="fe1">Learn Mode</a></li><li><a href="#quest" data-i="fe2">Mystery Mode</a></li><li><a href="#levels" data-i="fe3">Levels</a></li></ul></div>
+      <div><h4 data-i="fc">Account</h4><ul><li><a href="#login" data-i="login3">Login</a></li><li><a href="#register" data-i="reg3">Register</a></li><li><a href="#contact" data-i="fc3">Contact Us</a></li></ul></div>
+    </div>
+    <div class="copy" data-i="copy">© 2026 SignPlay. All rights reserved.</div>
+  </div>
+</footer>
+
+<script>
+var BM={welcome:"Selamat datang ke",lead:"Belajar bahasa isyarat sambil bermain. Kuasai isyarat baharu dengan webcam anda, kemudian gunakannya untuk menyelesaikan misteri dan memenangi ganjaran.",register:"Daftar percuma",login:"Log masuk",choose:"Pilih pengembaraan anda!",chooseSub:"Dua cara bermain. Tukar bila-bila masa.",m1tag:"Mod Belajar",m1h:"Pembelajaran Bahasa Isyarat",m1p:"Belajar bahasa isyarat langkah demi langkah melalui demonstrasi visual, pelajaran perbendaharaan kata dan latihan berasaskan webcam.",m1b:"Mula belajar",m2tag:"Mod Misteri",m2h:"Misi Misteri Bahasa Isyarat",m2p:"Jadilah detektif! Gunakan pengetahuan bahasa isyarat anda untuk menyahkod mesej rahsia, menemui petunjuk dan menyelesaikan misteri.",m2b:"Selesaikan misteri",lvH:"Terokai tiga tahap pembelajaran",lvSub:"Setiap tahap ialah dunia tersendiri. Habiskan satu untuk membuka yang seterusnya.",l1n:"Tahap 1",l1h:"Asas",l1l:"Permulaan",l1p:"Pelajari asas: abjad, nombor, ucapan, keluarga, makanan dan perbendaharaan kata harian.",l1s:"Peringkat 1–10",l2n:"Tahap 2",l2h:"Kehidupan Harian",l2l:"Pertengahan",l2p:"Amalkan komunikasi sebenar merangkumi emosi, kesihatan, membeli-belah, sekolah dan kerja.",l2s:"Peringkat 11–20",l3n:"Tahap 3",l3h:"Kefasihan Perbualan",l3l:"Lanjutan",l3p:"Bangunkan kemahiran berbual, bercerita, ekspresi dan kesedaran budaya Pekak.",l3s:"Peringkat 21–30",hwH:"Cara SignPlay berfungsi",hwSub:"Pembelajaran, penglihatan komputer dan permainan dalam satu kitaran.",s1h:"Belajar",s1p:"Temui isyarat baharu melalui pelajaran interaktif.",s2h:"Berlatih",s2p:"Lakukan isyarat menggunakan webcam dan terima maklum balas.",s3h:"Bermain",s3p:"Gunakan pengetahuan anda untuk menyelesaikan misteri dan membuka ganjaran.",pgH:"Pengembaraan anda menanti!",pgSub:"Contoh paparan papan pemuka anda.",xp:"Jumlah mata pengalaman",stg:"Peringkat selesai",l1prog:"Kemajuan Tahap 1",bd:"Lencana diperoleh",bd2:"Lencana diperoleh",register2:"Mulakan pengembaraan anda",mission:"Menjadikan komunikasi lebih inklusif, satu isyarat pada satu masa.",fa:"Tentang",fa1:"Tentang SignPlay",fa2:"Misi Kami",fe:"Teroka",fe1:"Mod Belajar",fe2:"Mod Misteri",fe3:"Tahap",fc:"Akaun",login3:"Log masuk",reg3:"Daftar",fc3:"Hubungi Kami",copy:"© 2026 SignPlay. Hak cipta terpelihara."};
+var els=[].slice.call(document.querySelectorAll("[data-i]")),EN={};
+els.forEach(function(e){EN[e.dataset.i]=e.textContent});
+function setLang(l){
+  els.forEach(function(e){var k=e.dataset.i;e.textContent=(l==="bm"&&BM[k])?BM[k]:EN[k]});
+  document.documentElement.lang=l==="bm"?"ms":"en";
+  document.getElementById("en").setAttribute("aria-pressed",l==="en");
+  document.getElementById("bm").setAttribute("aria-pressed",l==="bm");
+}
+document.getElementById("en").onclick=function(){setLang("en")};
+document.getElementById("bm").onclick=function(){setLang("bm")};
+
+
+
+/* Scroll reveals: pan + fade in, once per element */
+(function(){
+  var sel="section h2,section .sub,.mode,.world,.step,.stat,.badge,.go,.note,footer .fgrid>div,.copy";
+  var all=[].slice.call(document.querySelectorAll(sel));
+  all.forEach(function(e,i){
+    e.classList.add("rv");
+    var sibs=[].slice.call(e.parentNode.children).filter(function(c){return c.classList.contains("rv")||all.indexOf(c)>-1});
+    e.style.setProperty("--d",(sibs.indexOf(e)*0.14)+"s");
+    if(e.matches(".mode")){e.dataset.r=sibs.indexOf(e)?"r":"l"}
+    else if(e.matches(".stat,.step,.badge")){e.dataset.r="z"}
+  });
+  if(!("IntersectionObserver" in window)||matchMedia("(prefers-reduced-motion:reduce)").matches){all.forEach(function(e){e.classList.add("in")});return}
+  var io=new IntersectionObserver(function(es){es.forEach(function(x){if(x.isIntersecting){x.target.classList.add("in");io.unobserve(x.target)}})},{threshold:.15});
+  all.forEach(function(e){io.observe(e)});
+})();
+</script>
+</body>
+</html>
