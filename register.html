@@ -1,0 +1,795 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>SignPlay! - Create Account</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+:root {
+    --cream: #fff8e8;
+    --ink: #1f1b4d;
+    --muted: #645b88;
+    --yellow: #ffc83d;
+    --coral: #ff6b57;
+    --teal: #1fb5a8;
+    --purple: #30277f;
+    --purple-light: #6044d1;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    width: 100%;
+    min-height: 100%;
+}
+
+body {
+    min-height: 100vh;
+    min-height: 100dvh;
+    background: transparent;
+    color: var(--ink);
+    font-family: 'Nunito', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+/* POPUP CONTAINER */
+
+.register-container {
+    position: relative;
+    width: 100%;
+    max-width: 1120px;
+    min-height: 650px;
+    display: grid;
+    grid-template-columns: .9fr 1.1fr;
+    background: white;
+    border: 2px solid var(--ink);
+    border-radius: 30px;
+    overflow: hidden;
+    box-shadow: 0 15px 45px rgba(20, 15, 60, .25);
+    animation: popupAppear .35s ease-out;
+}
+
+@keyframes popupAppear {
+    from {
+        opacity: 0;
+        transform: translateY(20px) scale(.97);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* CLOSE BUTTON */
+
+.close-btn {
+    position: absolute;
+    z-index: 10;
+    top: 16px;
+    right: 17px;
+    width: 36px;
+    height: 36px;
+    border: 2px solid #e8e1d3;
+    border-radius: 50%;
+    background: white;
+    color: var(--ink);
+    font-size: 23px;
+    line-height: 1;
+    cursor: pointer;
+    transition: .2s;
+}
+
+.close-btn:hover {
+    background: var(--coral);
+    color: white;
+    border-color: var(--coral);
+    transform: rotate(90deg);
+}
+
+/* LEFT ILLUSTRATION PANEL */
+
+.visual-panel {
+    position: relative;
+    overflow: hidden;
+    background:
+        radial-gradient(circle at 80% 20%, #6044d1, transparent 45%),
+        linear-gradient(145deg, #29216f, #4934a9);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 35px;
+    color: white;
+    text-align: center;
+}
+
+.visual-panel::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(
+        rgba(255,255,255,.22) 2px,
+        transparent 2px
+    );
+    background-size: 36px 36px;
+    opacity: .5;
+}
+
+.visual-content {
+    position: relative;
+    z-index: 1;
+}
+
+.visual-tag {
+    display: inline-block;
+    padding: 9px 20px;
+    border-radius: 50px;
+    background: var(--cream);
+    color: var(--ink);
+    font-weight: 800;
+    font-size: .85rem;
+}
+
+.visual-content h2 {
+    font-family: 'Baloo 2', sans-serif;
+    font-size: 2rem;
+    line-height: 1.1;
+    margin-bottom: 12px;
+}
+
+.visual-content h2 span {
+    color: var(--yellow);
+}
+
+.visual-content p {
+    color: #eee9ff;
+    font-size: .95rem;
+    line-height: 1.6;
+    max-width: 310px;
+    margin: auto;
+}
+
+/* HAND ILLUSTRATION */
+
+.hand-wrap {
+    width: 240px;
+    height: 275px;
+    margin: 15px auto 18px;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.hand-circle {
+    position: absolute;
+    width: 215px;
+    height: 215px;
+    background: rgba(255,255,255,.16);
+    border-radius: 50%;
+}
+
+.hand-svg {
+    position: relative;
+    z-index: 2;
+    width: 210px;
+    height: 255px;
+    filter: drop-shadow(5px 8px 0 rgba(20,15,60,.35));
+}
+
+.sparkle {
+    position: absolute;
+    color: var(--yellow);
+    font-size: 2rem;
+    z-index: 3;
+}
+
+.sparkle.one {
+    top: 12px;
+    right: 5px;
+}
+
+.sparkle.two {
+    bottom: 42px;
+    left: 0;
+}
+
+.sparkle.three {
+    top: 65px;
+    left: 8px;
+    font-size: 1.2rem;
+}
+
+/* RIGHT FORM PANEL */
+
+.form-panel {
+    padding: 45px 50px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow-y: auto;
+}
+
+.form-heading {
+    margin-bottom: 22px;
+}
+
+.form-heading .eyebrow {
+    color: #d18a00;
+    font-size: .8rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+}
+
+.form-heading h1 {
+    font-family: 'Baloo 2', sans-serif;
+    font-size: 2.25rem;
+    line-height: 1.15;
+    margin: 4px 0;
+}
+
+.form-heading p {
+    color: var(--muted);
+    font-size: .95rem;
+}
+
+/* INPUTS */
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.form-group label {
+    display: block;
+    font-size: .85rem;
+    font-weight: 800;
+    margin-bottom: 6px;
+}
+
+.form-group input {
+    width: 100%;
+    height: 46px;
+    padding: 0 13px;
+    border: 2px solid #e9dfc8;
+    border-radius: 12px;
+    outline: none;
+    background: #fffdf8;
+    font-family: 'Nunito', sans-serif;
+    font-size: .9rem;
+    color: var(--ink);
+}
+
+.form-group input:focus {
+    border-color: var(--teal);
+    box-shadow: 0 0 0 3px rgba(31,181,168,.12);
+}
+
+.password-note {
+    font-size: .72rem;
+    color: var(--muted);
+    margin-top: 4px;
+}
+
+/* CREATE ACCOUNT BUTTON */
+
+.register-btn {
+    width: 100%;
+    height: 50px;
+    margin-top: 21px;
+    border: 2px solid var(--ink);
+    border-radius: 50px;
+    background: var(--yellow);
+    color: var(--ink);
+    font-family: 'Baloo 2', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 800;
+    cursor: pointer;
+    box-shadow: 0 4px 0 var(--ink);
+    transition: .2s;
+}
+
+.register-btn:hover {
+    transform: translateY(3px);
+    box-shadow: 0 1px 0 var(--ink);
+}
+
+/* DIVIDER */
+
+.divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 18px 0;
+    color: #958da9;
+    font-size: .8rem;
+}
+
+.divider::before,
+.divider::after {
+    content: "";
+    height: 1px;
+    flex: 1;
+    background: #e8e1d3;
+}
+
+/* GOOGLE BUTTON */
+
+.google-btn {
+    width: 100%;
+    height: 48px;
+    border: 2px solid #e6dfd1;
+    border-radius: 50px;
+    background: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    color: var(--ink);
+    font-family: 'Nunito', sans-serif;
+    font-weight: 800;
+    cursor: pointer;
+    transition: .2s;
+}
+
+.google-btn:hover {
+    border-color: var(--purple-light);
+    background: #faf8ff;
+}
+
+.google-btn svg {
+    width: 19px;
+    height: 19px;
+}
+
+/* FOOTER */
+
+.login-link {
+    text-align: center;
+    margin-top: 20px;
+    font-size: .88rem;
+    color: var(--muted);
+}
+
+.login-link a {
+    color: var(--purple-light);
+    font-weight: 800;
+    text-decoration: none;
+}
+
+.login-link a:hover {
+    color: var(--coral);
+}
+
+.message {
+    text-align: center;
+    margin-top: 10px;
+    font-size: .82rem;
+    font-weight: 800;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 850px) {
+    body {
+        align-items: flex-start;
+        overflow-y: auto;
+    }
+
+    .register-container {
+        max-width: 540px;
+        grid-template-columns: 1fr;
+        min-height: auto;
+    }
+
+    .visual-panel {
+        padding: 25px;
+    }
+
+    .hand-wrap {
+        width: 150px;
+        height: 150px;
+        margin: 10px auto;
+    }
+
+    .hand-circle {
+        width: 135px;
+        height: 135px;
+    }
+
+    .hand-svg {
+        width: 125px;
+        height: 150px;
+    }
+
+    .visual-content h2 {
+        font-size: 1.6rem;
+    }
+
+    .form-panel {
+        padding: 30px;
+        overflow: visible;
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        padding: 10px;
+    }
+
+    .register-container {
+        border-radius: 20px;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .form-panel {
+        padding: 27px 20px;
+    }
+
+    .form-heading h1 {
+        font-size: 2rem;
+    }
+
+    .close-btn {
+        top: 10px;
+        right: 10px;
+    }
+}
+
+@media (max-height: 750px) and (min-width: 851px) {
+    .register-container {
+        min-height: 0;
+        height: calc(100dvh - 40px);
+    }
+
+    .visual-panel {
+        padding: 20px;
+    }
+
+    .hand-wrap {
+        transform: scale(.8);
+        margin: -5px auto;
+    }
+
+    .form-panel {
+        padding: 25px 40px;
+    }
+
+    .form-heading {
+        margin-bottom: 13px;
+    }
+
+    .form-grid {
+        gap: 10px 13px;
+    }
+
+    .divider {
+        margin: 12px 0;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="register-container">
+
+    <!-- CLOSE POPUP BUTTON -->
+    <button class="close-btn"
+            type="button"
+            aria-label="Close registration"
+            onclick="closePopup()">
+        &times;
+    </button>
+
+    <!-- LEFT SIDE: ILLUSTRATION -->
+
+    <section class="visual-panel">
+
+        <div class="visual-content">
+
+            <div class="visual-tag">
+                ✨ YOUR SIGN LANGUAGE ADVENTURE
+            </div>
+
+            <div class="hand-wrap">
+
+                <div class="hand-circle"></div>
+
+                <span class="sparkle one">✦</span>
+                <span class="sparkle two">✧</span>
+                <span class="sparkle three">✦</span>
+
+                <svg class="hand-svg"
+                     viewBox="0 0 220 270"
+                     xmlns="http://www.w3.org/2000/svg">
+
+                    <!-- Fingers -->
+                    <rect x="40" y="48" width="39" height="125"
+                          rx="19" fill="#ff6b57"
+                          stroke="#1f1b4d" stroke-width="7"
+                          transform="rotate(-9 40 48)"/>
+
+                    <rect x="80" y="18" width="40" height="150"
+                          rx="20" fill="#ffc83d"
+                          stroke="#1f1b4d" stroke-width="7"
+                          transform="rotate(-3 80 18)"/>
+
+                    <rect x="120" y="30" width="39" height="140"
+                          rx="19" fill="#1fb5a8"
+                          stroke="#1f1b4d" stroke-width="7"
+                          transform="rotate(5 120 30)"/>
+
+                    <rect x="157" y="62" width="37" height="110"
+                          rx="18" fill="#45a5ff"
+                          stroke="#1f1b4d" stroke-width="7"
+                          transform="rotate(10 157 62)"/>
+
+                    <!-- Palm -->
+                    <rect x="37" y="135" width="148" height="112"
+                          rx="42" fill="#ff9888"
+                          stroke="#1f1b4d" stroke-width="7"
+                          transform="rotate(-5 37 135)"/>
+
+                    <!-- Thumb -->
+                    <rect x="4" y="166" width="42" height="83"
+                          rx="21" fill="#b68aff"
+                          stroke="#1f1b4d" stroke-width="7"
+                          transform="rotate(-35 4 166)"/>
+
+                    <!-- Face -->
+                    <circle cx="91" cy="188" r="7" fill="#1f1b4d"/>
+                    <circle cx="137" cy="188" r="7" fill="#1f1b4d"/>
+
+                    <path d="M99 210 Q115 227 132 210"
+                          fill="none" stroke="#1f1b4d"
+                          stroke-width="6" stroke-linecap="round"/>
+
+                    <circle cx="75" cy="207" r="9"
+                            fill="#ff6b57" opacity=".6"/>
+                    <circle cx="153" cy="207" r="9"
+                            fill="#ff6b57" opacity=".6"/>
+
+                    <!-- Wrist -->
+                    <rect x="77" y="235" width="75" height="35"
+                          rx="13" fill="#fff8e8"
+                          stroke="#1f1b4d" stroke-width="6"/>
+
+                </svg>
+
+            </div>
+
+            <h2>Every sign tells a <span>story!</span></h2>
+
+            <p>
+                Learn, practise and play your way into
+                a world of communication. Your adventure starts here!
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <!-- RIGHT SIDE: REGISTER FORM -->
+
+    <section class="form-panel">
+
+        <div class="form-heading">
+
+            <div class="eyebrow">LET'S GET STARTED</div>
+
+            <h1>Create Account ✨</h1>
+
+            <p>Join SignPlay and discover the joy of signing!</p>
+
+        </div>
+
+
+        <form id="registerForm">
+
+            <div class="form-grid">
+
+                <div class="form-group">
+                    <label for="fullname">Full Name</label>
+
+                    <input type="text"
+                           id="fullname"
+                           placeholder="Your full name"
+                           autocomplete="name"
+                           required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+
+                    <input type="email"
+                           id="email"
+                           placeholder="name@example.com"
+                           autocomplete="email"
+                           required>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+
+                    <input type="password"
+                           id="password"
+                           placeholder="Create password"
+                           minlength="8"
+                           autocomplete="new-password"
+                           required>
+
+                    <p class="password-note">
+                        At least 8 characters.
+                    </p>
+                </div>
+
+                <div class="form-group">
+                    <label for="confirmPassword">
+                        Confirm Password
+                    </label>
+
+                    <input type="password"
+                           id="confirmPassword"
+                           placeholder="Confirm password"
+                           autocomplete="new-password"
+                           required>
+                </div>
+
+            </div>
+
+            <button type="submit" class="register-btn">
+                Create My Account →
+            </button>
+
+            <p class="message" id="message" role="status"></p>
+
+        </form>
+
+
+        <div class="divider">OR CONTINUE WITH</div>
+
+
+        <!-- GOOGLE BUTTON -->
+
+        <button type="button" class="google-btn" id="googleBtn">
+
+            <svg viewBox="0 0 48 48"
+                 xmlns="http://www.w3.org/2000/svg">
+
+                <path fill="#EA4335"
+                      d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"
+                      transform="translate(0 4)"/>
+
+                <path fill="#4285F4"
+                      d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.75 7.18l7.73 6C44.42 37.93 46.98 31.82 46.98 24.55z"/>
+
+                <path fill="#FBBC05"
+                      d="M10.53 28.59A14.4 14.4 0 0 1 9.75 24c0-1.59.27-3.13.76-4.59l-7.98-6.19A23.9 23.9 0 0 0 0 24c0 3.88.93 7.56 2.56 10.78l7.97-6.19z"
+                      transform="translate(0 4)"/>
+
+                <path fill="#34A853"
+                      d="M24 48c6.48 0 11.93-2.13 15.91-5.8l-7.73-6c-2.14 1.45-4.89 2.3-8.18 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"
+                      transform="translate(0 -4)"/>
+
+            </svg>
+
+            Sign up with Google
+
+        </button>
+
+
+        <p class="login-link">
+            Already have an account?
+            <a href="login.html">Sign in</a>
+        </p>
+
+    </section>
+
+</div>
+
+
+<script>
+
+// CLOSE POPUP
+function closePopup() {
+
+    // Notify the homepage to close the popup
+    if (window.parent !== window) {
+
+        window.parent.postMessage(
+            { type: "signplay-close-auth" },
+            window.location.origin
+        );
+
+    } else {
+
+        // If opened directly, return to homepage
+        window.location.href = "index.html";
+
+    }
+
+}
+
+
+// REGISTER FORM VALIDATION
+const registerForm = document.getElementById("registerForm");
+
+registerForm.addEventListener("submit", function(e) {
+
+    e.preventDefault();
+
+    const password =
+        document.getElementById("password").value;
+
+    const confirmPassword =
+        document.getElementById("confirmPassword").value;
+
+    const message =
+        document.getElementById("message");
+
+    if (password.length < 8) {
+
+        message.style.color = "#ff6b57";
+        message.textContent =
+            "Password must contain at least 8 characters!";
+
+        return;
+    }
+
+    if (password !== confirmPassword) {
+
+        message.style.color = "#ff6b57";
+        message.textContent =
+            "Passwords do not match!";
+
+        return;
+    }
+
+    message.style.color = "#1fb5a8";
+
+    message.textContent =
+        "Form validated! Authentication setup is still needed.";
+
+});
+
+
+// GOOGLE SIGN-UP
+document.getElementById("googleBtn").addEventListener("click", function() {
+
+    alert("Google sign-up will be available after Firebase Authentication is connected.");
+
+});
+
+
+// CLOSE WITH ESCAPE KEY
+document.addEventListener("keydown", function(e) {
+
+    if (e.key === "Escape") {
+        closePopup();
+    }
+
+});
+
+</script>
+
+</body>
+</html>
