@@ -1,0 +1,1003 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>SignPlay! - Login</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+:root {
+    --bg: #fff8e8;
+    --ink: #1f1b4d;
+    --muted: #77709f;
+    --sun: #ffc83d;
+    --coral: #ff6b57;
+    --teal: #1fb5a8;
+    --hero1: #2a2272;
+    --hero2: #5b3fd1;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    min-height: 100vh;
+    font-family: 'Nunito', sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+}
+
+/* Main layout */
+
+.login-container {
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 12px;
+}
+
+.login-card {
+    width: 100%;
+    max-width: 1120px;
+    min-height: 680px;
+
+    display: grid;
+    grid-template-columns: 1fr 1.12fr;
+
+    background: white;
+    border: 2px solid var(--ink);
+    border-radius: 30px;
+    overflow: hidden;
+
+    box-shadow: 0 10px 0 rgba(31,27,77,.12);
+    position: relative;
+}
+
+/* Close button */
+
+.close-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 5;
+
+    width: 42px;
+    height: 42px;
+
+    border: 2px solid #e8dfcd;
+    border-radius: 50%;
+
+    background: white;
+    color: var(--ink);
+
+    font-size: 23px;
+    cursor: pointer;
+    transition: .2s;
+}
+
+.close-btn:hover {
+    background: var(--sun);
+    transform: rotate(90deg);
+}
+
+/* Left illustration panel */
+
+.welcome-panel {
+    background: radial-gradient(
+        circle at 80% 20%,
+        var(--hero2),
+        var(--hero1) 75%
+    );
+
+    color: white;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    text-align: center;
+    padding: 45px;
+
+    position: relative;
+    overflow: hidden;
+}
+
+.welcome-panel::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+
+    background-image: radial-gradient(
+        rgba(255,255,255,.17) 2px,
+        transparent 2px
+    );
+
+    background-size: 42px 42px;
+}
+
+.panel-content {
+    position: relative;
+    z-index: 1;
+    max-width: 390px;
+}
+
+.panel-tag {
+    display: inline-block;
+    background: var(--bg);
+    color: var(--ink);
+
+    padding: 10px 25px;
+    border-radius: 999px;
+
+    font-size: .9rem;
+    font-weight: 800;
+
+    margin-bottom: 30px;
+}
+
+/* Hand illustration */
+
+.hand-illustration {
+    width: 240px;
+    max-width: 100%;
+    margin: 0 auto 15px;
+
+    filter: drop-shadow(0 9px 0 rgba(15,12,46,.2));
+}
+
+.welcome-panel h2 {
+    font-family: 'Baloo 2', sans-serif;
+    font-size: 2rem;
+    line-height: 1.2;
+    margin-bottom: 15px;
+}
+
+.welcome-panel h2 span {
+    color: var(--sun);
+}
+
+.welcome-panel p {
+    font-size: 1rem;
+    line-height: 1.8;
+    color: #eeeaff;
+}
+
+/* Right form panel */
+
+.form-panel {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    padding: 65px 55px;
+}
+
+.form-tag {
+    color: #d58a00;
+    font-size: .9rem;
+    font-weight: 800;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+}
+
+.form-panel h1 {
+    font-family: 'Baloo 2', sans-serif;
+    font-size: 2.5rem;
+    line-height: 1.2;
+    margin-bottom: 5px;
+}
+
+.subtitle {
+    color: var(--muted);
+    margin-bottom: 32px;
+}
+
+/* Form fields */
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    font-weight: 800;
+    margin-bottom: 8px;
+}
+
+.input-wrapper {
+    position: relative;
+}
+
+input {
+    width: 100%;
+    padding: 14px 16px;
+
+    border: 2px solid #e6dcc0;
+    border-radius: 13px;
+
+    background: #fffdf8;
+
+    font-family: 'Nunito', sans-serif;
+    font-size: 1rem;
+
+    outline: none;
+    transition: .2s;
+}
+
+input:focus {
+    border-color: var(--teal);
+    box-shadow: 0 0 0 3px rgba(31,181,168,.12);
+}
+
+.password-input {
+    padding-right: 55px;
+}
+
+.toggle-password {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+
+    border: none;
+    background: transparent;
+
+    color: var(--muted);
+    font-size: .85rem;
+    font-weight: 800;
+
+    cursor: pointer;
+}
+
+/* Remember and forgot password */
+
+.form-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    gap: 10px;
+    margin: 5px 0 22px;
+    font-size: .9rem;
+}
+
+.remember {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+}
+
+.remember input {
+    width: 16px;
+    height: 16px;
+    accent-color: var(--hero2);
+}
+
+.forgot {
+    color: var(--hero2);
+    font-weight: 800;
+    text-decoration: none;
+}
+
+.forgot:hover {
+    color: var(--coral);
+}
+
+/* Buttons */
+
+.login-btn {
+    width: 100%;
+    padding: 14px;
+
+    border: 2px solid var(--ink);
+    border-radius: 999px;
+
+    background: var(--sun);
+    color: var(--ink);
+
+    font-family: 'Baloo 2', sans-serif;
+    font-size: 1.2rem;
+    font-weight: 800;
+
+    box-shadow: 0 5px 0 var(--ink);
+
+    cursor: pointer;
+    transition: .2s;
+}
+
+.login-btn:hover {
+    transform: translateY(3px);
+    box-shadow: 0 2px 0 var(--ink);
+}
+
+/* Divider */
+
+.divider {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+
+    color: #9992b5;
+    font-size: .85rem;
+
+    margin: 28px 0 18px;
+}
+
+.divider::before,
+.divider::after {
+    content: "";
+    height: 2px;
+    flex: 1;
+    background: #e8dfcd;
+}
+
+/* Google */
+
+.google-btn {
+    width: 100%;
+    padding: 13px;
+
+    border: 2px solid #e8dfcd;
+    border-radius: 999px;
+
+    background: white;
+    color: var(--ink);
+
+    font-family: 'Nunito', sans-serif;
+    font-size: 1rem;
+    font-weight: 800;
+
+    cursor: pointer;
+    transition: .2s;
+}
+
+.google-btn:hover {
+    background: #fffaf0;
+    border-color: var(--teal);
+}
+
+.google-icon {
+    font-weight: 900;
+    font-size: 1.2rem;
+    margin-right: 9px;
+
+    background: conic-gradient(
+        #4285f4 0deg 90deg,
+        #34a853 90deg 180deg,
+        #fbbc05 180deg 270deg,
+        #ea4335 270deg
+    );
+
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+/* Register link */
+
+.register-link {
+    text-align: center;
+    color: var(--muted);
+    margin-top: 25px;
+}
+
+.register-link a {
+    color: var(--hero2);
+    font-weight: 800;
+    text-decoration: none;
+}
+
+.register-link a:hover {
+    color: var(--coral);
+}
+
+.message {
+    text-align: center;
+    font-weight: 800;
+    font-size: .9rem;
+    margin-top: 15px;
+}
+
+/* Responsive */
+
+@media(max-width: 750px) {
+
+    .login-card {
+        grid-template-columns: 1fr;
+        min-height: auto;
+    }
+
+    .welcome-panel {
+        padding: 25px 20px;
+    }
+
+    .panel-tag {
+        margin-bottom: 12px;
+    }
+
+    .hand-illustration {
+        width: 125px;
+        margin-bottom: 5px;
+    }
+
+    .welcome-panel h2 {
+        font-size: 1.5rem;
+    }
+
+    .welcome-panel p {
+        font-size: .9rem;
+    }
+
+    .form-panel {
+        padding: 40px 25px;
+    }
+
+    .form-panel h1 {
+        font-size: 2rem;
+    }
+
+    .close-btn {
+        top: 12px;
+        right: 12px;
+    }
+}
+
+@media(max-height: 720px) and (min-width: 751px) {
+    .login-card {
+        min-height: 0;
+    }
+
+    .welcome-panel {
+        padding: 25px;
+    }
+
+    .hand-illustration {
+        width: 170px;
+    }
+
+    .form-panel {
+        padding: 35px 45px;
+    }
+
+    .subtitle {
+        margin-bottom: 18px;
+    }
+
+    .form-group {
+        margin-bottom: 12px;
+    }
+}
+
+
+/* =====================================
+   POPUP FIX - MATCH REGISTER DESIGN
+===================================== */
+
+/* Remove the cream background and extra scrolling */
+html,
+body {
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    margin: 0;
+    padding: 0;
+    background: transparent;
+    overflow: hidden;
+}
+
+/* Main popup container */
+.login-container {
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    padding: 0;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    overflow: hidden;
+}
+
+/* Main login card */
+.login-card {
+    width: 100%;
+    max-width: 1240px;
+
+    height: min(700px, calc(100% - 20px));
+    min-height: 0;
+
+    grid-template-columns: 1fr 1.12fr;
+
+    border: 2px solid var(--ink);
+    border-radius: 30px;
+    overflow: hidden;
+
+    box-shadow: 0 10px 0 rgba(31,27,77,.12);
+}
+
+/* Left illustration panel */
+.welcome-panel {
+    padding: 35px;
+}
+
+.panel-tag {
+    margin-bottom: 20px;
+}
+
+.hand-illustration {
+    width: 200px;
+    margin-bottom: 10px;
+}
+
+/* Right login form */
+.form-panel {
+    padding: 38px 50px;
+}
+
+.form-panel h1 {
+    font-size: 2.4rem;
+}
+
+.subtitle {
+    margin-bottom: 22px;
+}
+
+.form-group {
+    margin-bottom: 14px;
+}
+
+input {
+    padding: 12px 15px;
+}
+
+.form-options {
+    margin: 3px 0 18px;
+}
+
+.divider {
+    margin: 20px 0 14px;
+}
+
+.register-link {
+    margin-top: 18px;
+}
+
+/* Short desktop screens */
+@media (max-height: 720px) and (min-width: 751px) {
+    .login-card {
+        height: calc(100% - 12px);
+    }
+
+    .welcome-panel {
+        padding: 22px;
+    }
+
+    .hand-illustration {
+        width: 155px;
+    }
+
+    .form-panel {
+        padding: 20px 38px;
+    }
+
+    .form-panel h1 {
+        font-size: 2rem;
+    }
+
+    .subtitle {
+        margin-bottom: 14px;
+    }
+
+    .form-group {
+        margin-bottom: 9px;
+    }
+
+    .divider {
+        margin: 13px 0 10px;
+    }
+
+    .register-link {
+        margin-top: 12px;
+    }
+}
+
+/* Mobile layout */
+@media (max-width: 750px) {
+    html,
+    body {
+        overflow-y: auto;
+    }
+
+    .login-container {
+        height: auto;
+        min-height: 100%;
+        overflow: visible;
+        padding: 10px;
+    }
+
+    .login-card {
+        height: auto;
+        max-height: none;
+        grid-template-columns: 1fr;
+    }
+
+    .welcome-panel {
+        padding: 25px 20px;
+    }
+
+    .hand-illustration {
+        width: 125px;
+    }
+
+    .form-panel {
+        padding: 35px 25px;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<main class="login-container">
+
+    <div class="login-card">
+
+        <!-- CLOSE BUTTON -->
+        <button class="close-btn" onclick="closeLogin()" aria-label="Close">
+            &times;
+        </button>
+
+
+        <!-- LEFT PANEL -->
+        <section class="welcome-panel">
+
+            <div class="panel-content">
+
+                <div class="panel-tag">
+                    ✨ YOUR SIGN LANGUAGE ADVENTURE
+                </div>
+
+                <!-- Hand illustration -->
+                <svg class="hand-illustration"
+                     viewBox="0 0 250 270"
+                     xmlns="http://www.w3.org/2000/svg">
+
+                    <circle cx="125" cy="125" r="115"
+                            fill="#ffffff" opacity=".13"/>
+
+                    <g stroke="#1f1b4d"
+                       stroke-width="7"
+                       stroke-linejoin="round"
+                       stroke-linecap="round">
+
+                        <rect x="72" y="25" width="34" height="125"
+                              rx="17" fill="#ff6b57"/>
+
+                        <rect x="109" y="8" width="34" height="142"
+                              rx="17" fill="#ffc83d"/>
+
+                        <rect x="146" y="24" width="34" height="126"
+                              rx="17" fill="#1fb5a8"/>
+
+                        <rect x="183" y="52" width="34" height="105"
+                              rx="17" fill="#3aa0ff"/>
+
+                        <rect x="34" y="126" width="38" height="95"
+                              rx="19" fill="#b48cff"
+                              transform="rotate(-35 53 173)"/>
+
+                        <rect x="65" y="112" width="150" height="120"
+                              rx="45" fill="#ff9a8b"/>
+
+                        <rect x="94" y="220" width="91" height="42"
+                              rx="15" fill="#fff6dc"/>
+
+                        <g stroke="none">
+                            <circle cx="111" cy="170" r="8"
+                                    fill="#1f1b4d"/>
+
+                            <circle cx="169" cy="170" r="8"
+                                    fill="#1f1b4d"/>
+
+                            <circle cx="88" cy="196" r="11"
+                                    fill="#ff6b57" opacity=".6"/>
+
+                            <circle cx="193" cy="196" r="11"
+                                    fill="#ff6b57" opacity=".6"/>
+                        </g>
+
+                        <path d="M119 205 Q140 226 161 205"
+                              fill="none"/>
+                    </g>
+
+                    <g fill="#ffc83d">
+                        <path d="M220 25 L227 40 L242 47 L227 54 L220 69 L213 54 L198 47 L213 40Z"/>
+                        <path d="M26 100 L31 110 L41 115 L31 120 L26 130 L21 120 L11 115 L21 110Z"/>
+                    </g>
+
+                </svg>
+
+                <h2>
+                    Welcome back,
+                    <span>SignPlayer!</span>
+                </h2>
+
+                <p>
+                    Your sign language adventure is waiting for you.
+                    Continue learning, practise your signs and
+                    unlock new rewards!
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <!-- RIGHT PANEL -->
+        <section class="form-panel">
+
+            <p class="form-tag">LET'S CONTINUE</p>
+
+            <h1>Welcome Back! 👋</h1>
+
+            <p class="subtitle">
+                Sign in to continue your SignPlay adventure.
+            </p>
+
+
+            <!-- LOGIN FORM -->
+            <form id="loginForm">
+
+                <div class="form-group">
+
+                    <label for="email">Email Address</label>
+
+                    <input
+                        type="email"
+                        id="email"
+                        placeholder="name@example.com"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="password">Password</label>
+
+                    <div class="input-wrapper">
+
+                        <input
+                            type="password"
+                            id="password"
+                            class="password-input"
+                            placeholder="Enter your password"
+                            required
+                        >
+
+                        <button
+                            type="button"
+                            class="toggle-password"
+                            onclick="togglePassword()"
+                            id="toggleBtn">
+                            Show
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <div class="form-options">
+
+                    <label class="remember">
+
+                        <input type="checkbox" id="remember">
+
+                        Remember me
+
+                    </label>
+
+                    <a href="#" class="forgot" id="forgotLink">
+                        Forgot Password?
+                    </a>
+
+                </div>
+
+
+                <button type="submit" class="login-btn">
+                    Login to My Account →
+                </button>
+
+                <p class="message" id="message"></p>
+
+            </form>
+
+
+            <!-- DIVIDER -->
+            <div class="divider">
+                OR CONTINUE WITH
+            </div>
+
+
+            <!-- GOOGLE LOGIN -->
+            <button type="button" class="google-btn"
+                    id="googleBtn">
+
+                <span class="google-icon">G</span>
+
+                Continue with Google
+
+            </button>
+
+
+            <!-- REGISTER LINK -->
+            <p class="register-link">
+
+                Don't have an account?
+
+                <a href="register.html" onclick="openRegister(event)">
+                    Create Account
+                </a>
+
+            </p>
+
+        </section>
+
+    </div>
+
+</main>
+
+
+<script>
+
+// SHOW / HIDE PASSWORD
+
+function togglePassword() {
+
+    const password = document.getElementById("password");
+    const toggleBtn = document.getElementById("toggleBtn");
+
+    if (password.type === "password") {
+
+        password.type = "text";
+        toggleBtn.textContent = "Hide";
+
+    } else {
+
+        password.type = "password";
+        toggleBtn.textContent = "Show";
+
+    }
+
+}
+
+
+// CLOSE POPUP
+
+function closeLogin() {
+
+    if (window.parent !== window) {
+
+        window.parent.postMessage(
+            { type: "signplay-close-auth" },
+            window.location.origin
+        );
+
+    } else {
+
+        window.location.href = "index.html";
+
+    }
+
+}
+
+
+// OPEN REGISTER INSIDE SAME POPUP
+
+function openRegister(e) {
+
+    e.preventDefault();
+
+    if (window.parent !== window) {
+
+        window.parent.postMessage(
+            {
+                type: "signplay-open-auth",
+                page: "register"
+            },
+            window.location.origin
+        );
+
+    } else {
+
+        window.location.href = "register.html";
+
+    }
+
+}
+
+
+// LOGIN FORM VALIDATION
+
+document.getElementById("loginForm").addEventListener(
+    "submit",
+    function(e) {
+
+        e.preventDefault();
+
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
+        const message = document.getElementById("message");
+
+        if (!email || !password) {
+
+            message.style.color = "#ff6b57";
+            message.textContent = "Please fill in all fields.";
+
+            return;
+
+        }
+
+        message.style.color = "#1fb5a8";
+
+        message.textContent =
+            "Login form validated! Authentication setup is still needed.";
+
+    }
+);
+
+
+// FORGOT PASSWORD
+
+document.getElementById("forgotLink").addEventListener(
+    "click",
+    function(e) {
+
+        e.preventDefault();
+
+        const message = document.getElementById("message");
+
+        message.style.color = "#5b3fd1";
+
+        message.textContent =
+            "Password recovery will be available once authentication is connected.";
+
+    }
+);
+
+
+// GOOGLE SIGN-IN
+
+document.getElementById("googleBtn").addEventListener(
+    "click",
+    function() {
+
+        const message = document.getElementById("message");
+
+        message.style.color = "#5b3fd1";
+
+        message.textContent =
+            "Google authentication setup is still needed.";
+
+    }
+);
+
+</script>
+
+</body>
+</html>

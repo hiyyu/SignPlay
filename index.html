@@ -124,6 +124,74 @@ section{padding:56px 20px}
 .world:nth-child(n){padding-bottom:24px}
 }
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.btn{transition:none}.wave,.beam{animation:none}.beam{opacity:0}.rd{animation:none;opacity:0}.got{animation:none;opacity:1}.bubble{animation:none;opacity:1}.swish,.face,.hero::before,.hero .welcome,.hero .logo,.hero .lead,.hero .cta{animation:none}}
+
+
+/* ==============================
+   SIGNPLAY AUTH POPUP
+============================== */
+
+.auth-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+
+    display: none;
+    justify-content: center;
+    align-items: center;
+
+    padding: 20px;
+
+    background: rgba(15, 12, 46, 0.55);
+    backdrop-filter: blur(9px);
+    -webkit-backdrop-filter: blur(9px);
+}
+
+.auth-overlay.active {
+    display: flex;
+    animation: overlayAppear .25s ease;
+}
+
+.auth-frame {
+    width: min(1120px, 100%);
+    height: min(740px, calc(100dvh - 40px));
+
+    border: none;
+    border-radius: 30px;
+    background: transparent;
+
+    box-shadow: 0 20px 70px rgba(0,0,0,.3);
+
+    animation: popupAppear .3s ease;
+}
+
+@keyframes overlayAppear {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes popupAppear {
+    from {
+        opacity: 0;
+        transform: translateY(20px) scale(.97);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@media(max-width: 600px) {
+    .auth-overlay {
+        padding: 8px;
+    }
+
+    .auth-frame {
+        width: 100%;
+        height: calc(100dvh - 16px);
+        border-radius: 20px;
+    }
+}
+
 </style>
 </head>
 <body>
@@ -138,8 +206,17 @@ section{padding:56px 20px}
       <h1 class="logo" aria-label="SignPlay"><span>Sign</span><span>Play</span>!</h1>
       <p class="lead" data-i="lead">Learn sign language by playing. Master new signs with your webcam, then use them to crack mysteries and win rewards.</p>
       <div class="cta">
-        <a class="btn main" href="#register" data-i="register">Register free</a>
-        <a class="btn alt" href="#login" data-i="login">Login</a>
+        <a class="btn main" href="register.html"
+   data-i="register"
+   data-open-auth="register">
+   Register free
+</a>
+        <a class="btn alt"
+   href="login.html"
+   data-i="login"
+   data-open-auth="login">
+   Login
+</a>
       </div>
     </div>
     <div>
@@ -234,7 +311,11 @@ section{padding:56px 20px}
       <div class="badge"><svg viewBox="0 0 52 52" aria-hidden="true"><circle cx="26" cy="26" r="23" fill="#ffc83d" stroke="#0f0c2e" stroke-width="3"/><path d="M26 12l4 9 10 1-7 7 2 10-9-5-9 5 2-10-7-7 10-1z" fill="#ff6b57" stroke="#0f0c2e" stroke-width="2" stroke-linejoin="round"/></svg><span>First Sign<small data-i="bd">Badge earned</small></span></div>
       <div class="badge"><svg viewBox="0 0 52 52" aria-hidden="true"><circle cx="26" cy="26" r="23" fill="#1fb5a8" stroke="#0f0c2e" stroke-width="3"/><circle cx="23" cy="23" r="9" fill="#fff6dc" stroke="#0f0c2e" stroke-width="3"/><path d="M30 30l9 9" stroke="#0f0c2e" stroke-width="5" stroke-linecap="round"/></svg><span>Clue Finder<small data-i="bd2">Badge earned</small></span></div>
     </div>
-    <div class="go"><a class="btn main" href="#register" data-i="register2">Start your adventure</a></div>
+    <div class="go"><a class="btn main" href="#register"
+   data-i="register2"
+   data-open-auth="register">
+   Start your adventure
+</a></div>
   </div>
 </section>
 
@@ -244,11 +325,38 @@ section{padding:56px 20px}
       <div><div class="logo">SignPlay!</div><p data-i="mission">Making communication more inclusive, one sign at a time.</p></div>
       <div><h4 data-i="fa">About</h4><ul><li><a href="#about" data-i="fa1">About SignPlay</a></li><li><a href="#mission" data-i="fa2">Our Mission</a></li></ul></div>
       <div><h4 data-i="fe">Explore</h4><ul><li><a href="#learn" data-i="fe1">Learn Mode</a></li><li><a href="#quest" data-i="fe2">Mystery Mode</a></li><li><a href="#levels" data-i="fe3">Levels</a></li></ul></div>
-      <div><h4 data-i="fc">Account</h4><ul><li><a href="#login" data-i="login3">Login</a></li><li><a href="#register" data-i="reg3">Register</a></li><li><a href="#contact" data-i="fc3">Contact Us</a></li></ul></div>
+      <div><h4 data-i="fc">Account</h4><ul><li>
+    <a href="login.html"
+       data-i="login3"
+       data-open-auth="login">
+       Login
+    </a>
+</li><li>
+    <a href="#register"
+       data-i="reg3"
+       data-open-auth="register">
+       Register
+    </a>
+</li><li><a href="#contact" data-i="fc3">Contact Us</a></li></ul></div>
     </div>
     <div class="copy" data-i="copy">© 2026 SignPlay. All rights reserved.</div>
   </div>
 </footer>
+
+<!-- AUTHENTICATION POPUP -->
+
+<div class="auth-overlay" id="authOverlay">
+
+    <iframe
+        id="authFrame"
+        class="auth-frame"
+        src="about:blank"
+        title="SignPlay Registration"
+        allow="publickey-credentials-get"
+    ></iframe>
+
+</div>
+
 
 <script>
 var BM={welcome:"Selamat datang ke",lead:"Belajar bahasa isyarat sambil bermain. Kuasai isyarat baharu dengan webcam anda, kemudian gunakannya untuk menyelesaikan misteri dan memenangi ganjaran.",register:"Daftar percuma",login:"Log masuk",choose:"Pilih pengembaraan anda!",chooseSub:"Dua cara bermain. Tukar bila-bila masa.",m1tag:"Mod Belajar",m1h:"Pembelajaran Bahasa Isyarat",m1p:"Belajar bahasa isyarat langkah demi langkah melalui demonstrasi visual, pelajaran perbendaharaan kata dan latihan berasaskan webcam.",m1b:"Mula belajar",m2tag:"Mod Misteri",m2h:"Misi Misteri Bahasa Isyarat",m2p:"Jadilah detektif! Gunakan pengetahuan bahasa isyarat anda untuk menyahkod mesej rahsia, menemui petunjuk dan menyelesaikan misteri.",m2b:"Selesaikan misteri",lvH:"Terokai tiga tahap pembelajaran",lvSub:"Setiap tahap ialah dunia tersendiri. Habiskan satu untuk membuka yang seterusnya.",l1n:"Tahap 1",l1h:"Asas",l1l:"Permulaan",l1p:"Pelajari asas: abjad, nombor, ucapan, keluarga, makanan dan perbendaharaan kata harian.",l1s:"Peringkat 1–10",l2n:"Tahap 2",l2h:"Kehidupan Harian",l2l:"Pertengahan",l2p:"Amalkan komunikasi sebenar merangkumi emosi, kesihatan, membeli-belah, sekolah dan kerja.",l2s:"Peringkat 11–20",l3n:"Tahap 3",l3h:"Kefasihan Perbualan",l3l:"Lanjutan",l3p:"Bangunkan kemahiran berbual, bercerita, ekspresi dan kesedaran budaya Pekak.",l3s:"Peringkat 21–30",hwH:"Cara SignPlay berfungsi",hwSub:"Pembelajaran, penglihatan komputer dan permainan dalam satu kitaran.",s1h:"Belajar",s1p:"Temui isyarat baharu melalui pelajaran interaktif.",s2h:"Berlatih",s2p:"Lakukan isyarat menggunakan webcam dan terima maklum balas.",s3h:"Bermain",s3p:"Gunakan pengetahuan anda untuk menyelesaikan misteri dan membuka ganjaran.",pgH:"Pengembaraan anda menanti!",pgSub:"Contoh paparan papan pemuka anda.",xp:"Jumlah mata pengalaman",stg:"Peringkat selesai",l1prog:"Kemajuan Tahap 1",bd:"Lencana diperoleh",bd2:"Lencana diperoleh",register2:"Mulakan pengembaraan anda",mission:"Menjadikan komunikasi lebih inklusif, satu isyarat pada satu masa.",fa:"Tentang",fa1:"Tentang SignPlay",fa2:"Misi Kami",fe:"Teroka",fe1:"Mod Belajar",fe2:"Mod Misteri",fe3:"Tahap",fc:"Akaun",login3:"Log masuk",reg3:"Daftar",fc3:"Hubungi Kami",copy:"© 2026 SignPlay. Hak cipta terpelihara."};
@@ -280,6 +388,105 @@ document.getElementById("bm").onclick=function(){setLang("bm")};
   var io=new IntersectionObserver(function(es){es.forEach(function(x){if(x.isIntersecting){x.target.classList.add("in");io.unobserve(x.target)}})},{threshold:.15});
   all.forEach(function(e){io.observe(e)});
 })();
+
+
+/* ==============================
+   AUTH POPUP FUNCTIONALITY
+============================== */
+
+const authOverlay = document.getElementById("authOverlay");
+const authFrame = document.getElementById("authFrame");
+
+// OPEN REGISTER POPUP
+function openAuthPopup(page) {
+
+    authFrame.src = page + ".html";
+
+    authOverlay.classList.add("active");
+
+    authOverlay.setAttribute("aria-hidden", "false");
+
+    document.body.style.overflow = "hidden";
+}
+
+
+// CLOSE REGISTER POPUP
+function closeAuthPopup() {
+
+    authOverlay.classList.remove("active");
+
+    authOverlay.setAttribute("aria-hidden", "true");
+
+    document.body.style.overflow = "";
+
+    authFrame.src = "about:blank";
+}
+
+
+// REGISTER BUTTON CLICK
+document.querySelectorAll("[data-open-auth]").forEach(button => {
+
+    button.addEventListener("click", function(e) {
+
+        e.preventDefault();
+
+        const page = this.dataset.openAuth;
+
+        openAuthPopup(page);
+
+    });
+
+});
+
+
+// CLICK OUTSIDE POPUP TO CLOSE
+authOverlay.addEventListener("click", function(e) {
+
+    if (e.target === authOverlay) {
+        closeAuthPopup();
+    }
+
+});
+
+
+
+// RECEIVE MESSAGES FROM LOGIN AND REGISTER POPUPS
+window.addEventListener("message", function(e) {
+
+    // Security check
+    if (e.origin !== window.location.origin) return;
+
+    if (e.source !== authFrame.contentWindow) return;
+
+    // CLOSE POPUP
+    if (e.data?.type === "signplay-close-auth") {
+        closeAuthPopup();
+    }
+
+    // SWITCH BETWEEN LOGIN AND REGISTER
+    if (
+        e.data?.type === "signplay-open-auth" &&
+        ["login", "register"].includes(e.data.page)
+    ) {
+        openAuthPopup(e.data.page);
+    }
+
+});
+
+
+
+// CLOSE WITH ESCAPE KEY
+document.addEventListener("keydown", function(e) {
+
+    if (
+        e.key === "Escape" &&
+        authOverlay.classList.contains("active")
+    ) {
+        closeAuthPopup();
+    }
+
+});
+
 </script>
 </body>
 </html>
