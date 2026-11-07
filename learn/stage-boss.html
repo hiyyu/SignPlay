@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SignPlay! – Boss Stage</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#fff8e8;--ink:#1f1b4d;--muted:#6c6794;--card:#fff;--lock:#e4e0f5;--sun:#ffc83d;--coral:#ff6b57;--teal:#1fb5a8;--green:#2fcf7f;--line:#1f1b4d;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#15123a;--ink:#fff6dc;--muted:#a49ed6;--card:#201b57;--lock:#2f2a74;--line:#0b0922}}
+:root[data-theme="dark"]{--bg:#15123a;--ink:#fff6dc;--muted:#a49ed6;--card:#201b57;--lock:#2f2a74;--line:#0b0922}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 1.05rem/1.55 Nunito,system-ui,sans-serif}
+h1,h2,h3{font-family:"Baloo 2",system-ui,sans-serif;line-height:1.1;margin:0}
+button,a.btn{font:800 1.1rem "Baloo 2",sans-serif;cursor:pointer}
+button:focus-visible,a:focus-visible{outline:3px solid #3aa0ff;outline-offset:3px}
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:10;background:#2a2272;color:#fff6dc;display:flex;align-items:center;gap:12px;padding:10px 16px;border-bottom:4px solid #0f0c2e}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:#2a2272;z-index:20}
+.dots{flex:1;display:flex;gap:5px}.dots i{flex:1;height:10px;border-radius:9px;background:#0f0c2e;border:2px solid #fff6dc;transition:background .3s}
+.dots i.on{background:var(--sun)}.dots i.now{background:#fff6dc}
+.chip{font:800 .95rem "Baloo 2",sans-serif;background:#fff6dc;color:#1f1b4d;border-radius:99px;padding:0 12px}
+main{max-width:560px;margin:0 auto;padding:22px 16px 60px}
+.tag{font:800 .9rem "Baloo 2",sans-serif;background:var(--sun);color:#1f1b4d;border-radius:99px;padding:0 12px;display:inline-block}
+.tag.boss{background:var(--coral)}
+h1{font-size:clamp(2rem,7vw,2.6rem);margin:10px 0 8px}h2{font-size:1.7rem;margin:6px 0 10px}
+.card{background:var(--card);border:4px solid var(--line);border-radius:24px;box-shadow:0 6px 0 var(--line);padding:20px;margin:16px 0}
+.muted{color:var(--muted)}
+.btn{display:block;width:100%;background:var(--sun);color:#1f1b4d;border:3px solid #0f0c2e;border-radius:999px;padding:10px 20px;box-shadow:0 5px 0 #0f0c2e;text-align:center;text-decoration:none;margin-top:16px}
+.btn.alt{background:var(--card);color:var(--ink);border-color:var(--line);box-shadow:0 5px 0 var(--line)}
+.btn:disabled{background:var(--lock);color:var(--muted);box-shadow:none;cursor:not-allowed}
+.btn:active:not(:disabled){transform:translateY(3px);box-shadow:0 2px 0 #0f0c2e}
+.row{display:flex;gap:10px}.row .btn{margin-top:16px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 0}.chips span{font:700 .95rem Nunito,sans-serif;background:var(--lock);border-radius:99px;padding:2px 12px}
+.demo{aspect-ratio:16/10;background:linear-gradient(135deg,#6b4ce6,#2a2272);border-radius:18px;border:3px solid var(--line);display:grid;place-items:center;color:#fff6dc;text-align:center;padding:12px;overflow:hidden}
+.demo video{width:100%;height:100%;object-fit:cover}
+.demo b{display:block;font:800 2.6rem "Baloo 2",sans-serif;line-height:1}
+.demo small{opacity:.8}
+.note{border-left:5px solid var(--coral);padding:4px 0 4px 12px;margin:12px 0 0;color:var(--muted)}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.opts.one{grid-template-columns:1fr}
+.opt{background:var(--card);color:var(--ink);border:3px solid var(--line);border-radius:16px;padding:12px;box-shadow:0 4px 0 var(--line);font-size:1.05rem}
+.opt.ok{background:var(--green);color:#1f1b4d}.opt.no{background:var(--coral);color:#1f1b4d}
+.fb{min-height:1.6em;font:800 1.1rem "Baloo 2",sans-serif;margin-top:12px}
+.cam{position:relative;aspect-ratio:4/3;background:#0f0c2e;border-radius:18px;border:3px solid var(--line);display:grid;place-items:center;color:#c9c4f2;text-align:center;padding:12px;overflow:hidden}
+.cam video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scaleX(-1)}
+.cam .corner{position:absolute;width:30px;height:30px;border:5px solid var(--sun)}
+.c1{top:10px;left:10px;border-right:0;border-bottom:0;border-radius:10px 0 0 0}.c2{top:10px;right:10px;border-left:0;border-bottom:0;border-radius:0 10px 0 0}
+.c3{bottom:10px;left:10px;border-right:0;border-top:0;border-radius:0 0 0 10px}.c4{bottom:10px;right:10px;border-left:0;border-top:0;border-radius:0 0 10px 0}
+.stars{font-size:3rem;text-align:center;letter-spacing:6px}
+.big{font:800 3.4rem "Baloo 2",sans-serif;text-align:center;color:var(--teal);line-height:1}
+.tm{font:800 1.2rem "Baloo 2",sans-serif;background:var(--coral);color:#1f1b4d;border-radius:99px;padding:0 14px;display:inline-block;margin-left:8px}
+.badge{display:grid;justify-items:center;gap:6px;margin:14px 0 0;font:800 1.3rem "Baloo 2",sans-serif}
+.badge span{font-size:3.4rem;width:96px;height:96px;display:grid;place-items:center;border-radius:50%;background:var(--sun);border:4px solid var(--line)}
+.badge.locked{opacity:.35;filter:grayscale(1)}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="dots" id="dots" aria-hidden="true"></div>
+  <span class="chip" id="xp"></span>
+</header>
+<main id="m"></main>
+
+<script>
+/* ===== BOSS STAGE DATA =====
+   One page for stages 10, 20 and 30. Open it as boss.html?stage=10 (or 20, 30).
+   To make your own, add a new entry to STAGES.
+   quiz:  {q, v (optional demo video), t (optional text clue), o:[options], a: index of the right option}
+   chain: webcam prompts, one after another. {w: prompt, t: what to sign, m: hint if it fails}
+   scen:  a short scenario. {intro, steps:[{q, o:[...], a, e: explanation}]}
+   timer: seconds allowed per webcam prompt (0 = no timer). */
+var STAGES={
+10:{id:10,level:1,title:"The Survival Challenge",goal:"Meet a new Deaf friend and get through your first conversation.",xp:150,pass:80,timer:0,
+ badge:{n:"Level 1 Champion",e:"🏅"},
+ quiz:[
+  {q:"Which sign is this?",v:"",t:"Fist on your chest, rubbing in a circle.",o:["Sorry","Please","Thank you","Help"],a:0},
+  {q:"Which sign is this?",v:"",t:"Fingertips at the chin, then forward and down.",o:["Goodbye","Thank you","Hello","Bathroom"],a:1},
+  {q:"You need the toilet. Which sign do you use?",v:"",o:["Bathroom","Help","Please","Hello"],a:0},
+  {q:"What does a flat hand rubbing a slow circle on the chest mean?",v:"",o:["Sorry","Hello","Please","Thank you"],a:2}],
+ chain:[
+  {w:"Say hello",t:"Flat hand at your forehead, then a small salute outward.",m:"Keep it small, and away from the head."},
+  {w:"Say “please help”",t:"Sign PLEASE, then HELP (fist on open palm, lift both hands).",m:"Keep the circle on the chest, then lift both hands together."},
+  {w:"Say “thank you”",t:"Fingertips at the chin, then move forward and down.",m:"Start at the chin and move toward the person."},
+  {w:"Say goodbye",t:"Open hand facing out, fold the fingers down and up.",m:"Fold the fingers. Don’t swing the whole arm."}],
+ scen:{intro:"You meet a Deaf friend of a friend at a café.",steps:[
+  {q:"They wave to get your attention. What do you do first?",o:["Make eye contact and sign HELLO","Look at your phone","Speak loudly","Walk away"],a:0,e:"Eye contact is how you show you are listening."},
+  {q:"You didn’t understand a sign. What now?",o:["Pretend you understood","Sign SORRY, then PLEASE and ask them to repeat","Say “never mind”","Look away"],a:1,e:"Asking again politely is always welcome."},
+  {q:"You need to leave. How do you finish?",o:["Just walk off","Sign THANK YOU, then GOODBYE","Wave without looking","Text them later only"],a:1,e:"A thank you and goodbye ends it kindly."}]}},
+
+20:{id:20,level:2,title:"The Community Challenge",goal:"Shop, order food and sort out a small scheduling problem.",xp:200,pass:80,timer:0,
+ badge:{n:"Level 2 Champion",e:"🥈"},
+ quiz:[
+  {q:"At the shop, which sign asks how much something costs?",v:"",o:["Price / how much","Weather","Sorry","Library"],a:0},
+  {q:"At a restaurant you want the bill. Which request fits?",v:"",o:["Ask for the check","Order dessert","Say goodbye","Ask for a doctor"],a:0},
+  {q:"Which pair is about money?",v:"",o:["Cheap and expensive","Happy and sad","Rain and snow","Teacher and student"],a:0},
+  {q:"You feel sick. Which place do you need?",v:"",o:["Hospital","Park","Library","Bank"],a:0}],
+ chain:[
+  {w:"Ask the price",t:"Sign HOW-MUCH with a clear question face.",m:"Look at the person and keep your eyebrows up."},
+  {w:"Order a meal",t:"Sign PLEASE, then the food you want.",m:"Sign PLEASE first, then the food."},
+  {w:"Ask for the check",t:"Sign PLEASE, then CHECK or PAY.",m:"Make eye contact with the waiter first."}],
+ scen:{intro:"You are shopping, then having lunch. Your lunch plan with a friend needs to move.",steps:[
+  {q:"The item is too expensive. What do you sign?",o:["EXPENSIVE, then ask for a cheaper one","Walk out silently","GOODBYE","SORRY, HELP"],a:0,e:"Say it is expensive, then ask for another option."},
+  {q:"At the café, how do you attract the waiter’s attention?",o:["Wave and wait for eye contact","Shout","Throw a napkin","Tap the table loudly for a minute"],a:0,e:"A visible wave works. Wait for eye contact."},
+  {q:"Your friend can’t come at 1pm. What do you do?",o:["Sign TIME + CHANGE and suggest a new time","Say nothing","Cancel without telling","Sign GOODBYE"],a:0,e:"Offer a new time clearly."}]}},
+
+30:{id:30,level:3,title:"The Fluent Masterclass",goal:"A fast conversation. Use questions, directions and classifiers with a timer.",xp:300,pass:80,timer:20,
+ badge:{n:"Fluent Master",e:"🏆"},
+ quiz:[
+  {q:"Which face goes with a Yes/No question?",v:"",o:["Eyebrows up","Eyebrows down","Eyes closed","No change"],a:0},
+  {q:"Which face goes with a Wh- question (who, what, where)?",v:"",o:["Eyebrows down","Eyebrows up","Smile only","Look away"],a:0},
+  {q:"“I help you” and “You help me” differ by…",v:"",o:["Direction of movement","Handshape","Speed only","Nothing"],a:0},
+  {q:"A car driving along a winding road is shown with…",v:"",o:["A classifier","Fingerspelling","A number","A greeting"],a:0}],
+ chain:[
+  {w:"Greet and ask how they are",t:"HELLO, then HOW-ARE-YOU with eyebrows up.",m:"Raise your eyebrows for a Yes/No question."},
+  {w:"Ask “Where do you live?”",t:"YOU LIVE WHERE, with eyebrows down.",m:"Lower your eyebrows for a Wh- question."},
+  {w:"Tell them “I help you”",t:"Move HELP away from you, toward them.",m:"The movement goes from you to them."}],
+ scen:{intro:"A live chat. Answer quickly and clearly.",steps:[
+  {q:"They ask a Yes/No question. How do you check you understood?",o:["Watch for raised eyebrows and answer YES or NO","Guess from the speed","Ignore the face","Look at the floor"],a:0,e:"The eyebrows tell you the question type."},
+  {q:"You want to say “They help me”. How should HELP move?",o:["Toward your body","Away from your body","It doesn’t move","Up only"],a:0,e:"Movement toward you means someone helps you."},
+  {q:"They tell a story with a character. How do you follow it?",o:["Watch the body shifts that show who is speaking","Only watch the hands","Close your eyes","Look at your phone"],a:0,e:"Body shifts show a change of character."}]}}
+};
+var qs=(location.search.match(/stage=(\d+)/)||[])[1];
+var D=STAGES[qs]||STAGES[10];
+document.title="SignPlay! – Stage "+D.id;
+/* To use a real hand-tracking model, replace judge(). It should return true if the sign is right. */
+function judge(){S.att++;return S.att>=2}
+
+var STEPS=["Intro","Quiz","Chain","Scenario","Results"];
+var $=function(i){return document.getElementById(i)};
+function shuf(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),t=a[i];a[i]=a[j];a[j]=t}return a}
+var S,stream=null,tm=null;
+function reset(){S={st:0,i:0,qc:0,cc:0,sc:0,att:0,
+  Q:shuf(D.quiz).map(function(x){var c=x.o[x.a],o=shuf(x.o);return{x:x,o:o,a:o.indexOf(c)}})}}
+function stop(){if(stream){stream.getTracks().forEach(function(t){t.stop()});stream=null}}
+function demo(x){return '<div class="demo">'+(x.v?'<video src="'+x.v+'" autoplay loop muted playsinline></video>':(x.t?'<div><small>'+x.t+'</small></div>':'<div><b>▶</b><small>Demo video</small></div>'))+'</div>'}
+function go(n,i){clearInterval(tm);if(n!==2)stop();S.st=n;S.i=i||0;S.att=0;draw();window.scrollTo(0,0)}
+function total(){return Math.round((S.qc+S.cc+S.sc)/(D.quiz.length+D.chain.length+D.scen.steps.length)*100)}
+function showCam(){var c=$("cam");if(!c||!stream)return;var v=document.createElement("video");v.autoplay=true;v.muted=true;v.playsInline=true;v.srcObject=stream;c.insertBefore(v,c.firstChild);$("cmsg").textContent="";var b=document.querySelector('[data-a="cam"]');if(b){b.textContent="Camera on";b.disabled=true}}
+function camOn(){if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){$("cmsg").textContent="Camera not available here";return}
+  navigator.mediaDevices.getUserMedia({video:{facingMode:"user"}}).then(function(s){stream=s;showCam()}).catch(function(){$("cmsg").textContent="Camera blocked. Allow access, or use the simulated check."})}
+function startTimer(){clearInterval(tm);if(!D.timer)return;var n=D.timer,e=$("tm");if(!e)return;e.textContent=n+"s";
+  tm=setInterval(function(){n--;e.textContent=n+"s";if(n<=0){clearInterval(tm);fb("Time’s up!","var(--coral)");after(nextChain,900)}},1000)}
+function nextChain(){S.i<D.chain.length-1?go(2,S.i+1):go(3)}
+function fb(t,c){var f=$("fb");if(f){f.textContent=t;f.style.color=c||"var(--ink)"}}
+function after(fn,ms){setTimeout(fn,ms||900)}
+function draw(){
+  $("xp").textContent="+"+D.xp+" XP";
+  $("dots").innerHTML=STEPS.map(function(_,k){return '<i class="'+(k<S.st?"on":k===S.st?"now":"")+'"></i>'}).join("");
+  var h="",st=S.st;
+  if(st===0){
+    h='<span class="tag boss">Level '+D.level+' · Boss stage '+D.id+'</span><h1>'+D.title+'</h1><p class="muted">'+D.goal+'</p><div class="card"><h2>The challenge</h2><div class="chips"><span>Mixed quiz ('+D.quiz.length+')</span><span>Webcam chain ('+D.chain.length+')</span><span>Scenario ('+D.scen.steps.length+')</span>'+(D.timer?'<span>'+D.timer+'s per prompt</span>':'')+'</div><p class="muted" style="margin:14px 0 0">No learning step. Pass mark: '+D.pass+'% · Reward: '+D.xp+' XP and a badge.</p><div class="badge locked"><span>'+D.badge.e+'</span>'+D.badge.n+'</div></div><button class="btn" data-a="next">Start the challenge</button>';
+  }else if(st===1){
+    var q=S.Q[S.i];
+    h='<span class="tag boss">Quiz '+(S.i+1)+'/'+S.Q.length+'</span><h2>'+q.x.q+'</h2>'+((q.x.v||q.x.t)?demo(q.x):'')+'<div class="opts '+(q.o.some(function(o){return o.length>22})?"one":"")+'">'+q.o.map(function(o,k){return '<button class="opt" data-a="qz" data-k="'+k+'">'+o+'</button>'}).join("")+'</div><div class="fb" id="fb"></div>';
+  }else if(st===2){
+    var c=D.chain[S.i];
+    h='<span class="tag boss">Chain '+(S.i+1)+'/'+D.chain.length+'</span>'+(D.timer?'<span class="tm" id="tm"></span>':'')+'<h2>'+c.w+'</h2><p class="muted" style="margin:0 0 10px">'+c.t+'</p><div class="cam" id="cam"><i class="corner c1"></i><i class="corner c2"></i><i class="corner c3"></i><i class="corner c4"></i><span id="cmsg">Camera is off</span></div><div class="fb" id="fb"></div><div class="row"><button class="btn alt" data-a="cam">Turn on camera</button><button class="btn" data-a="chk">Check my sign</button></div><button class="btn alt" data-a="pskip">Skip this one</button><p class="muted" style="font-size:.85rem;margin:12px 0 0">Prototype: the check is simulated (it fails once, then passes). Swap in the hand-tracking model in judge().</p>';
+  }else if(st===3){
+    var s=D.scen.steps[S.i];
+    h='<span class="tag boss">Scenario '+(S.i+1)+'/'+D.scen.steps.length+'</span><p class="note" style="margin:12px 0 0">'+D.scen.intro+'</p><h2 style="margin-top:12px">'+s.q+'</h2><div class="opts one">'+s.o.map(function(o,k){return '<button class="opt" data-a="sc" data-k="'+k+'">'+o+'</button>'}).join("")+'</div><div class="fb" id="fb"></div>';
+  }else{
+    var p=total(),ok=p>=D.pass,stars=p>=95?3:p>=88?2:p>=D.pass?1:0;
+    h='<span class="tag boss">'+(ok?"Boss defeated!":"Almost there")+'</span><h1>'+D.title+'</h1><div class="card"><div class="stars" aria-label="'+stars+' of 3 stars">'+"★".repeat(stars)+'<span style="opacity:.25">'+"★".repeat(3-stars)+'</span></div><div class="big">'+p+'%</div><p class="muted" style="text-align:center;margin:6px 0 0">Quiz '+S.qc+'/'+D.quiz.length+' · Chain '+S.cc+'/'+D.chain.length+' · Scenario '+S.sc+'/'+D.scen.steps.length+'</p><div class="badge '+(ok?"":"locked")+'"><span>'+D.badge.e+'</span>'+D.badge.n+'</div>'+(ok?'<p style="text-align:center;font:800 1.4rem \'Baloo 2\',sans-serif;margin:14px 0 0">+'+D.xp+' XP earned</p>':'<p class="muted" style="text-align:center;margin:14px 0 0">You need '+D.pass+'% to pass and win the badge. Review the earlier stages and try again.</p>')+'</div><button class="btn alt" data-a="retry">'+(ok?"Play again":"Try again")+'</button>';
+  }
+  $("m").innerHTML=h;
+  if(st===2){showCam();startTimer()}
+}
+document.addEventListener("click",function(e){
+  var b=e.target.closest("[data-a]");if(!b||b.disabled)return;var a=b.dataset.a,k=+b.dataset.k;
+  if(a==="next")go(1);
+  else if(a==="qz"){var q=S.Q[S.i],ok=k===q.a;if(ok)S.qc++;b.classList.add(ok?"ok":"no");fb(ok?"Correct!":"Not quite: "+q.o[q.a],ok?"var(--green)":"var(--coral)");document.querySelectorAll(".opt").forEach(function(x){x.disabled=true});
+    after(function(){S.i<S.Q.length-1?go(1,S.i+1):go(2)},1100)}
+  else if(a==="cam")camOn();
+  else if(a==="chk"){if(judge()){clearInterval(tm);S.cc++;fb("Great sign!","var(--green)");after(nextChain,900)}
+    else fb("Almost! Hint: "+D.chain[S.i].m,"var(--coral)")}
+  else if(a==="pskip"){nextChain()}
+  else if(a==="sc"){var s=D.scen.steps[S.i],ok2=k===s.a;if(ok2)S.sc++;b.classList.add(ok2?"ok":"no");fb((ok2?"Yes! ":"Not quite. ")+s.e,ok2?"var(--green)":"var(--coral)");document.querySelectorAll(".opt").forEach(function(x){x.disabled=true});
+    after(function(){S.i<D.scen.steps.length-1?go(3,S.i+1):go(4)},1800)}
+  else if(a==="retry"){reset();go(0)}
+});
+reset();draw();
+</script>
+</body>
+</html>
