@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SignPlay! – Stage 4</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#fff8e8;--ink:#1f1b4d;--muted:#6c6794;--card:#fff;--lock:#e4e0f5;--sun:#ffc83d;--coral:#ff6b57;--teal:#1fb5a8;--green:#2fcf7f;--line:#1f1b4d;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#15123a;--ink:#fff6dc;--muted:#a49ed6;--card:#201b57;--lock:#2f2a74;--line:#0b0922}}
+:root[data-theme="dark"]{--bg:#15123a;--ink:#fff6dc;--muted:#a49ed6;--card:#201b57;--lock:#2f2a74;--line:#0b0922}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 1.05rem/1.55 Nunito,system-ui,sans-serif}
+h1,h2,h3{font-family:"Baloo 2",system-ui,sans-serif;line-height:1.1;margin:0}
+button,a.btn{font:800 1.1rem "Baloo 2",sans-serif;cursor:pointer}
+button:focus-visible,a:focus-visible{outline:3px solid #3aa0ff;outline-offset:3px}
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:10;background:#2a2272;color:#fff6dc;display:flex;align-items:center;gap:12px;padding:10px 16px;border-bottom:4px solid #0f0c2e}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:#2a2272;z-index:20}
+.top a{color:#fff6dc;text-decoration:none;font:800 1rem "Baloo 2",sans-serif}
+.dots{flex:1;display:flex;gap:5px}.dots i{flex:1;height:10px;border-radius:9px;background:#0f0c2e;border:2px solid #fff6dc;transition:background .3s}
+.dots i.on{background:var(--sun)}.dots i.now{background:#fff6dc}
+.chip{font:800 .95rem "Baloo 2",sans-serif;background:#fff6dc;color:#1f1b4d;border-radius:99px;padding:0 12px}
+main{max-width:560px;margin:0 auto;padding:22px 16px 60px}
+.tag{font:800 .9rem "Baloo 2",sans-serif;background:var(--sun);color:#1f1b4d;border-radius:99px;padding:0 12px;display:inline-block}
+h1{font-size:clamp(2rem,7vw,2.6rem);margin:10px 0 8px}h2{font-size:1.7rem;margin:6px 0 10px}
+.card{background:var(--card);border:4px solid var(--line);border-radius:24px;box-shadow:0 6px 0 var(--line);padding:20px;margin:16px 0}
+.muted{color:var(--muted)}
+.btn{display:block;width:100%;background:var(--sun);color:#1f1b4d;border:3px solid #0f0c2e;border-radius:999px;padding:10px 20px;box-shadow:0 5px 0 #0f0c2e;text-align:center;text-decoration:none;margin-top:16px}
+.btn.alt{background:var(--card);color:var(--ink);border-color:var(--line);box-shadow:0 5px 0 var(--line)}
+.btn:disabled{background:var(--lock);color:var(--muted);box-shadow:none;cursor:not-allowed}
+.btn:active:not(:disabled){transform:translateY(3px);box-shadow:0 2px 0 #0f0c2e}
+.row{display:flex;gap:10px}.row .btn{margin-top:16px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 0}.chips span{font:700 .95rem Nunito,sans-serif;background:var(--lock);border-radius:99px;padding:2px 12px}
+.demo{aspect-ratio:16/10;background:linear-gradient(135deg,#6b4ce6,#2a2272);border-radius:18px;border:3px solid var(--line);display:grid;place-items:center;color:#fff6dc;text-align:center;padding:12px;overflow:hidden}
+.demo video{width:100%;height:100%;object-fit:cover}
+.demo b{display:block;font:800 2.6rem "Baloo 2",sans-serif;line-height:1}
+.demo small{opacity:.8}
+.word{font:800 2.4rem "Baloo 2",sans-serif;margin:14px 0 4px}
+.note{border-left:5px solid var(--coral);padding:4px 0 4px 12px;margin:12px 0 0;color:var(--muted)}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.opt{background:var(--card);color:var(--ink);border:3px solid var(--line);border-radius:16px;padding:12px;box-shadow:0 4px 0 var(--line);font-size:1.05rem}
+.opt.ok{background:var(--green);color:#1f1b4d}.opt.no{background:var(--coral);color:#1f1b4d}
+.fb{min-height:1.6em;font:800 1.1rem "Baloo 2",sans-serif;margin-top:12px}
+.cam{position:relative;aspect-ratio:4/3;background:#0f0c2e;border-radius:18px;border:3px solid var(--line);display:grid;place-items:center;color:#c9c4f2;text-align:center;padding:12px;overflow:hidden}
+.cam video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scaleX(-1)}
+.cam .corner{position:absolute;width:30px;height:30px;border:5px solid var(--sun)}
+.c1{top:10px;left:10px;border-right:0;border-bottom:0;border-radius:10px 0 0 0}.c2{top:10px;right:10px;border-left:0;border-bottom:0;border-radius:0 10px 0 0}
+.c3{bottom:10px;left:10px;border-right:0;border-top:0;border-radius:0 0 0 10px}.c4{bottom:10px;right:10px;border-left:0;border-top:0;border-radius:0 0 10px 0}
+.pairs{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.pairs button{background:var(--card);color:var(--ink);border:3px solid var(--line);border-radius:14px;padding:10px;font:700 .95rem/1.25 Nunito,sans-serif;box-shadow:0 4px 0 var(--line);min-height:64px}
+.pairs button.sel{background:var(--sun);color:#1f1b4d}.pairs button.gone{visibility:hidden}
+.pairs button.bad{animation:shake .35s}
+@keyframes shake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.stars{font-size:3rem;text-align:center;letter-spacing:6px}
+.big{font:800 3.4rem "Baloo 2",sans-serif;text-align:center;color:var(--teal);line-height:1}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="dots" id="dots" aria-hidden="true"></div>
+  <span class="chip" id="xp">+50 XP</span>
+</header>
+<main id="m"></main>
+
+<script>
+/* ===== STAGE DATA: swap this object to make any other stage ===== */
+var D={id:4,level:1,title:"Core Survival & Greetings",goal:"Learn the signs you need to greet people and ask for help.",xp:50,pass:70,
+review:[], /* optional warm-up: add items like {q:"...",o:[...],a:0}. Empty = step is skipped */
+signs:[
+ {w:"Hello",v:"",t:"Flat hand at your forehead, then move it outward in a small salute.",m:"It is not a wave. Keep it small and away from the head."},
+ {w:"Goodbye",v:"",t:"Open hand facing out, fingers fold down and up as you wave.",m:"Fold the fingers, don’t swing the whole arm."},
+ {w:"Please",v:"",t:"Flat hand on your chest, rub in a slow circle.",m:"Keep the circle on the chest and take it slowly."},
+ {w:"Thank you",v:"",t:"Fingertips of a flat hand touch your chin, then move forward and down.",m:"Start at the chin, and move toward the person."},
+ {w:"Sorry",v:"",t:"Fist on your chest, rub in a circle.",m:"Use a fist. A flat hand means “please”."},
+ {w:"Help",v:"",t:"Fist on top of your open palm, lift both hands up together.",m:"Lift both hands together as one movement."},
+ {w:"Bathroom",v:"",t:"Make a T-shape fist (thumb between index and middle) and shake it side to side.",m:"Shake the hand, don’t wave it."}]};
+/* v = path to the demo video for each sign, e.g. "videos/hello.mp4". Empty shows a placeholder. */
+
+var STEPS=["Intro","Review","Learn","Recognise","Practise","Play","Results"];
+var $=function(i){return document.getElementById(i)};
+function shuf(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),t=a[i];a[i]=a[j];a[j]=t}return a}
+var S,stream=null;
+function reset(){S={st:0,i:0,rc:0,pc:0,mg:0,att:0,done:false,
+  Q:shuf(D.signs).map(function(s){var o=shuf([s].concat(shuf(D.signs.filter(function(x){return x!==s})).slice(0,3)));return{s:s,o:o}}),
+  P:shuf(D.signs).slice(0,4),G:shuf(D.signs).slice(0,4),sel:null,left:null,gm:0,gn:0}
+  S.right=shuf(S.G);S.gone={};S.tried={};S.left=shuf(S.G)}
+function stop(){if(stream){stream.getTracks().forEach(function(t){t.stop()});stream=null}}
+function demo(s){return '<div class="demo">'+(s.v?'<video src="'+s.v+'" autoplay loop muted playsinline></video>':'<div><b>▶</b><small>Demo video: “'+s.w+'”</small></div>')+'</div>'}
+function go(n,i){stop();S.st=n;S.i=i||0;draw();window.scrollTo(0,0)}
+function total(){return Math.round((S.rc+S.pc+S.mg)/(D.signs.length+S.P.length+S.G.length)*100)}
+function draw(){
+  $("dots").innerHTML=STEPS.map(function(_,k){return k===1&&!D.review.length?"":'<i class="'+(k<S.st?"on":k===S.st?"now":"")+'"></i>'}).join("");
+  var h="",s,st=S.st;
+  if(st===0){
+    h='<span class="tag">Level '+D.level+' · Stage '+D.id+'</span><h1>'+D.title+'</h1><p class="muted">'+D.goal+'</p><div class="card"><h2>In this stage</h2><div class="chips">'+D.signs.map(function(x){return '<span>'+x.w+'</span>'}).join("")+'</div><p class="muted" style="margin:14px 0 0">About 10 minutes · Reward: '+D.xp+' XP · Pass mark: '+D.pass+'%</p></div><button class="btn" data-a="next">Start stage</button>';
+  }else if(st===1){
+    var r=D.review[S.i];
+    h='<span class="tag">Warm-up '+(S.i+1)+'/'+D.review.length+'</span><h2>Quick review from earlier stages</h2><div class="card"><p style="margin:0"><b>'+r.q+'</b></p><div class="opts">'+r.o.map(function(o,k){return '<button class="opt" data-a="rv" data-k="'+k+'">'+o+'</button>'}).join("")+'</div><div class="fb" id="fb"></div></div><button class="btn alt" data-a="skip">Skip review</button>';
+  }else if(st===2){
+    s=D.signs[S.i];
+    h='<span class="tag">Learn '+(S.i+1)+'/'+D.signs.length+'</span>'+demo(s)+'<div class="word">'+s.w+'</div><p style="margin:0">'+s.t+'</p><p class="note"><b>Common mistake:</b> '+s.m+'</p><div class="row"><button class="btn alt" data-a="prev"'+(S.i?'':' disabled')+'>Back</button><button class="btn" data-a="nxt">'+(S.i<D.signs.length-1?"Got it":"Finish learning")+'</button></div>';
+  }else if(st===3){
+    var q=S.Q[S.i];
+    h='<span class="tag">Recognise '+(S.i+1)+'/'+S.Q.length+'</span><h2>Which sign is this?</h2>'+demo(q.s)+'<p class="muted" style="margin:10px 0 0">Hint: '+q.s.t+'</p><div class="opts">'+q.o.map(function(o,k){return '<button class="opt" data-a="rc" data-k="'+k+'">'+o.w+'</button>'}).join("")+'</div><div class="fb" id="fb"></div>';
+  }else if(st===4){
+    s=S.P[S.i];
+    h='<span class="tag">Practise '+(S.i+1)+'/'+S.P.length+'</span><h2>Sign: “'+s.w+'”</h2><p class="muted" style="margin:0 0 10px">'+s.t+'</p><div class="cam" id="cam"><i class="corner c1"></i><i class="corner c2"></i><i class="corner c3"></i><i class="corner c4"></i><span id="cmsg">Camera is off</span></div><div class="fb" id="fb"></div><div class="row"><button class="btn alt" data-a="cam">Turn on camera</button><button class="btn" data-a="chk">Check my sign</button></div><button class="btn alt" data-a="pskip">Skip this sign</button><p class="muted" style="font-size:.85rem;margin:12px 0 0">Prototype: the real hand-tracking model plugs in here. For now the check is simulated (it fails once, then passes).</p>';
+  }else if(st===5){
+    h='<span class="tag">Play</span><h2>Match the sign to its word</h2><p class="muted" style="margin:0 0 12px">Tap a description, then tap its word.</p><div class="pairs"><div style="display:grid;gap:10px">'+S.left.map(function(x){return '<button data-a="pl" data-w="'+x.w+'" class="'+(S.gone[x.w]?"gone ":"")+(S.sel===x.w?"sel":"")+'">'+x.t+'</button>'}).join("")+'</div><div style="display:grid;gap:10px">'+S.right.map(function(x){return '<button data-a="pr" data-w="'+x.w+'" class="'+(S.gone[x.w]?"gone":"")+'">'+x.w+'</button>'}).join("")+'</div></div><div class="fb" id="fb"></div>';
+  }else{
+    var p=total(),ok=p>=D.pass,stars=p>=90?3:p>=80?2:p>=D.pass?1:0;
+    h='<span class="tag">'+(ok?"Stage complete!":"Almost there")+'</span><h1>'+D.title+'</h1><div class="card"><div class="stars" aria-label="'+stars+' of 3 stars">'+"★".repeat(stars)+'<span style="opacity:.25">'+"★".repeat(3-stars)+'</span></div><div class="big">'+p+'%</div><p class="muted" style="text-align:center;margin:6px 0 0">Recognise '+S.rc+'/'+S.Q.length+' · Practise '+S.pc+'/'+S.P.length+' · Play '+S.mg+'/'+S.G.length+'</p>'+(ok?'<p style="text-align:center;font:800 1.4rem \'Baloo 2\',sans-serif;margin:14px 0 0">+'+D.xp+' XP earned</p>':'<p class="muted" style="text-align:center;margin:14px 0 0">You need '+D.pass+'% to pass. Review the signs and try again.</p>')+'</div><div class="chips">'+D.signs.map(function(x){return '<span>✓ '+x.w+'</span>'}).join("")+'</div>'+'<button class="btn alt" data-a="retry">'+(ok?"Play again":"Try again")+'</button>';
+  }
+  $("m").innerHTML=h;
+}
+function fb(t,c){var f=$("fb");if(f){f.textContent=t;f.style.color=c||"var(--ink)"}}
+function after(fn,ms){setTimeout(fn,ms||900)}
+document.addEventListener("click",function(e){
+  var b=e.target.closest("[data-a]");if(!b||b.disabled)return;var a=b.dataset.a,k=+b.dataset.k;
+  if(a==="next")go(D.review.length?1:2);
+  else if(a==="skip")go(2);
+  else if(a==="rv"){var r=D.review[S.i],ok=k===r.a;b.classList.add(ok?"ok":"no");fb(ok?"Correct!":"Not quite: "+r.o[r.a],ok?"var(--green)":"var(--coral)");document.querySelectorAll(".opt").forEach(function(x){x.disabled=true});
+    after(function(){S.i<D.review.length-1?go(1,S.i+1):go(2)},1100)}
+  else if(a==="nxt"){S.i<D.signs.length-1?go(2,S.i+1):go(3)}
+  else if(a==="prev"){go(2,S.i-1)}
+  else if(a==="rc"){var q=S.Q[S.i],ok2=q.o[k]===q.s;if(ok2)S.rc++;b.classList.add(ok2?"ok":"no");fb(ok2?"Correct!":"It was “"+q.s.w+"”",ok2?"var(--green)":"var(--coral)");document.querySelectorAll(".opt").forEach(function(x){x.disabled=true});
+    after(function(){S.i<S.Q.length-1?go(3,S.i+1):go(4)},1100)}
+  else if(a==="cam"){
+    if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){$("cmsg").textContent="Camera not available here";return}
+    navigator.mediaDevices.getUserMedia({video:{facingMode:"user"}}).then(function(s){stream=s;var v=document.createElement("video");v.autoplay=true;v.muted=true;v.playsInline=true;v.srcObject=s;$("cam").insertBefore(v,$("cam").firstChild);$("cmsg").textContent="";b.textContent="Camera on";b.disabled=true}).catch(function(){$("cmsg").textContent="Camera blocked. Allow access, or use the simulated check."})}
+  else if(a==="chk"){S.att++;
+    if(S.att<2){fb("Almost! Hint: "+S.P[S.i].m,"var(--coral)")}
+    else{S.pc++;S.att=0;fb("Great sign!","var(--green)");after(function(){S.i<S.P.length-1?go(4,S.i+1):go(5)},900)}}
+  else if(a==="pskip"){S.att=0;S.i<S.P.length-1?go(4,S.i+1):go(5)}
+  else if(a==="pl"){S.sel=b.dataset.w;draw()}
+  else if(a==="pr"){if(!S.sel){fb("Pick a description first");return}
+    if(S.sel===b.dataset.w){S.gone[S.sel]=1;S.gm++;if(!S.tried[S.sel])S.mg++;S.sel=null;draw();fb("Match!","var(--green)");
+      if(S.gm===S.G.length)after(function(){go(6)},900)}
+    else{b.classList.add("bad");S.tried[S.sel]=1;S.sel=null;fb("Not a match. Try again","var(--coral)");setTimeout(draw,450)}}
+  else if(a==="retry"){reset();go(0)}
+});
+/* a pair counts as a first-try match when no misses came before it */
+reset();draw();
+</script>
+</body>
+</html>
