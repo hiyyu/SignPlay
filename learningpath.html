@@ -7,69 +7,28 @@
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg-gradient: linear-gradient(180deg, #fdfbf7 0%, #f7f1e5 50%, #f4ede0 100%);
-  --ink: #1e1b4b;
-  --muted: #645f88;
-  --card: #ffffff;
-  --line: #1e1b4b;
-  --sun: #ffc83d;
-  --sun-shadow: #d97706;
+  --bg-gradient: linear-gradient(180deg, #fdf6e6 0%, #fbf0d9 50%, #f8e9cc 100%);
+  --ink: #3b2f1d;
+  --muted: #7a6e56;
+  --card: #fffaf0;
+  --line: #5b4318;
+  --sun: #f7bf3a;
+  --sun-shadow: #c98a0a;
   --stage-cream: #faf6ea;
   --stage-cream-border: #ded7c2;
-  --locked-grey: #94a3b8;
-  --locked-dark: #64748b;
-  --locked-light: #cbd5e1;
-  --boss-crown: #f59e0b;
-  --path-yellow: #ffc83d;
+  --path-yellow: #f6c445;
   --dash-green: #15803d;
-  --dash-bg: #ffffff;
-  --dash-border: #e2e8f0;
+ 
+  /* Warm cream panels */
+  --panel-bg: linear-gradient(160deg, #fffaf0 0%, #fdf3dc 55%, #faebc9 100%);
+  --panel-border: #ecd79c;
+  --panel-ink: #3b2f1d;
+  --panel-muted: #7a6e56;
+  --panel-soft: rgba(246, 196, 69, 0.14);
+  --panel-line: #eddcb0;
+  --track: #f3e3b8;
 }
-
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --bg-gradient: linear-gradient(180deg, #13112c 0%, #191538 50%, #1c1740 100%);
-    --ink: #fdfaf3;
-    --muted: #a49fcb;
-    --card: #201b4d;
-    --line: #0f0c2a;
-    --stage-cream: #2b255c;
-    --stage-cream-border: #3d357d;
-    --path-yellow: #f59e0b;
-    --dash-green: #22c55e;
-    --dash-bg: #1c1744;
-    --dash-border: #2e266a;
-  }
-}
-
-:root[data-theme="dark"] {
-  --bg-gradient: linear-gradient(180deg, #13112c 0%, #191538 50%, #1c1740 100%);
-  --ink: #fdfaf3;
-  --muted: #a49fcb;
-  --card: #201b4d;
-  --line: #0f0c2a;
-  --stage-cream: #2b255c;
-  --stage-cream-border: #3d357d;
-  --path-yellow: #f59e0b;
-  --dash-green: #22c55e;
-  --dash-bg: #1c1744;
-  --dash-border: #2e266a;
-}
-
-:root[data-theme="light"] {
-  --bg-gradient: linear-gradient(180deg, #fdfbf7 0%, #f7f1e5 50%, #f4ede0 100%);
-  --ink: #1e1b4b;
-  --muted: #645f88;
-  --card: #ffffff;
-  --line: #1e1b4b;
-  --stage-cream: #faf6ea;
-  --stage-cream-border: #ded7c2;
-  --path-yellow: #ffc83d;
-  --dash-green: #15803d;
-  --dash-bg: #ffffff;
-  --dash-border: #e2e8f0;
-}
-
+ 
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 html { scroll-behavior: smooth; }
 body {
@@ -81,47 +40,47 @@ body {
   min-height: 100vh;
   padding-bottom: 60px;
 }
-
+ 
 /* Sticky Top Bar */
 .top-bar {
   position: sticky;
   top: 0;
   z-index: 50;
-  background: rgba(30, 27, 75, 0.94);
+  background: rgba(43, 40, 88, 0.96);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  color: #fff6dc;
+  color: #fff7e6;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
   padding: 10px 20px;
-  border-bottom: 3px solid rgba(0,0,0,0.25);
-  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.2);
+  border-bottom: 3px solid #39336f;
+  box-shadow: 0 4px 18px rgba(35, 28, 83, 0.22);
 }
-
+ 
 .brand {
   font-family: 'Baloo 2', sans-serif;
   font-weight: 800;
   font-size: 1.8rem;
-  color: #ffc83d;
-  text-shadow: 0 2px 0 #92400e;
+  color: #f5a50a;
+  text-shadow: 0 2px 0 #fbe3a6;
   display: flex;
   align-items: center;
   gap: 4px;
 }
 .brand span { color: #ff5757; }
-
+ 
 .top-actions {
   display: flex;
   align-items: center;
   gap: 10px;
 }
-
+ 
 .btn-icon {
-  background: rgba(255,255,255,0.12);
-  border: 2px solid rgba(255,255,255,0.3);
-  color: #fff6dc;
+  background: #fff3d2;
+  border: 2px solid #e9cf95;
+  color: #5b4318;
   border-radius: 999px;
   width: 36px;
   height: 36px;
@@ -132,12 +91,12 @@ body {
   font-size: 1.05rem;
   transition: all 0.2s;
 }
-.btn-icon:hover { background: rgba(255,255,255,0.25); }
-
+.btn-icon:hover { background: #ffe9b0; }
+ 
 /* Quick Jump & Demo Bar (Instant state preview) */
 .demo-strip {
-  background: #1e1848;
-  color: #e0e7ff;
+  background: #211b4b;
+  color: #ffd43b;
   padding: 7px 16px;
   display: flex;
   align-items: center;
@@ -146,13 +105,13 @@ body {
   font-size: 0.85rem;
   font-weight: 700;
   flex-wrap: wrap;
-  border-bottom: 2px solid #2e266a;
+  border-bottom: 2px solid #39336f;
 }
-.demo-strip span { color: #fde047; font-family: 'Baloo 2', sans-serif; font-size: 0.95rem; }
+.demo-strip span { color: #ffd43b; font-family: 'Baloo 2', sans-serif; font-size: 0.95rem; }
 .demo-chip {
-  background: #2f2770;
-  color: #fff;
-  border: 1px solid #4a3e9c;
+  background: #302a70;
+  color: #fff7e6;
+  border: 1px solid #51479b;
   border-radius: 999px;
   padding: 2px 10px;
   cursor: pointer;
@@ -162,58 +121,109 @@ body {
   transition: all 0.18s;
 }
 .demo-chip:hover {
-  background: #4338ca;
-  border-color: #6366f1;
+  background: #403985;
+  border-color: #7165c4;
 }
 .demo-chip.active {
-  background: #f59e0b;
-  color: #1e1848;
-  border-color: #fef08a;
+  background: #f7bf3a;
+  color: #2b2458;
+  border-color: #f7bf3a;
   font-weight: 800;
 }
-
-/* Learning Path Header */
+ 
+/* =========================================================
+   PAGE LAYOUT
+   ========================================================= */
 .main-wrapper {
-  max-width: 1080px;
+  max-width: 1440px;
   margin: 0 auto;
-  padding: 20px 16px;
+  padding: 20px 20px;
 }
-
+.page-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 380px;
+  gap: 24px;
+  align-items: start;
+}
+.path-column, .side-column {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+ 
+/* Shared dark panel */
+.panel {
+  background: var(--panel-bg);
+  border: 1px solid var(--panel-border);
+  border-radius: 22px;
+  color: var(--panel-ink);
+  box-shadow: 0 8px 24px rgba(168, 124, 40, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.85);
+  position: relative;
+}
+ 
+/* =========================================================
+   LEARNING PATH PANEL
+   ========================================================= */
+.path-panel {
+  padding: 22px 24px 18px;
+  overflow: hidden;
+}
+.path-panel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgba(201, 150, 40, 0.13) 1.2px, transparent 1.5px);
+  background-size: 22px 22px;
+  pointer-events: none;
+}
+.path-panel > * { position: relative; }
+ 
 .path-section-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 12px;
+  margin-bottom: 8px;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 12px;
 }
 .path-title h1 {
   font-family: 'Baloo 2', sans-serif;
   font-weight: 800;
-  font-size: clamp(1.8rem, 4vw, 2.3rem);
+  font-size: clamp(1.7rem, 3.5vw, 2.2rem);
   margin: 0;
-  color: var(--ink);
+  color: var(--panel-ink);
   line-height: 1.1;
 }
 .path-title p {
   margin: 2px 0 0;
-  color: var(--muted);
-  font-size: 0.95rem;
+  color: var(--panel-muted);
+  font-size: 0.92rem;
   font-weight: 600;
 }
-
-/* Level Indicator Navigation Tabs */
+ 
+/* Level tabs: segmented control */
 .level-nav-tabs {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.tab-group {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  background: #f6e8c0;
+  border: 1px solid var(--panel-line);
+  border-radius: 999px;
+  padding: 4px;
 }
 .lvl-tab {
-  background: var(--card);
-  color: var(--muted);
-  border: 2px solid #cbd5e1;
+  background: transparent;
+  color: var(--panel-muted);
+  border: none;
   border-radius: 999px;
-  padding: 5px 14px;
+  padding: 6px 14px;
   font-family: 'Baloo 2', sans-serif;
   font-weight: 800;
   font-size: 0.88rem;
@@ -223,25 +233,18 @@ body {
   align-items: center;
   gap: 5px;
 }
-.lvl-tab:hover {
-  border-color: #3b82f6;
-  color: #3b82f6;
-}
+.lvl-tab:hover { color: #b45309; }
 .lvl-tab.active {
-  background: #1e1b4b;
-  color: #ffc83d;
-  border-color: #ffc83d;
-  box-shadow: 0 2px 8px rgba(30, 27, 75, 0.2);
+  background: var(--sun);
+  color: #4a3510;
+  box-shadow: 0 2px 0 var(--sun-shadow), 0 4px 14px rgba(255, 200, 61, 0.35);
 }
-
-.scroll-arrows {
-  display: flex;
-  gap: 6px;
-}
+ 
+.scroll-arrows { display: flex; gap: 6px; }
 .scroll-btn {
-  background: var(--card);
-  border: 2px solid #cbd5e1;
-  color: var(--ink);
+  background: var(--panel-soft);
+  border: 1px solid var(--panel-line);
+  color: var(--panel-ink);
   border-radius: 999px;
   width: 34px;
   height: 34px;
@@ -254,26 +257,50 @@ body {
   transition: all 0.15s;
 }
 .scroll-btn:hover {
-  background: #1e1b4b;
-  color: #fff;
-  border-color: #1e1b4b;
+  background: var(--sun);
+  color: #4a3510;
+  border-color: var(--sun);
 }
-
-/* Horizontal Learning Path Scroll Container (Clean, no enclosing box or corners) */
+ 
+/* Horizontal scroll container (native scrollbar hidden; custom slider below) */
 .path-scroll-wrapper {
   background: transparent;
-  border: none;
-  border-radius: 0;
-  padding: 8px 0;
-  box-shadow: none;
+  padding: 8px 0 0;
   overflow-x: auto;
   overflow-y: hidden;
   scroll-behavior: smooth;
   -webkit-overflow-scrolling: touch;
-  margin-bottom: 24px;
+  scrollbar-width: none;
   position: relative;
 }
-
+.path-scroll-wrapper::-webkit-scrollbar { display: none; }
+ 
+/* Custom path slider */
+.path-slider {
+  position: relative;
+  height: 12px;
+  margin: 10px 2px 2px;
+  border-radius: 999px;
+  background: #f3e3b8;
+  border: 1px solid var(--panel-line);
+  cursor: pointer;
+}
+.slider-thumb {
+  position: absolute;
+  top: -1px;
+  bottom: -1px;
+  left: 0;
+  min-width: 48px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #ffd95e, #f59e0b);
+  box-shadow: 0 0 14px rgba(255, 200, 61, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.55);
+  cursor: grab;
+  touch-action: none;
+  transition: box-shadow 0.15s;
+}
+.slider-thumb:hover { box-shadow: 0 0 20px rgba(255, 200, 61, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.55); }
+.slider-thumb.dragging { cursor: grabbing; box-shadow: 0 0 22px rgba(255, 200, 61, 0.9), inset 0 1px 0 rgba(255, 255, 255, 0.55); }
+ 
 /* Full-Screen Confetti Canvas */
 #confetti-canvas {
   position: fixed;
@@ -283,23 +310,7 @@ body {
   pointer-events: none;
   z-index: 9999;
 }
-
-/* Clean Custom Scrollbar */
-.path-scroll-wrapper::-webkit-scrollbar {
-  height: 8px;
-}
-.path-scroll-wrapper::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0.04);
-  border-radius: 999px;
-}
-.path-scroll-wrapper::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
-  border-radius: 999px;
-}
-.path-scroll-wrapper::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
-}
-
+ 
 /* SVG Scene Canvas (Horizontal layout: 3000px wide x 380px tall) */
 svg.scene {
   display: block;
@@ -307,7 +318,7 @@ svg.scene {
   height: 380px;
   overflow: visible;
 }
-
+ 
 /* Solid Yellow Connecting Line */
 .yellow-path-line {
   stroke: var(--path-yellow);
@@ -315,30 +326,20 @@ svg.scene {
   stroke-linecap: round;
   stroke-linejoin: round;
   fill: none;
-  filter: drop-shadow(0 2px 4px rgba(245, 158, 11, 0.35));
+  filter: drop-shadow(0 2px 6px rgba(245, 158, 11, 0.45));
 }
-
-/* Stage Buttons Styling: Rock solid, NO jumpy transform */
+ 
+/* Stage Buttons */
 .stage-btn {
   cursor: pointer;
   outline: none;
   transition: filter 0.15s ease;
 }
-.stage-btn:hover {
-  filter: brightness(1.12);
-}
-.stage-btn:active {
-  filter: brightness(0.92);
-}
-
-.stage-btn.locked {
-  cursor: not-allowed;
-  opacity: 0.88;
-}
-.stage-btn.locked:hover {
-  filter: none;
-}
-
+.stage-btn:hover { filter: brightness(1.12); }
+.stage-btn:active { filter: brightness(0.92); }
+.stage-btn.locked { cursor: not-allowed; opacity: 0.88; }
+.stage-btn.locked:hover { filter: none; }
+ 
 /* Active current stage glowing beacon aura */
 .stage-aura {
   animation: aura-pulse 1.8s ease-in-out infinite;
@@ -349,7 +350,7 @@ svg.scene {
   50% { transform: scale(1.24); opacity: 0.2; stroke-width: 1.5; }
   100% { transform: scale(1); opacity: 0.85; stroke-width: 3.5; }
 }
-
+ 
 /* Floating Bouncing START Tag */
 .start-banner {
   animation: bounce-tag 1.2s ease-in-out infinite alternate;
@@ -359,46 +360,35 @@ svg.scene {
   0% { transform: translateY(-38px); }
   100% { transform: translateY(-46px); }
 }
-
+ 
 /* Volumetric Light Cone Animation */
-.volumetric-cone {
-  transition: opacity 0.8s ease;
-}
-.level-active .volumetric-cone {
-  animation: light-flicker 4s ease-in-out infinite alternate;
-}
+.volumetric-cone { transition: opacity 0.8s ease; }
+.level-active .volumetric-cone { animation: light-flicker 4s ease-in-out infinite alternate; }
 @keyframes light-flicker {
   0% { opacity: 0.55; }
   50% { opacity: 0.78; }
   100% { opacity: 0.6; }
 }
-
-.level-active .spotlight-lens {
-  filter: drop-shadow(0 0 16px #ffea79);
-}
-
-/* Picture Placeholder Card */
+.level-active .spotlight-lens { filter: drop-shadow(0 0 16px #ffea79); }
+ 
+/* Fixed Level Illustration Card */
 .level-card-placeholder {
-  cursor: pointer;
+  cursor: default;
   transition: filter 0.2s, stroke 0.2s;
 }
-.level-card-placeholder:hover {
-  filter: brightness(1.05);
-}
+.level-card-placeholder:hover { filter: brightness(1.1); }
 .level-locked .level-card-placeholder {
   filter: grayscale(1) opacity(0.7);
-  cursor: not-allowed;
+  cursor: default;
 }
-
+ 
 /* Trophy Celebrations */
 .trophy-group {
   cursor: pointer;
   outline: none;
   transition: filter 0.2s;
 }
-.trophy-group:hover {
-  filter: brightness(1.08);
-}
+.trophy-group:hover { filter: brightness(1.08); }
 .trophy-sunburst {
   transform-origin: 0 0;
   animation: spin-sunburst 24s linear infinite;
@@ -408,92 +398,227 @@ svg.scene {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
-.trophy-sparkle {
-  animation: sparkle-twinkle 1.6s ease-in-out infinite alternate;
-}
+.trophy-sparkle { animation: sparkle-twinkle 1.6s ease-in-out infinite alternate; }
 @keyframes sparkle-twinkle {
   0% { transform: scale(0.4) rotate(0deg); opacity: 0.3; }
   100% { transform: scale(1.25) rotate(45deg); opacity: 1; }
 }
-
+ 
 /* =========================================================
-   DASHBOARD COMPONENT (Exact Match to User's Uploaded Image)
+   HEX BADGES (shared by feed + collection)
    ========================================================= */
-.dashboard-card {
-  background: var(--dash-bg);
-  border: 1px solid var(--dash-border);
-  border-radius: 18px;
-  padding: 24px 28px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-  margin-top: 8px;
+.hex {
+  width: 64px;
+  height: 72px;
+  clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+  background: linear-gradient(145deg, #fff3b0, #f59e0b 55%, #b45309);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
 }
-
-.dash-top {
+.hex-in {
+  width: 54px;
+  height: 61px;
+  clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+  background: linear-gradient(145deg, #fcd34d, #d97706);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6rem;
+  filter: drop-shadow(0 1px 0 rgba(255, 255, 255, 0.4));
+}
+.hex.locked { background: linear-gradient(145deg, #ddd5c2, #b9b09a); }
+.hex.locked .hex-in { background: #efe9d8; }
+.hex.locked .hex-in span { filter: grayscale(1) opacity(0.4); }
+.hex.sm { width: 56px; height: 63px; }
+.hex.sm .hex-in { width: 47px; height: 53px; font-size: 1.4rem; }
+ 
+/* =========================================================
+   BADGE COLLECTION PANEL (under the path)
+   ========================================================= */
+.badge-panel { padding: 22px 24px 24px; }
+.panel-head {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 18px;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.side-title {
+  font-family: 'Baloo 2', sans-serif;
+  font-weight: 800;
+  font-size: 1.3rem;
+  color: var(--panel-ink);
+  line-height: 1.15;
+}
+.panel-sub {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--panel-muted);
+  margin-top: 2px;
+}
+.count-pill {
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: #4a3510;
+  background: var(--sun);
+  border-radius: 999px;
+  padding: 3px 12px;
+  white-space: nowrap;
+}
+.badge-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 12px;
+}
+.bd-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 14px 6px 12px;
+  border-radius: 16px;
+  background: var(--panel-soft);
+  border: 1px solid var(--panel-line);
+  transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+}
+.bd-item.earned {
+  border-color: rgba(255, 200, 61, 0.55);
+  background: linear-gradient(180deg, rgba(255, 200, 61, 0.14), rgba(255, 200, 61, 0.04));
+}
+.bd-item.earned:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(168, 124, 40, 0.25); }
+.bd-name {
+  margin-top: 8px;
+  font-weight: 800;
+  font-size: 0.85rem;
+  line-height: 1.15;
+  color: var(--panel-ink);
+}
+.bd-item.locked .bd-name { color: var(--panel-muted); }
+.bd-sub {
+  margin-top: 3px;
+  font-size: 0.72rem;
+  line-height: 1.2;
+  color: var(--panel-muted);
+}
+.bd-item.earned .bd-sub { color: #b45309; font-weight: 700; }
+ 
+/* =========================================================
+   SIDEBAR CARDS
+   ========================================================= */
+.side-card { padding: 22px 22px 22px; }
+ 
+/* Stats / Adventure card */
+.dash-top {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  margin-bottom: 16px;
 }
 .dash-heading {
-  font-size: 1.25rem;
+  font-family: 'Baloo 2', sans-serif;
+  font-size: 1.3rem;
   font-weight: 800;
-  color: var(--ink);
-  letter-spacing: -0.3px;
+  color: var(--panel-ink);
+  line-height: 1.15;
 }
 .dash-status-pill {
-  background: #dcfce7;
-  color: #166534;
-  font-size: 0.85rem;
-  font-weight: 700;
-  padding: 4px 14px;
+  background: #d3efe9;
+  border: 1px solid #9fd8d0;
+  color: #17706c;
+  font-size: 0.8rem;
+  font-weight: 800;
+  padding: 3px 12px;
   border-radius: 999px;
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
 }
-
+.profile-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+.avatar {
+  width: 62px;
+  height: 62px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #ff7a7a, #ec4899);
+  border: 3px solid #fff3d2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Baloo 2', sans-serif;
+  font-weight: 800;
+  font-size: 1.8rem;
+  color: #fff;
+  flex-shrink: 0;
+}
+.profile-info { flex: 1; min-width: 0; }
+.profile-name {
+  font-weight: 800;
+  font-size: 1.02rem;
+  color: var(--panel-ink);
+  margin-bottom: 6px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.profile-name span { color: #c98a0a; font-size: 0.82rem; }
+.plvl-row { display: flex; align-items: center; gap: 8px; }
+.plvl-label { font-size: 0.82rem; font-weight: 800; color: var(--panel-ink); white-space: nowrap; }
+.plvl-bar {
+  flex: 1;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--track);
+  overflow: hidden;
+}
+.plvl-fill {
+  height: 100%;
+  width: 0%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #ffd95e, #f59e0b);
+  transition: width 0.4s ease;
+}
+.plvl-xp { font-size: 0.78rem; font-weight: 800; color: #c98a0a; white-space: nowrap; }
+ 
 .dash-metrics {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  margin-bottom: 16px;
+  gap: 12px;
+  margin-bottom: 14px;
+  padding-top: 16px;
+  border-top: 1px solid var(--panel-line);
 }
-.metric-block {}
+.metric-block:last-child { text-align: right; }
 .metric-val {
   font-family: 'Baloo 2', sans-serif;
-  font-size: 2.1rem;
+  font-size: 2rem;
   font-weight: 800;
   line-height: 1;
 }
-.metric-val.xp-val {
-  color: var(--dash-green);
-}
-.metric-val.stage-val {
-  color: var(--ink);
-  text-align: right;
-}
+.metric-val.xp-val { color: #15803d; }
+.metric-val.stage-val { color: var(--panel-ink); }
 .metric-sub {
-  color: var(--muted);
-  font-size: 0.92rem;
+  color: var(--panel-muted);
+  font-size: 0.8rem;
   font-weight: 600;
   margin-top: 4px;
 }
-
-.dash-progress-wrap {
-  margin-bottom: 28px;
-}
+.dash-progress-wrap { margin-bottom: 18px; }
 .dash-progress-bar {
   width: 100%;
   height: 10px;
-  background: #f1f5f9;
+  background: var(--track);
   border-radius: 999px;
   overflow: hidden;
-  position: relative;
 }
 .dash-progress-fill {
   height: 100%;
   width: 0%;
-  background: linear-gradient(90deg, #10b981, #16a34a);
+  background: linear-gradient(90deg, #10b981, #4ade80);
   border-radius: 999px;
   transition: width 0.4s ease;
 }
@@ -501,69 +626,200 @@ svg.scene {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 0.88rem;
-  color: var(--muted);
+  font-size: 0.82rem;
+  color: var(--panel-muted);
   font-weight: 600;
   margin-top: 6px;
 }
-.dash-progress-labels span:last-child {
-  color: var(--ink);
-  font-weight: 700;
-}
-
-/* Badges Showcase (Matching uploaded image) */
-.dash-badges-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-  padding-top: 14px;
-  border-top: 1px solid var(--dash-border);
-  gap: 16px;
-  flex-wrap: wrap;
-}
-.badge-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+.dash-progress-labels span:last-child { color: var(--panel-ink); font-weight: 800; }
+ 
+.stat-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+  padding-top: 16px;
+  border-top: 1px solid var(--panel-line);
   text-align: center;
-  min-width: 130px;
 }
-.badge-icon-wrap {
-  font-size: 1.8rem;
-  margin-bottom: 6px;
+.stat-row > div {
+  background: #fbeccb;
+  border: 1px solid #efd9a2;
+  border-radius: 14px;
+  padding: 10px 4px;
+}
+.stat-ico { font-size: 1.3rem; margin-bottom: 4px; }
+.stat-val { font-weight: 800; font-size: 1rem; color: var(--panel-ink); }
+.stat-lbl { font-size: 0.7rem; font-weight: 700; color: var(--panel-muted); margin-top: 1px; }
+ 
+/* Weekly mission */
+.mission-card { padding: 0; overflow: hidden; }
+.mission-band {
+  background: #c9ecd9;
+  border-bottom: 1px solid #a6d9be;
+  padding: 11px 22px;
+  text-align: center;
+  font-weight: 800;
+  font-size: 0.9rem;
+  color: #17613c;
+}
+.mission-body { padding: 20px 22px 22px; }
+.mission-head { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; }
+.chest-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 16px;
+  background: linear-gradient(145deg, rgba(255, 200, 61, 0.3), rgba(255, 200, 61, 0.08));
+  border: 1px solid rgba(255, 200, 61, 0.5);
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 44px;
-  height: 44px;
+  font-size: 1.7rem;
+}
+.mission { margin-bottom: 14px; }
+.mission-row { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 6px; }
+.mission-title { font-weight: 800; font-size: 1rem; color: var(--panel-ink); }
+.mission-count { font-weight: 700; font-size: 0.85rem; color: var(--panel-muted); }
+.mission-bar-row { display: flex; align-items: center; gap: 10px; }
+.mission-ico { width: 22px; text-align: center; font-size: 1rem; }
+.mission-bar {
+  flex: 1;
+  height: 8px;
   border-radius: 999px;
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
-  transition: transform 0.2s;
+  background: var(--track);
+  overflow: hidden;
 }
-.badge-item.earned .badge-icon-wrap {
-  background: #fef3c7;
-  border-color: #f59e0b;
-  transform: scale(1.06);
+.mission-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #ffd95e, #f59e0b);
+  transition: width 0.4s ease;
 }
-.badge-item.locked .badge-icon-wrap {
-  filter: grayscale(1) opacity(0.45);
+.mission.complete .mission-fill { background: linear-gradient(90deg, #10b981, #4ade80); }
+.mission.complete .mission-count { color: #15803d; }
+ 
+.bonus-box {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  text-align: left;
+  font-family: inherit;
+  color: var(--panel-ink);
+  background: rgba(255, 255, 255, 0.6);
+  border: 1px solid var(--panel-line);
+  border-radius: 16px;
+  padding: 14px 16px;
+  margin-top: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
 }
-.badge-name {
-  font-weight: 700;
-  font-size: 0.95rem;
-  color: var(--ink);
+.bonus-box:hover { border-color: rgba(255, 200, 61, 0.6); }
+.bonus-box.ready {
+  border-color: #ffc83d;
+  background: linear-gradient(180deg, rgba(255, 200, 61, 0.2), rgba(255, 200, 61, 0.06));
+  box-shadow: 0 0 22px rgba(255, 200, 61, 0.3);
 }
-.badge-sub {
+.bonus-ico { font-size: 1.9rem; }
+.bonus-text { flex: 1; display: flex; flex-direction: column; gap: 2px; }
+.bonus-title { font-weight: 800; font-size: 0.95rem; }
+.bonus-title em { font-style: normal; font-weight: 700; color: var(--panel-muted); margin-left: 6px; font-size: 0.85rem; }
+.bonus-sub { font-size: 0.85rem; color: var(--panel-muted); font-weight: 600; }
+.bonus-arrow { font-size: 1.5rem; color: var(--panel-muted); }
+ 
+/* Feed */
+.feed-list { display: flex; flex-direction: column; gap: 12px; margin-top: 14px; }
+.feed-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 14px 14px 14px 16px;
+  border-radius: 16px;
+  background: var(--panel-soft);
+  border: 1px solid var(--panel-line);
+}
+.feed-main { min-width: 0; }
+.feed-user { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.feed-avatar {
+  width: 26px;
+  height: 26px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #ff7a7a, #ec4899);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 0.8rem;
+  color: #fff;
+}
+.feed-name { font-weight: 800; font-size: 0.9rem; }
+.feed-text { font-weight: 700; font-size: 0.92rem; line-height: 1.3; }
+.feed-text .hl { color: #b45309; }
+.feed-time { font-size: 0.78rem; color: var(--panel-muted); font-weight: 600; margin: 3px 0 10px; }
+.cheer-btn {
+  font-family: inherit;
+  font-weight: 800;
   font-size: 0.82rem;
-  color: var(--muted);
+  color: var(--panel-ink);
+  background: rgba(255, 255, 255, 0.6);
+  border: 1px solid var(--panel-line);
+  border-radius: 10px;
+  padding: 6px 12px;
+  cursor: pointer;
+  transition: all 0.15s;
 }
-
+.cheer-btn:hover { border-color: #ffc83d; }
+.cheer-btn.on { background: var(--sun); color: #4a3510; border-color: var(--sun); }
+.feed-empty {
+  text-align: center;
+  color: var(--panel-muted);
+  font-weight: 700;
+  font-size: 0.92rem;
+  padding: 18px 8px;
+  border: 1px dashed var(--panel-line);
+  border-radius: 16px;
+}
+.feed-more { text-align: center; margin-top: 14px; }
+.btn-ghost {
+  font-family: inherit;
+  font-weight: 800;
+  font-size: 0.9rem;
+  color: var(--panel-ink);
+  background: transparent;
+  border: 1px solid var(--panel-line);
+  border-radius: 10px;
+  padding: 8px 22px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.btn-ghost:hover { border-color: #f0b83a; color: #b45309; }
+.feed-next {
+  margin-top: 14px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: rgba(255, 200, 61, 0.1);
+  border: 1px dashed rgba(255, 200, 61, 0.45);
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--panel-muted);
+}
+.feed-next b { color: #b45309; }
+ 
+/* Tablet / mobile */
+@media (max-width: 1000px) {
+  .page-layout { grid-template-columns: 1fr; }
+  .badge-grid { grid-template-columns: repeat(4, 1fr); }
+}
+@media (max-width: 560px) {
+  .badge-grid { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .path-panel, .badge-panel { padding: 18px 16px; }
+}
+ 
 /* Bottom Sheet / Modal */
 .modal-shade {
   position: fixed;
   inset: 0;
-  background: rgba(15, 12, 42, 0.6);
+  background: rgba(90, 65, 20, 0.45);
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
   opacity: 0;
@@ -571,11 +827,8 @@ svg.scene {
   transition: opacity 0.3s ease;
   z-index: 90;
 }
-.modal-shade.open {
-  opacity: 1;
-  pointer-events: auto;
-}
-
+.modal-shade.open { opacity: 1; pointer-events: auto; }
+ 
 .bottom-sheet {
   position: fixed;
   left: 0;
@@ -594,10 +847,8 @@ svg.scene {
   transform: translateY(105%);
   transition: transform 0.35s cubic-bezier(0.2, 0.9, 0.3, 1);
 }
-.bottom-sheet.open {
-  transform: translateY(0);
-}
-
+.bottom-sheet.open { transform: translateY(0); }
+ 
 .sheet-badge {
   display: inline-flex;
   align-items: center;
@@ -606,7 +857,7 @@ svg.scene {
   font-weight: 800;
   font-size: 0.9rem;
   background: var(--sun);
-  color: #1e1848;
+  color: #4a3510;
   padding: 3px 12px;
   border-radius: 999px;
   box-shadow: 0 2px 0 var(--sun-shadow);
@@ -634,24 +885,21 @@ svg.scene {
   align-items: center;
   gap: 6px;
 }
-
 .sheet-action {
   width: 100%;
   font-family: 'Baloo 2', sans-serif;
   font-weight: 800;
   font-size: 1.25rem;
   background: #ffc83d;
-  color: #1e1848;
-  border: 3px solid #1e1848;
+  color: #4a3510;
+  border: 3px solid #4a3510;
   border-radius: 999px;
   padding: 12px;
   cursor: pointer;
-  box-shadow: 0 5px 0 #1e1848;
+  box-shadow: 0 5px 0 #4a3510;
   transition: all 0.15s;
 }
-.sheet-action:hover:not(:disabled) {
-  background: #ffd359;
-}
+.sheet-action:hover:not(:disabled) { background: #ffd359; }
 .sheet-action:disabled {
   background: #94a3b8;
   color: #475569;
@@ -659,7 +907,6 @@ svg.scene {
   box-shadow: none;
   cursor: not-allowed;
 }
-
 .sheet-close {
   position: absolute;
   top: 16px;
@@ -677,15 +924,15 @@ svg.scene {
   justify-content: center;
 }
 .sheet-close:hover { background: rgba(0,0,0,0.06); }
-
+ 
 /* Toast */
 .toast {
   position: fixed;
   left: 50%;
   top: calc(75px + env(safe-area-inset-top, 0px));
   transform: translate(-50%, -40px);
-  background: #1e1848;
-  color: #fff6dc;
+  background: #fff7e0;
+  color: #4a3510;
   font-family: 'Baloo 2', sans-serif;
   font-weight: 800;
   font-size: 1.15rem;
@@ -699,17 +946,14 @@ svg.scene {
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
   white-space: nowrap;
 }
-.toast.open {
-  opacity: 1;
-  transform: translate(-50%, 0);
-}
-
+.toast.open { opacity: 1; transform: translate(-50%, 0); }
+ 
 /* Victory Fullscreen Modal */
 .victory-modal {
   position: fixed;
   inset: 0;
   z-index: 150;
-  background: rgba(15, 12, 42, 0.85);
+  background: rgba(90, 65, 20, 0.7);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   display: flex;
@@ -720,14 +964,11 @@ svg.scene {
   pointer-events: none;
   transition: opacity 0.4s ease;
 }
-.victory-modal.open {
-  opacity: 1;
-  pointer-events: auto;
-}
+.victory-modal.open { opacity: 1; pointer-events: auto; }
 .victory-card {
   background: var(--card);
   color: var(--ink);
-  border: 4px solid #1e1848;
+  border: 4px solid #4a3510;
   border-radius: 32px;
   padding: 32px 24px;
   max-width: 440px;
@@ -737,13 +978,8 @@ svg.scene {
   transform: scale(0.85);
   transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
-.victory-modal.open .victory-card {
-  transform: scale(1);
-}
-.victory-trophy-icon {
-  font-size: 4rem;
-  margin-bottom: 8px;
-}
+.victory-modal.open .victory-card { transform: scale(1); }
+.victory-trophy-icon { font-size: 4rem; margin-bottom: 8px; }
 .victory-title {
   font-family: 'Baloo 2', sans-serif;
   font-weight: 800;
@@ -761,29 +997,27 @@ svg.scene {
 }
 .victory-btn {
   background: #ffc83d;
-  color: #1e1848;
+  color: #4a3510;
   font-family: 'Baloo 2', sans-serif;
   font-weight: 800;
   font-size: 1.25rem;
-  border: 3px solid #1e1848;
+  border: 3px solid #4a3510;
   border-radius: 999px;
   padding: 12px 32px;
   cursor: pointer;
-  box-shadow: 0 5px 0 #1e1848;
+  box-shadow: 0 5px 0 #4a3510;
   transition: all 0.15s;
 }
-
-#image-uploader {
-  display: none;
-}
-
+ 
+#image-uploader { display: none; }
+ 
 @media (prefers-reduced-motion: reduce) {
   * { animation: none !important; transition: none !important; }
 }
 </style>
 </head>
 <body>
-
+ 
 <!-- Header -->
 <header class="top-bar">
   <div class="brand">Sign<span>Play</span>!</div>
@@ -791,7 +1025,7 @@ svg.scene {
     <button class="btn-icon" id="sound-btn" aria-label="Toggle sound" title="Toggle audio effects">🔊</button>
   </div>
 </header>
-
+ 
 <!-- Quick Jump & Demo Bar (Instant preview of any state) -->
 <nav class="demo-strip" aria-label="Fast Demo Preview">
   <span>⚡ Preview:</span>
@@ -802,157 +1036,215 @@ svg.scene {
   <button class="demo-chip" id="demo-plus1" title="Complete +1 stage">+1 Stage</button>
   <button class="demo-chip" id="demo-reset" title="Reset all progress">Reset</button>
 </nav>
-
+ 
 <div class="main-wrapper">
-  <!-- Track Header & Controls -->
-  <div class="path-section-header">
-    <div class="path-title">
-      <h1>Learning Path</h1>
-      <p>Scroll horizontally through the levels or click a tab to jump</p>
+  <div class="page-layout">
+ 
+    <!-- LEFT COLUMN -->
+    <div class="path-column">
+ 
+      <!-- Learning Path panel -->
+      <section class="panel path-panel" aria-label="Learning Path">
+        <div class="path-section-header">
+          <div class="path-title">
+            <h1>Learning Path</h1>
+            <p>Drag the slider or click a tab to jump between levels</p>
+          </div>
+          <div class="level-nav-tabs">
+            <div class="tab-group">
+              <button class="lvl-tab" id="tab-lvl-1" data-jump="0">Level 1</button>
+              <button class="lvl-tab" id="tab-lvl-2" data-jump="950">Level 2</button>
+              <button class="lvl-tab" id="tab-lvl-3" data-jump="1900">Level 3</button>
+              <button class="lvl-tab" id="tab-lvl-trophy" data-jump="2700">🏆 Trophy</button>
+            </div>
+            <div class="scroll-arrows">
+              <button class="scroll-btn" id="scroll-prev" aria-label="Scroll left" title="Scroll left">‹</button>
+              <button class="scroll-btn" id="scroll-next" aria-label="Scroll right" title="Scroll right">›</button>
+            </div>
+          </div>
+        </div>
+ 
+        <div class="path-scroll-wrapper" id="path-scroller">
+          <svg class="scene" id="scene" viewBox="0 0 3000 380" role="application" aria-label="Sign Language Learning Path">
+            <defs>
+              <filter id="shadow-btn" x="-20%" y="-20%" width="140%" height="150%">
+                <feDropShadow dx="0" dy="5" stdDeviation="3.5" flood-opacity="0.22" flood-color="#140e36"/>
+              </filter>
+              <filter id="glow-lit" x="-50%" y="-50%" width="200%" height="200%">
+                <feGaussianBlur stdDeviation="8" result="blur"/>
+                <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+              </filter>
+ 
+              <!-- Picture placeholder backgrounds (dark, matches the panels) -->
+              <linearGradient id="pic-bg-lit" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#58cfc8"/>
+                <stop offset="100%" stop-color="#2aa9a5"/>
+              </linearGradient>
+              <linearGradient id="pic-bg-locked" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#e9e2d0"/>
+                <stop offset="100%" stop-color="#d3cab4"/>
+              </linearGradient>
+ 
+              <!-- Volumetric Spotlight Beam Gradients -->
+              <linearGradient id="cone-lit-1" x1="50%" y1="0%" x2="50%" y2="100%">
+                <stop offset="0%" stop-color="#fef08a" stop-opacity="0.75"/>
+                <stop offset="40%" stop-color="#fde047" stop-opacity="0.3"/>
+                <stop offset="100%" stop-color="#eab308" stop-opacity="0"/>
+              </linearGradient>
+ 
+              <linearGradient id="cone-lit-2" x1="50%" y1="0%" x2="50%" y2="100%">
+                <stop offset="0%" stop-color="#a7f3d0" stop-opacity="0.75"/>
+                <stop offset="40%" stop-color="#6ee7b7" stop-opacity="0.3"/>
+                <stop offset="100%" stop-color="#10b981" stop-opacity="0"/>
+              </linearGradient>
+ 
+              <linearGradient id="cone-lit-3" x1="50%" y1="0%" x2="50%" y2="100%">
+                <stop offset="0%" stop-color="#ddd6fe" stop-opacity="0.75"/>
+                <stop offset="40%" stop-color="#c4b5fd" stop-opacity="0.3"/>
+                <stop offset="100%" stop-color="#8b5cf6" stop-opacity="0"/>
+              </linearGradient>
+ 
+              <linearGradient id="cone-lit-trophy" x1="50%" y1="0%" x2="50%" y2="100%">
+                <stop offset="0%" stop-color="#fef08a" stop-opacity="0.85"/>
+                <stop offset="40%" stop-color="#fde047" stop-opacity="0.4"/>
+                <stop offset="100%" stop-color="#f59e0b" stop-opacity="0"/>
+              </linearGradient>
+ 
+              <linearGradient id="cone-locked" x1="50%" y1="0%" x2="50%" y2="100%">
+                <stop offset="0%" stop-color="#94a3b8" stop-opacity="0.16"/>
+                <stop offset="100%" stop-color="#475569" stop-opacity="0"/>
+              </linearGradient>
+ 
+              <linearGradient id="gold-trophy-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#fffbeb"/>
+                <stop offset="25%" stop-color="#fde047"/>
+                <stop offset="55%" stop-color="#eab308"/>
+                <stop offset="85%" stop-color="#ca8a04"/>
+                <stop offset="100%" stop-color="#854d0e"/>
+              </linearGradient>
+ 
+              <linearGradient id="grad-start-tag" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#fde047"/>
+                <stop offset="100%" stop-color="#f59e0b"/>
+              </linearGradient>
+ 
+              <linearGradient id="boss-gold" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#fef08a"/>
+                <stop offset="50%" stop-color="#f59e0b"/>
+                <stop offset="100%" stop-color="#b45309"/>
+              </linearGradient>
+            </defs>
+ 
+            <!-- Dynamic content rendered via JS -->
+            <g id="map-render-root"></g>
+          </svg>
+        </div>
+ 
+        <!-- Custom path slider -->
+        <div class="path-slider" id="path-slider" aria-hidden="true">
+          <div class="slider-thumb" id="slider-thumb"></div>
+        </div>
+      </section>
+ 
+      <!-- Badge collection -->
+      <section class="panel badge-panel" id="badge-collection" aria-label="Badge Collection">
+        <div class="panel-head">
+          <div>
+            <div class="side-title">🎖️ Badge Collection</div>
+            <div class="panel-sub">Complete stages to collect them all</div>
+          </div>
+          <div class="count-pill" id="badges-count">0/12</div>
+        </div>
+        <div class="badge-grid" id="badge-grid"></div>
+      </section>
     </div>
-    <div class="level-nav-tabs">
-      <button class="lvl-tab" id="tab-lvl-1" data-jump="0">Level 1</button>
-      <button class="lvl-tab" id="tab-lvl-2" data-jump="950">Level 2</button>
-      <button class="lvl-tab" id="tab-lvl-3" data-jump="1900">Level 3</button>
-      <button class="lvl-tab" id="tab-lvl-trophy" data-jump="2700">🏆 Trophy</button>
-      <div class="scroll-arrows">
-        <button class="scroll-btn" id="scroll-prev" aria-label="Scroll left" title="Scroll left">‹</button>
-        <button class="scroll-btn" id="scroll-next" aria-label="Scroll right" title="Scroll right">›</button>
-      </div>
-    </div>
+ 
+    <!-- RIGHT COLUMN: sidebar -->
+    <aside class="side-column">
+ 
+      <!-- Your Stats / Adventure -->
+      <section class="panel side-card stats-card" id="dashboard" aria-label="Your Stats">
+        <div class="dash-top">
+          <div class="dash-heading">Your Adventure Awaits!</div>
+          <div class="dash-status-pill" id="dash-status-pill">Level 1 · Foundations</div>
+        </div>
+ 
+        <div class="profile-row">
+          <div class="avatar">S</div>
+          <div class="profile-info">
+            <div class="profile-name">SignPlay Learner <span id="rank-tag">[ROOKIE]</span></div>
+            <div class="plvl-row">
+              <span class="plvl-label" id="plvl-label">Level 1</span>
+              <div class="plvl-bar"><div class="plvl-fill" id="plvl-fill"></div></div>
+              <span class="plvl-xp" id="plvl-xp">0/300</span>
+            </div>
+          </div>
+        </div>
+ 
+        <div class="dash-metrics">
+          <div class="metric-block">
+            <div class="metric-val xp-val" id="dash-xp-val">0 XP</div>
+            <div class="metric-sub">Total experience points</div>
+          </div>
+          <div class="metric-block">
+            <div class="metric-val stage-val" id="dash-stage-val">0/10</div>
+            <div class="metric-sub">Stages completed</div>
+          </div>
+        </div>
+ 
+        <div class="dash-progress-wrap">
+          <div class="dash-progress-bar" role="progressbar" id="dash-progress-bar">
+            <div class="dash-progress-fill" id="dash-progress-fill"></div>
+          </div>
+          <div class="dash-progress-labels">
+            <span id="dash-progress-label">Level 1 progress</span>
+            <span id="dash-pct-label">0%</span>
+          </div>
+        </div>
+ 
+        <div class="stat-row">
+          <div><div class="stat-ico">🔥</div><div class="stat-val" id="stat-streak">1</div><div class="stat-lbl">Day streak</div></div>
+          <div><div class="stat-ico">🚪</div><div class="stat-val" id="stat-stages">0/30</div><div class="stat-lbl">Stages</div></div>
+          <div><div class="stat-ico">🏅</div><div class="stat-val" id="stat-badges">0</div><div class="stat-lbl">Badges</div></div>
+          <div><div class="stat-ico">👑</div><div class="stat-val" id="stat-bosses">0/3</div><div class="stat-lbl">Bosses</div></div>
+        </div>
+      </section>
+ 
+      <!-- Weekly Mission -->
+      <section class="panel side-card mission-card" aria-label="Weekly Mission">
+        <div class="mission-band">⏳ <span id="mission-days">1 day to next mission</span></div>
+        <div class="mission-body">
+          <div class="mission-head">
+            <div class="chest-icon">🎁</div>
+            <div>
+              <div class="side-title">Weekly Mission</div>
+              <div class="panel-sub">What’s in the chest? 👀</div>
+            </div>
+          </div>
+          <div id="mission-list"></div>
+          <button class="bonus-box" id="bonus-box" type="button">
+            <span class="bonus-ico" id="bonus-ico">🧰</span>
+            <span class="bonus-text">
+              <span class="bonus-title">Complete 3 Missions <em id="bonus-count">0 / 3</em></span>
+              <span class="bonus-sub" id="bonus-sub">Unlock the bonus chest.</span>
+            </span>
+            <span class="bonus-arrow">›</span>
+          </button>
+        </div>
+      </section>
+ 
+      <!-- Feed -->
+      <section class="panel side-card feed-card" aria-label="Feed">
+        <div class="side-title">Feed</div>
+        <div class="feed-list" id="feed-list"></div>
+        <div class="feed-more" id="feed-more"></div>
+        <div class="feed-next" id="feed-next"></div>
+      </section>
+    </aside>
+ 
   </div>
-
-  <!-- Horizontal Scrollable Learning Path Track:
-       Level 1 [Picture Box] O O O O O O O O O O ->
-       Level 2 [Picture Box] O O O O O O O O O O ->
-       Level 3 [Picture Box] O O O O O O O O O O (Trophy)
-  -->
-  <div class="path-scroll-wrapper" id="path-scroller">
-    <svg class="scene" id="scene" viewBox="0 0 3000 380" role="application" aria-label="Sign Language Learning Path">
-      <defs>
-        <filter id="shadow-btn" x="-20%" y="-20%" width="140%" height="150%">
-          <feDropShadow dx="0" dy="5" stdDeviation="3.5" flood-opacity="0.22" flood-color="#140e36"/>
-        </filter>
-        <filter id="glow-lit" x="-50%" y="-50%" width="200%" height="200%">
-          <feGaussianBlur stdDeviation="8" result="blur"/>
-          <feComposite in="SourceGraphic" in2="blur" operator="over"/>
-        </filter>
-
-        <!-- Volumetric Spotlight Beam Gradients -->
-        <linearGradient id="cone-lit-1" x1="50%" y1="0%" x2="50%" y2="100%">
-          <stop offset="0%" stop-color="#fef08a" stop-opacity="0.75"/>
-          <stop offset="40%" stop-color="#fde047" stop-opacity="0.3"/>
-          <stop offset="100%" stop-color="#eab308" stop-opacity="0"/>
-        </linearGradient>
-
-        <linearGradient id="cone-lit-2" x1="50%" y1="0%" x2="50%" y2="100%">
-          <stop offset="0%" stop-color="#a7f3d0" stop-opacity="0.75"/>
-          <stop offset="40%" stop-color="#6ee7b7" stop-opacity="0.3"/>
-          <stop offset="100%" stop-color="#10b981" stop-opacity="0"/>
-        </linearGradient>
-
-        <linearGradient id="cone-lit-3" x1="50%" y1="0%" x2="50%" y2="100%">
-          <stop offset="0%" stop-color="#ddd6fe" stop-opacity="0.75"/>
-          <stop offset="40%" stop-color="#c4b5fd" stop-opacity="0.3"/>
-          <stop offset="100%" stop-color="#8b5cf6" stop-opacity="0"/>
-        </linearGradient>
-
-        <linearGradient id="cone-lit-trophy" x1="50%" y1="0%" x2="50%" y2="100%">
-          <stop offset="0%" stop-color="#fef08a" stop-opacity="0.85"/>
-          <stop offset="40%" stop-color="#fde047" stop-opacity="0.4"/>
-          <stop offset="100%" stop-color="#f59e0b" stop-opacity="0"/>
-        </linearGradient>
-
-        <linearGradient id="cone-locked" x1="50%" y1="0%" x2="50%" y2="100%">
-          <stop offset="0%" stop-color="#94a3b8" stop-opacity="0.12"/>
-          <stop offset="100%" stop-color="#475569" stop-opacity="0"/>
-        </linearGradient>
-
-        <linearGradient id="gold-trophy-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stop-color="#fffbeb"/>
-          <stop offset="25%" stop-color="#fde047"/>
-          <stop offset="55%" stop-color="#eab308"/>
-          <stop offset="85%" stop-color="#ca8a04"/>
-          <stop offset="100%" stop-color="#854d0e"/>
-        </linearGradient>
-
-        <linearGradient id="grad-start-tag" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" stop-color="#fde047"/>
-          <stop offset="100%" stop-color="#f59e0b"/>
-        </linearGradient>
-
-        <linearGradient id="boss-gold" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" stop-color="#fef08a"/>
-          <stop offset="50%" stop-color="#f59e0b"/>
-          <stop offset="100%" stop-color="#b45309"/>
-        </linearGradient>
-      </defs>
-
-      <!-- Dynamic content rendered via JS -->
-      <g id="map-render-root"></g>
-    </svg>
-  </div>
-
-  <!-- DASHBOARD COMPONENT (Matching User's Uploaded Image) -->
-  <section class="dashboard-card" id="dashboard" aria-label="Progress Dashboard">
-    <div class="dash-top">
-      <div class="dash-heading">Your Adventure Awaits!</div>
-      <div class="dash-status-pill" id="dash-status-pill">Level 1 · Foundations</div>
-    </div>
-
-    <div class="dash-metrics">
-      <div class="metric-block">
-        <div class="metric-val xp-val" id="dash-xp-val">0 XP</div>
-        <div class="metric-sub">Total experience points</div>
-      </div>
-      <div class="metric-block">
-        <div class="metric-val stage-val" id="dash-stage-val">0/10</div>
-        <div class="metric-sub">Stages completed</div>
-      </div>
-    </div>
-
-    <div class="dash-progress-wrap">
-      <div class="dash-progress-bar" role="progressbar" id="dash-progress-bar">
-        <div class="dash-progress-fill" id="dash-progress-fill"></div>
-      </div>
-      <div class="dash-progress-labels">
-        <span id="dash-progress-label">Level 1 progress</span>
-        <span id="dash-pct-label">0%</span>
-      </div>
-    </div>
-
-    <!-- Badges Earned (Exact badges matching uploaded image) -->
-    <div class="dash-badges-row">
-      <div class="badge-item" id="badge-1">
-        <div class="badge-icon-wrap">🎗️</div>
-        <div class="badge-name">First Sign</div>
-        <div class="badge-sub" id="badge-sub-1">Badge earned</div>
-      </div>
-
-      <div class="badge-item" id="badge-2">
-        <div class="badge-icon-wrap">🔍</div>
-        <div class="badge-name">Clue Finder</div>
-        <div class="badge-sub" id="badge-sub-2">Badge earned</div>
-      </div>
-
-      <div class="badge-item" id="badge-3">
-        <div class="badge-icon-wrap">🤝</div>
-        <div class="badge-name">Dialogue Pro</div>
-        <div class="badge-sub" id="badge-sub-3">Unlock at Lvl 2</div>
-      </div>
-
-      <div class="badge-item" id="badge-4">
-        <div class="badge-icon-wrap">🏆</div>
-        <div class="badge-name">Sign Champion</div>
-        <div class="badge-sub" id="badge-sub-4">Master all 30</div>
-      </div>
-    </div>
-  </section>
 </div>
-
-<!-- Hidden File Uploader for replacing placeholder image with user's picture -->
-<input type="file" id="image-uploader" accept="image/*" aria-label="Upload picture for level">
-
+ 
 <!-- Bottom Sheet (Stage Details) -->
 <div class="modal-shade" id="shade"></div>
 <aside class="bottom-sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheet-title">
@@ -963,7 +1255,7 @@ svg.scene {
   <div class="sheet-reward" id="sheet-reward"></div>
   <button class="sheet-action" id="sheet-action"></button>
 </aside>
-
+ 
 <!-- Victory Modal -->
 <div class="victory-modal" id="victory-modal">
   <div class="victory-card">
@@ -973,18 +1265,18 @@ svg.scene {
     <button class="victory-btn" id="victory-btn">Celebrate & Continue</button>
   </div>
 </div>
-
+ 
 <!-- Floating Toast -->
 <div class="toast" id="toast" role="status"></div>
-
+ 
 <!-- Full-Screen Celebration Confetti Canvas -->
 <canvas id="confetti-canvas"></canvas>
-
+ 
 <script>
 // Web Audio API Synthesizer (Instant feedback, zero external MP3 dependencies)
 var audioCtx = null;
 var soundEnabled = true;
-
+ 
 function initAudio() {
   if (!audioCtx) {
     try {
@@ -996,12 +1288,12 @@ function initAudio() {
     audioCtx.resume();
   }
 }
-
+ 
 function playSound(type) {
   if (!soundEnabled) return;
   initAudio();
   if (!audioCtx) return;
-
+ 
   var now = audioCtx.currentTime;
   if (type === 'tap') {
     var osc = audioCtx.createOscillator();
@@ -1061,12 +1353,12 @@ function playSound(type) {
     });
   }
 }
-
+ 
 // Stage and Level Data
 var ST = [["The Manual Alphabet (A–Z)","Master static handshapes and fingerspelling clarity."],["Numbers & Counting (1–100)","Digits, ordinals and basic quantities."],["Time & Calendar","Days of the week, months, seasons and telling time."],["Core Survival & Greetings","Hello, goodbye, please, thank you, sorry, help and bathroom."],["Personal Pronouns & Identity","Me, you, he/she/they, name, age and introducing yourself."],["Family & Relationships","Mom, dad, siblings, friends and marital status."],["Colors, Shapes & Clothes","Basic wardrobe items and visual descriptors."],["Food & Drink Essentials","Water, eating, common meals and dietary signs."],["Home & Daily Routine","Rooms, waking up, sleeping and everyday chores."],["Boss: The Survival Challenge","A cumulative quiz simulating an initial casual meetup and introduction."],["Emotions & Feelings","Happy, sad, angry, tired, excited and anxious."],["Health & The Body","Head, stomach, pain, doctor, hospital and feeling sick."],["Restaurant & Dining Out","Ordering food, asking for the check, tipping and menu choices."],["Shopping & Money","Prices, buying, paying, cheap, expensive and clothing sizes."],["Hobbies & Sports","Soccer, reading, music, gaming and outdoor activities."],["School & Education","Classroom items, teacher, student, subjects and studying."],["Work & Professions","Office, computer, boss, meeting and common jobs."],["Weather & Nature","Sun, rain, snow, hot, cold and seasonal changes."],["Places Around Town","Park, store, library, bank and asking for general locations."],["Boss: The Community Challenge","A scenario involving shopping, ordering food and describing a minor scheduling issue."],["Direction & Spatial Verbs","How verbs change direction: I help you vs. you help me."],["Questions & Non-Manual Markers","Facial expressions and eyebrow movements for Wh- and Yes/No questions."],["Travel & Transportation","Airports, trains, hotels, luggage and booking trips."],["Emergencies & Safety","Police, fire, earthquake, warning signs and urgent requests."],["Technology & Modern Life","Smartphones, internet, social media and digital communication."],["Classifiers & Visual Scaling","Use your hands to show shapes, sizes and movements of objects."],["Storytelling & Narratives","Pacing, character perspectives and linking ideas together."],["Idioms, Slang & Expressive Nuances","Cultural expressions and casual conversational pacing."],["Deaf Culture & Etiquette","History, community norms, eye-contact rules and respect."],["Boss: The Fluent Masterclass","A live webcam conversation simulator testing full comprehension and rapid response."]];
 var STAGE_COLORS = [{"p":"#2563eb","d":"#1d4ed8","l":"#60a5fa"},{"p":"#06b6d4","d":"#0891b2","l":"#67e8f9"},{"p":"#10b981","d":"#059669","l":"#6ee7b7"},{"p":"#84cc16","d":"#65a30d","l":"#bef264"},{"p":"#f59e0b","d":"#d97706","l":"#fde047"},{"p":"#f97316","d":"#ea580c","l":"#fdba74"},{"p":"#ef4444","d":"#dc2626","l":"#fca5a5"},{"p":"#ec4899","d":"#db2777","l":"#f472b6"},{"p":"#a855f7","d":"#9333ea","l":"#d8b4fe"},{"p":"#6366f1","d":"#4338ca","l":"#a5b4fc"},{"p":"#0ea5e9","d":"#0284c7","l":"#7dd3fc"},{"p":"#22c55e","d":"#16a34a","l":"#86efac"},{"p":"#e11d48","d":"#be123c","l":"#fda4af"},{"p":"#d97706","d":"#b45309","l":"#fcd34d"},{"p":"#0284c7","d":"#0369a1","l":"#38bdf8"},{"p":"#7c3aed","d":"#6d28d9","l":"#c4b5fd"},{"p":"#d946ef","d":"#c026d3","l":"#f0abfc"},{"p":"#f43f5e","d":"#e11d48","l":"#fbcfe8"},{"p":"#14b8a6","d":"#0d9488","l":"#5eead4"},{"p":"#f59e0b","d":"#b45309","l":"#fef08a"},{"p":"#0284c7","d":"#0369a1","l":"#38bdf8"},{"p":"#65a30d","d":"#4d7c0f","l":"#bef264"},{"p":"#e11d48","d":"#be123c","l":"#fda4af"},{"p":"#2563eb","d":"#1d4ed8","l":"#93c5fd"},{"p":"#f97316","d":"#ea580c","l":"#fed7aa"},{"p":"#059669","d":"#047857","l":"#6ee7b7"},{"p":"#9333ea","d":"#7e22ce","l":"#e9d5ff"},{"p":"#ef4444","d":"#b91c1c","l":"#fca5a5"},{"p":"#06b6d4","d":"#0891b2","l":"#a5f3fc"},{"p":"#eab308","d":"#a16207","l":"#fef08a"}];
-
-// Horizontal Stage Coordinates (Matching User's ASCII Diagram):
+ 
+// Horizontal Stage Coordinates:
 // Level 1: [Pic] O O O O O O O O O O ->
 // Level 2: [Pic] O O O O O O O O O O ->
 // Level 3: [Pic] O O O O O O O O O O (Trophy)
@@ -1074,45 +1366,113 @@ var P1 = [[240,200],[305,200],[370,200],[435,200],[500,200],[565,200],[630,200],
 var P2 = [[1200,200],[1265,200],[1330,200],[1395,200],[1460,200],[1525,200],[1590,200],[1655,200],[1720,200],[1785,200]];
 var P3 = [[2160,200],[2225,200],[2290,200],[2355,200],[2420,200],[2485,200],[2550,200],[2615,200],[2680,200],[2745,200]];
 var STAGE_COORDS = P1.concat(P2).concat(P3);
-
+ 
+// Badges: add or edit entries here
+var BADGES = [
+  { icon: "👋", name: "First Sign",       min: 1,  hint: "Complete 1 stage" },
+  { icon: "🔢", name: "Number Whiz",      min: 2,  hint: "Complete 2 stages" },
+  { icon: "🔍", name: "Clue Finder",      min: 5,  hint: "Complete 5 stages" },
+  { icon: "👨‍👩‍👧", name: "Family Friend",    min: 6,  hint: "Complete 6 stages" },
+  { icon: "🤝", name: "Dialogue Pro",     min: 10, hint: "Unlock at Lvl 2" },
+  { icon: "😊", name: "Emotion Reader",   min: 11, hint: "Complete 11 stages" },
+  { icon: "🚀", name: "Halfway Hero",     min: 15, hint: "Complete 15 stages" },
+  { icon: "⚔️", name: "Boss Slayer",      min: 20, hint: "Beat 2 bosses" },
+  { icon: "❓", name: "Question Master",  min: 22, hint: "Complete 22 stages" },
+  { icon: "📖", name: "Storyteller",      min: 27, hint: "Complete 27 stages" },
+  { icon: "🌍", name: "Culture Keeper",   min: 29, hint: "Complete 29 stages" },
+  { icon: "🏆", name: "Sign Champion",    min: 30, hint: "Master all 30" }
+];
+ 
+// Level milestones shown in the feed
+var LEVEL_EVENTS = [
+  { min: 10, icon: "🎓", name: "Foundations" },
+  { min: 20, icon: "🌟", name: "Everyday Life" },
+  { min: 30, icon: "👑", name: "Conversational Fluency" }
+];
+ 
+// Player ranks (a new player level every 300 XP)
+var RANKS = ["ROOKIE", "EXPLORER", "SIGNER", "STORYTELLER", "EXPERT", "MASTER", "LEGEND"];
+var XP_PER_LEVEL = 300;
+ 
 var done = 0;
 var activeStageModal = 0;
-var levelImages = { 1: null, 2: null, 3: null };
+// Default illustrations are loaded from image files in the same folder as this HTML.
+// You can still click a level picture to choose a different image.
+var levelImages = {
+  1: "./images/level1.png",
+  2: "./images/level2.png",
+  3: "./images/level3.png"
+};
+var feedExpanded = false;
+var cheered = {};
 
 try {
   var saved = localStorage.getItem("sp-done");
   if (saved !== null) done = Math.min(30, Math.max(0, parseInt(saved, 10) || 0));
-  var savedImgs = localStorage.getItem("sp-lvl-imgs");
-  if (savedImgs) levelImages = JSON.parse(savedImgs);
 } catch(e) {}
-
+ 
+// ---- Weekly mission baseline (progress counted since the start of this week) ----
+function dstr(d) { return d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate(); }
+function weekKey() {
+  var d = new Date();
+  var day = (d.getDay() + 6) % 7;
+  d.setDate(d.getDate() - day);
+  return dstr(d);
+}
+function daysToNextWeek() {
+  var day = (new Date().getDay() + 6) % 7;
+  return 7 - day;
+}
+var weekBase = done;
+try {
+  var w = JSON.parse(localStorage.getItem("sp-week") || "null");
+  if (w && w.key === weekKey()) weekBase = Math.min(w.base, done);
+} catch(e) {}
+function saveWeek() {
+  try { localStorage.setItem("sp-week", JSON.stringify({ key: weekKey(), base: weekBase })); } catch(e) {}
+}
+saveWeek();
+ 
+// ---- Daily streak ----
+var streak = 1;
+try {
+  var today = dstr(new Date());
+  var yesterday = dstr(new Date(Date.now() - 86400000));
+  var sv = JSON.parse(localStorage.getItem("sp-streak") || "null");
+  if (sv) {
+    if (sv.last === today) streak = sv.count;
+    else if (sv.last === yesterday) streak = sv.count + 1;
+    else streak = 1;
+  }
+  localStorage.setItem("sp-streak", JSON.stringify({ last: today, count: streak }));
+} catch(e) {}
+ 
 function saveProgress() {
   try { localStorage.setItem("sp-done", done); } catch(e) {}
 }
-
+ 
 function saveImages() {
   try { localStorage.setItem("sp-lvl-imgs", JSON.stringify(levelImages)); } catch(e) {}
 }
-
+ 
 function isBoss(s) { return s % 10 === 0; }
 function xpOf(n) {
   var t = 0;
   for (var i = 1; i <= n; i++) t += isBoss(i) ? 150 : 50;
   return t;
 }
-
+ 
 // Render SVG Components & Update Dashboard
 function renderMap() {
   var h = "";
-
+ 
   // 1. Straight Solid Yellow Lines Connecting the Buttons Horizontally
-  // User: "Level 1 [Pic] O O O O O O O O O O Level 2 [Pic] O O O O O O O O O O Level 3 [Pic] O O O O O O O O O O (Trophy)"
   var lines = [
-    { start: [170, 200], pts: P1, end: [980, 200] },   // Level 1 -> P1 -> Level 2
-    { start: [1130, 200], pts: P2, end: [1940, 200] }, // Level 2 -> P2 -> Level 3
-    { start: [2090, 200], pts: P3, end: [2840, 200] }  // Level 3 -> P3 -> Trophy
+    { start: [170, 200], pts: P1, end: [980, 200] },
+    { start: [1130, 200], pts: P2, end: [1940, 200] },
+    { start: [2090, 200], pts: P3, end: [2840, 200] }
   ];
-
+ 
   lines.forEach(function(l) {
     var all = [l.start].concat(l.pts).concat([l.end]);
     var d = "M " + all[0][0] + " " + all[0][1];
@@ -1121,77 +1481,77 @@ function renderMap() {
     }
     h += '<path class="yellow-path-line" d="' + d + '"/>';
   });
-
-  // 2. Render Levels (Horizontal sequence: Level 1 at x=100, Level 2 at x=1060, Level 3 at x=2020)
+ 
+  // 2. Render Levels
   var lvlConfigs = [
     { id: 1, name: "Foundations", x: 100, y: 200, lampY: 45, coneGrad: "cone-lit-1" },
     { id: 2, name: "Everyday Life", x: 1060, y: 200, lampY: 45, coneGrad: "cone-lit-2" },
     { id: 3, name: "Conversational Fluency", x: 2020, y: 200, lampY: 45, coneGrad: "cone-lit-3" }
   ];
-
+ 
   lvlConfigs.forEach(function(lvl, idx) {
     var isEnrolled = (idx === 0) || (idx === 1 && done >= 10) || (idx === 2 && done >= 20);
     var isDone = (idx === 0 && done >= 10) || (idx === 1 && done >= 20) || (idx === 2 && done >= 30);
     var isCur = isEnrolled && !isDone;
-
+ 
     var lit = isEnrolled;
     var stateClass = lit ? (isCur ? "level-active" : "level-done") : "level-locked";
-
+ 
     var cx = lvl.x;
     var cy = lvl.y;
     var ly = lvl.lampY;
-
+ 
     h += '<g class="' + stateClass + '" id="level-group-' + lvl.id + '">';
-
+ 
     // Spotlight Fixture
-    h += '<line x1="' + cx + '" y1="' + (ly - 30) + '" x2="' + cx + '" y2="' + ly + '" stroke="#475569" stroke-width="3.5"/>';
-    h += '<path d="M ' + (cx - 24) + ' ' + (ly - 6) + ' C ' + (cx - 24) + ' ' + (ly + 16) + ', ' + (cx + 24) + ' ' + (ly + 16) + ', ' + (cx + 24) + ' ' + (ly - 6) + '" fill="none" stroke="#334155" stroke-width="4"/>';
-    h += '<rect x="' + (cx - 20) + '" y="' + (ly - 10) + '" width="40" height="20" rx="6" fill="#1e293b" stroke="#0f172a" stroke-width="2"/>';
+    h += '<line x1="' + cx + '" y1="' + (ly - 30) + '" x2="' + cx + '" y2="' + ly + '" stroke="#64748b" stroke-width="3.5"/>';
+    h += '<path d="M ' + (cx - 24) + ' ' + (ly - 6) + ' C ' + (cx - 24) + ' ' + (ly + 16) + ', ' + (cx + 24) + ' ' + (ly + 16) + ', ' + (cx + 24) + ' ' + (ly - 6) + '" fill="none" stroke="#475569" stroke-width="4"/>';
+    h += '<rect x="' + (cx - 20) + '" y="' + (ly - 10) + '" width="40" height="20" rx="6" fill="#7b879b" stroke="#a3aec0" stroke-width="2"/>';
     var lensFill = lit ? "#fef08a" : "#475569";
     var lensGlow = lit ? 'filter="url(#glow-lit)"' : '';
     h += '<ellipse class="spotlight-lens" cx="' + cx + '" cy="' + (ly + 8) + '" rx="18" ry="6" fill="' + lensFill + '" ' + lensGlow + '/>';
-
+ 
     // Volumetric Light Beam Cone
     var coneGrad = lit ? 'url(#' + lvl.coneGrad + ')' : 'url(#cone-locked)';
     var coneOpacity = lit ? "0.65" : "0.15";
     h += '<polygon class="volumetric-cone" points="' + (cx - 16) + ' ' + (ly + 10) + ', ' + (cx + 16) + ' ' + (ly + 10) + ', ' + (cx + 95) + ' ' + (cy + 75) + ', ' + (cx - 95) + ' ' + (cy + 75) + '" fill="' + coneGrad + '" opacity="' + coneOpacity + '"/>';
-
+ 
     // Level Header Signboard
     var badgeBg = lit ? (isDone ? "#10b981" : "#f59e0b") : "#64748b";
     var badgeText = isDone ? "★ COMPLETED" : isCur ? "● CURRENT LEVEL" : "🔒 LOCKED";
     h += '<g transform="translate(' + cx + ' ' + (ly + 32) + ')">';
-    h += '<rect x="-65" y="-14" width="130" height="24" rx="12" fill="' + badgeBg + '" stroke="#ffffff" stroke-width="2" filter="drop-shadow(0 3px 6px rgba(0,0,0,0.2))"/>';
+    h += '<rect x="-65" y="-14" width="130" height="24" rx="12" fill="' + badgeBg + '" stroke="#ffffff" stroke-width="2" filter="drop-shadow(0 3px 6px rgba(0,0,0,0.3))"/>';
     h += '<text y="3" text-anchor="middle" font-family="Baloo 2, sans-serif" font-weight="800" font-size="11" fill="#ffffff">' + badgeText + '</text>';
-    h += '<text y="24" text-anchor="middle" font-family="Baloo 2, sans-serif" font-weight="800" font-size="18" fill="' + (lit ? 'var(--ink)' : 'var(--muted)') + '">Level ' + lvl.id + '</text>';
-    h += '<text y="38" text-anchor="middle" font-family="Nunito, sans-serif" font-weight="700" font-size="11" fill="var(--muted)">' + lvl.name + '</text>';
+    h += '<text y="24" text-anchor="middle" font-family="Baloo 2, sans-serif" font-weight="800" font-size="18" fill="' + (lit ? '#3b2f1d' : '#9a917b') + '">Level ' + lvl.id + '</text>';
+    h += '<text y="38" text-anchor="middle" font-family="Nunito, sans-serif" font-weight="700" font-size="11" fill="#7a6e56">' + lvl.name + '</text>';
     h += '</g>';
-
-    // Picture Placeholder Card
+ 
+    // Picture Placeholder Card (dark, themed)
     var hasUserImg = levelImages[lvl.id];
-    var pStroke = lit ? (isDone ? "#10b981" : "#ffc83d") : "#94a3b8";
-
+    var pStroke = lit ? (isDone ? "#10b981" : "#a7e6e0") : "#b9b09a";
+ 
     h += '<!-- USER PLACEHOLDER FOR LEVEL ' + lvl.id + ' -->';
-    h += '<g class="level-card-placeholder" data-lvl="' + lvl.id + '" transform="translate(' + cx + ' ' + cy + ')" tabindex="0" role="button" aria-label="Level ' + lvl.id + ' Picture Placeholder (Click to choose image)">';
-    h += '<rect x="-65" y="-55" width="130" height="110" rx="18" fill="var(--card)" stroke="' + pStroke + '" stroke-width="2.5" stroke-dasharray="' + (hasUserImg ? 'none' : '5 5') + '" filter="drop-shadow(0 6px 16px rgba(0,0,0,0.1))"/>';
-
+    h += '<g class="level-card-placeholder" data-lvl="' + lvl.id + '" transform="translate(' + cx + ' ' + cy + ')" tabindex="0" role="button" aria-label="Level ' + lvl.id + ' illustration">';
+    h += '<rect x="-65" y="-55" width="130" height="110" rx="18" fill="' + (lit ? 'url(#pic-bg-lit)' : 'url(#pic-bg-locked)') + '" stroke="' + pStroke + '" stroke-width="2.5" stroke-dasharray="' + (hasUserImg ? 'none' : '5 5') + '" filter="drop-shadow(0 6px 16px rgba(120,90,30,0.25))"/>';
+ 
     if (hasUserImg) {
       h += '<clipPath id="clip-lvl-' + lvl.id + '"><rect x="-65" y="-55" width="130" height="110" rx="18"/></clipPath>';
       h += '<image href="' + hasUserImg + '" x="-65" y="-55" width="130" height="110" preserveAspectRatio="xMidYMid slice" clip-path="url(#clip-lvl-' + lvl.id + ')"/>';
     } else {
       h += '<g transform="translate(0 -10)">';
-      h += '<rect x="-24" y="-18" width="48" height="36" rx="6" fill="' + (lit ? '#fef3c7' : '#f1f5f9') + '" stroke="' + (lit ? '#f59e0b' : '#cbd5e1') + '" stroke-width="1.8"/>';
-      h += '<circle cx="-10" cy="-6" r="4" fill="' + (lit ? '#f59e0b' : '#94a3b8') + '"/>';
-      h += '<path d="M -20 12 L -6 0 L 6 10 L 14 4 L 20 12 Z" fill="' + (lit ? '#fbbf24' : '#94a3b8') + '"/>';
+      h += '<rect x="-24" y="-18" width="48" height="36" rx="6" fill="' + (lit ? '#ffffff' : '#f3eee0') + '" stroke="' + (lit ? '#d6f5f2' : '#bdb49c') + '" stroke-width="1.8"/>';
+      h += '<circle cx="-10" cy="-6" r="4" fill="' + (lit ? '#2aa9a5' : '#b5ab92') + '"/>';
+      h += '<path d="M -20 12 L -6 0 L 6 10 L 14 4 L 20 12 Z" fill="' + (lit ? '#58cfc8' : '#b5ab92') + '"/>';
       h += '</g>';
-      h += '<text y="32" text-anchor="middle" font-family="Baloo 2, sans-serif" font-weight="800" font-size="12" fill="' + (lit ? 'var(--ink)' : 'var(--muted)') + '">Level ' + lvl.id + ' Picture</text>';
-      h += '<text y="46" text-anchor="middle" font-family="Nunito, sans-serif" font-weight="700" font-size="10" fill="var(--muted)">(Click to add pic)</text>';
+      h += '<text y="32" text-anchor="middle" font-family="Baloo 2, sans-serif" font-weight="800" font-size="12" fill="' + (lit ? '#ffffff' : '#7a6e56') + '">Level ' + lvl.id + ' Picture</text>';
+      h += '<text y="46" text-anchor="middle" font-family="Nunito, sans-serif" font-weight="700" font-size="10" fill="' + (lit ? '#e6fbf9' : '#8a8167') + '">(Click to add pic)</text>';
     }
-
+ 
     h += '</g>';
     h += '</g>';
   });
-
-  // 3. Render The 30 Stage Buttons (Exact 3D buttons along the horizontal track)
+ 
+  // 3. Render The 30 Stage Buttons
   STAGE_COORDS.forEach(function(pos, idx) {
     var s = idx + 1;
     var col = STAGE_COLORS[idx];
@@ -1199,26 +1559,26 @@ function renderMap() {
     var isCur = s === done + 1;
     var isLocked = s > done + 1;
     var boss = isBoss(s);
-
+ 
     var x = pos[0];
     var y = pos[1];
-
+ 
     var btnClass = "stage-btn " + (isDone ? "done" : isCur ? "cur" : "locked");
     var ariaState = isDone ? "completed" : isCur ? "current" : "locked";
-
+ 
     h += '<g class="' + btnClass + '" data-s="' + s + '" tabindex="0" role="button" aria-label="Stage ' + s + ': ' + ST[idx][0] + ', ' + ariaState + '" transform="translate(' + x + ' ' + y + ')">';
-
+ 
     if (isCur) {
       h += '<ellipse class="stage-aura" cx="0" cy="5" rx="36" ry="22" fill="none" stroke="' + col.p + '" stroke-width="3" opacity="0.85"/>';
       h += '<g class="start-banner" transform="translate(0 -36)">';
       h += '<rect x="-24" y="-12" width="48" height="22" rx="11" fill="url(#grad-start-tag)" stroke="#ffffff" stroke-width="2" filter="drop-shadow(0 3px 6px rgba(0,0,0,0.25))"/>';
       h += '<polygon points="-5,10 0,16 5,10" fill="#f59e0b" stroke="#ffffff" stroke-width="1.2"/>';
-      h += '<text y="3.5" text-anchor="middle" font-family="Baloo 2, sans-serif" font-weight="800" font-size="12" fill="#1e1848">START</text>';
+      h += '<text y="3.5" text-anchor="middle" font-family="Baloo 2, sans-serif" font-weight="800" font-size="12" fill="#4a3510">START</text>';
       h += '</g>';
     }
-
+ 
     if (isLocked) {
-      h += '<ellipse cx="0" cy="18" rx="27" ry="10" fill="rgba(24, 18, 48, 0.12)" filter="blur(2px)"/>';
+      h += '<ellipse cx="0" cy="18" rx="27" ry="10" fill="rgba(120, 90, 30, 0.25)" filter="blur(2px)"/>';
       h += '<path d="M -27 4 C -27 15, 27 15, 27 4 L 27 10 C 27 21, -27 21, -27 10 Z" fill="#e2e8f0" stroke="#cbd5e1" stroke-width="1.2"/>';
       h += '<ellipse cx="0" cy="10" rx="26" ry="10.5" fill="#cbd5e1"/>';
       h += '<path d="M -26 -3 C -26 8, 26 8, 26 -3 L 26 5 C 26 16, -26 16, -26 5 Z" fill="#64748b"/>';
@@ -1226,7 +1586,7 @@ function renderMap() {
       h += '<path d="M -18 -6 C -14 -12, 14 -12, 18 -6 C 10 -10, -10 -10, -18 -6 Z" fill="#ffffff" opacity="0.22"/>';
       h += '<text x="0" y="3.5" text-anchor="middle" font-family="Baloo 2, sans-serif" font-weight="800" font-size="20" fill="#475569" filter="drop-shadow(0 1px 0 #cbd5e1)">' + s + '</text>';
     } else {
-      h += '<ellipse cx="0" cy="18" rx="27" ry="10" fill="rgba(24, 18, 48, 0.22)" filter="blur(2.5px)"/>';
+      h += '<ellipse cx="0" cy="18" rx="27" ry="10" fill="rgba(120, 90, 30, 0.3)" filter="blur(2.5px)"/>';
       h += '<path d="M -27 4 C -27 15, 27 15, 27 4 L 27 10 C 27 21, -27 21, -27 10 Z" fill="var(--stage-cream)" stroke="var(--stage-cream-border)" stroke-width="1.2"/>';
       h += '<ellipse cx="0" cy="10" rx="26" ry="10.5" fill="var(--stage-cream)"/>';
       h += '<path d="M -26 -3 C -26 8, 26 8, 26 -3 L 26 5 C 26 16, -26 16, -26 5 Z" fill="' + col.d + '"/>';
@@ -1235,7 +1595,7 @@ function renderMap() {
       h += '<path d="M -18 -6 C -14 -12, 14 -12, 18 -6 C 10 -10, -10 -10, -18 -6 Z" fill="#ffffff" opacity="0.65"/>';
       h += '<circle cx="-11" cy="-7" r="2" fill="#ffffff" opacity="0.8"/>';
       h += '<text x="0" y="3.5" text-anchor="middle" font-family="Baloo 2, sans-serif" font-weight="800" font-size="20" fill="#ffffff" filter="drop-shadow(0 2px 0 ' + col.d + ')">' + s + '</text>';
-
+ 
       if (isDone) {
         h += '<g transform="translate(16 -14)">';
         h += '<circle cx="0" cy="0" r="7" fill="#f59e0b" stroke="#ffffff" stroke-width="1.5" filter="drop-shadow(0 2px 4px rgba(0,0,0,0.2))"/>';
@@ -1243,7 +1603,7 @@ function renderMap() {
         h += '</g>';
       }
     }
-
+ 
     if (boss) {
       h += '<g transform="translate(0 -22)">';
       h += '<path d="M -14 0 L -12 -12 L -5 -6 L 0 -15 L 5 -6 L 12 -12 L 14 0 Z" fill="' + (isLocked ? '#94a3b8' : 'url(#boss-gold)') + '" stroke="' + (isLocked ? '#64748b' : '#b45309') + '" stroke-width="1.5" filter="drop-shadow(0 2px 4px rgba(0,0,0,0.25))"/>';
@@ -1252,30 +1612,30 @@ function renderMap() {
       h += '<circle cx="12" cy="-12" r="1.5" fill="#ffffff"/>';
       h += '</g>';
     }
-
+ 
     h += '</g>';
   });
-
-  // 4. Render The Grand Trophy at the end of Level 3 (x = 2890, y = 210)
+ 
+  // 4. Render The Grand Trophy at the end of Level 3
   var tx = 2890;
   var ty = 210;
   var tLy = 45;
   var allDone = done >= 30;
-
+ 
   h += '<g id="trophy-section" class="' + (allDone ? 'trophy-shining' : 'trophy-locked') + '">';
-
+ 
   // Spotlight Fixture
-  h += '<line x1="' + tx + '" y1="' + (tLy - 30) + '" x2="' + tx + '" y2="' + tLy + '" stroke="#475569" stroke-width="4"/>';
-  h += '<rect x="' + (tx - 24) + '" y="' + (tLy - 12) + '" width="48" height="24" rx="7" fill="#1e293b" stroke="#0f172a" stroke-width="2.5"/>';
+  h += '<line x1="' + tx + '" y1="' + (tLy - 30) + '" x2="' + tx + '" y2="' + tLy + '" stroke="#64748b" stroke-width="4"/>';
+  h += '<rect x="' + (tx - 24) + '" y="' + (tLy - 12) + '" width="48" height="24" rx="7" fill="#7b879b" stroke="#a3aec0" stroke-width="2.5"/>';
   var tLensFill = allDone ? "#fef08a" : "#475569";
   var tLensGlow = allDone ? 'filter="url(#glow-lit)"' : '';
   h += '<ellipse class="spotlight-lens" cx="' + tx + '" cy="' + (tLy + 10) + '" rx="22" ry="7" fill="' + tLensFill + '" ' + tLensGlow + '/>';
-
+ 
   // Volumetric Beam
   var tConeGrad = allDone ? 'url(#cone-lit-trophy)' : 'url(#cone-locked)';
   var tConeOpacity = allDone ? "0.8" : "0.15";
   h += '<polygon class="volumetric-cone" points="' + (tx - 18) + ' ' + (tLy + 12) + ', ' + (tx + 18) + ' ' + (tLy + 12) + ', ' + (tx + 100) + ' ' + (ty + 75) + ', ' + (tx - 100) + ' ' + (ty + 75) + '" fill="' + tConeGrad + '" opacity="' + tConeOpacity + '"/>';
-
+ 
   if (allDone) {
     h += '<g transform="translate(' + tx + ' ' + ty + ')">';
     h += '<g class="trophy-sunburst">';
@@ -1290,133 +1650,264 @@ function renderMap() {
     });
     h += '</g>';
   }
-
+ 
   // Podium
-  h += '<ellipse cx="' + tx + '" cy="' + (ty + 85) + '" rx="90" ry="22" fill="rgba(24, 18, 48, 0.28)" filter="blur(4px)"/>';
+  h += '<ellipse cx="' + tx + '" cy="' + (ty + 85) + '" rx="90" ry="22" fill="rgba(120, 90, 30, 0.3)" filter="blur(4px)"/>';
   h += '<path d="M ' + (tx - 75) + ' ' + (ty + 60) + ' L ' + (tx + 75) + ' ' + (ty + 60) + ' L ' + (tx + 85) + ' ' + (ty + 84) + ' L ' + (tx - 85) + ' ' + (ty + 84) + ' Z" fill="' + (allDone ? '#d97706' : '#475569') + '" stroke="' + (allDone ? '#b45309' : '#334155') + '" stroke-width="2"/>';
   h += '<ellipse cx="' + tx + '" cy="' + (ty + 60) + '" rx="75" ry="16" fill="' + (allDone ? '#f59e0b' : '#64748b') + '" stroke="' + (allDone ? '#b45309' : '#334155') + '" stroke-width="2"/>';
   h += '<ellipse cx="' + tx + '" cy="' + (ty + 60) + '" rx="70" ry="12" fill="' + (allDone ? '#fde047' : '#94a3b8') + '" opacity="0.65"/>';
-
+ 
   // Trophy Cup
   h += '<g class="trophy-group" id="trophy-click" tabindex="0" role="button" aria-label="Grand Trophy, ' + (allDone ? 'Shining and Unlocked!' : 'Finish all 30 stages to light it') + '" transform="translate(' + tx + ' ' + ty + ')">';
   var tGold = allDone ? "url(#gold-trophy-grad)" : "#94a3b8";
   var tDark = allDone ? "#b45309" : "#475569";
   var tRibbon = allDone ? "#ef4444" : "#64748b";
-
+ 
   h += '<path d="M -34 -45 C -75 -48, -68 5, -28 10" fill="none" stroke="' + tGold + '" stroke-width="10" stroke-linecap="round"/>';
   h += '<path d="M -34 -45 C -75 -48, -68 5, -28 10" fill="none" stroke="' + tDark + '" stroke-width="3" stroke-linecap="round"/>';
   h += '<path d="M -56 -20 C -70 -28, -75 -8, -58 -14 Z" fill="' + tRibbon + '" stroke="#ffffff" stroke-width="1.5"/>';
   h += '<path d="M -56 -20 C -42 -28, -38 -8, -54 -14 Z" fill="' + tRibbon + '" stroke="#ffffff" stroke-width="1.5"/>';
   h += '<circle cx="-56" cy="-17" r="3" fill="#ffffff"/>';
-
+ 
   h += '<path d="M 34 -45 C 75 -48, 68 5, 28 10" fill="none" stroke="' + tGold + '" stroke-width="10" stroke-linecap="round"/>';
   h += '<path d="M 34 -45 C 75 -48, 68 5, 28 10" fill="none" stroke="' + tDark + '" stroke-width="3" stroke-linecap="round"/>';
   h += '<path d="M 56 -20 C 70 -28, 75 -8, 58 -14 Z" fill="' + tRibbon + '" stroke="#ffffff" stroke-width="1.5"/>';
   h += '<path d="M 56 -20 C 42 -28, 38 -8, 54 -14 Z" fill="' + tRibbon + '" stroke="#ffffff" stroke-width="1.5"/>';
   h += '<circle cx="56" cy="-17" r="3" fill="#ffffff"/>';
-
+ 
   h += '<path d="M -10 24 L -16 48 L 16 48 L 10 24 Z" fill="' + tGold + '" stroke="' + tDark + '" stroke-width="2.5"/>';
   h += '<rect x="-28" y="46" width="56" height="14" rx="4" fill="' + tGold + '" stroke="' + tDark + '" stroke-width="2.5"/>';
   h += '<path d="M -38 -60 L 38 -60 L 36 -10 C 36 24, -36 24, -36 -10 Z" fill="' + tGold + '" stroke="' + tDark + '" stroke-width="3"/>';
   h += '<ellipse cx="0" cy="-60" rx="38" ry="10" fill="' + tGold + '" stroke="' + tDark + '" stroke-width="3"/>';
   h += '<ellipse cx="0" cy="-60" rx="34" ry="7" fill="' + (allDone ? '#fef08a' : '#cbd5e1') + '" opacity="0.8"/>';
   h += '<polygon points="0,-32 4,-18 18,-18 7,-9 11,5 0,-3 -11,5 -7,-9 -18,-18 -4,-18" fill="' + (allDone ? '#ffffff' : '#64748b') + '" stroke="' + tDark + '" stroke-width="2" filter="drop-shadow(0 2px 4px rgba(0,0,0,0.25))"/>';
-
+ 
   h += '<g transform="translate(0 75)">';
   var tBannerBg = allDone ? "#ffc83d" : "#64748b";
   var tBannerText = allDone ? "🏆 CHAMPION!" : "🔒 TROPHY";
   h += '<rect x="-70" y="-14" width="140" height="28" rx="14" fill="' + tBannerBg + '" stroke="#ffffff" stroke-width="2" filter="drop-shadow(0 4px 8px rgba(0,0,0,0.3))"/>';
-  h += '<text y="5" text-anchor="middle" font-family="Baloo 2, sans-serif" font-weight="800" font-size="14" fill="' + (allDone ? '#1e1848' : '#ffffff') + '">' + tBannerText + '</text>';
+  h += '<text y="5" text-anchor="middle" font-family="Baloo 2, sans-serif" font-weight="800" font-size="14" fill="' + (allDone ? '#4a3510' : '#ffffff') + '">' + tBannerText + '</text>';
   h += '</g>';
-
+ 
   h += '</g>'; // trophy-group
   h += '</g>'; // trophy-section
-
+ 
   // Insert into scene
   document.getElementById("map-render-root").innerHTML = h;
-
-  // 5. Update The Dashboard (Matching uploaded image)
+ 
+  // 5. Update The Dashboard / sidebar
   updateDashboard();
 }
-
+ 
+// ---------- Dashboard pieces ----------
+function playerLevel() { return Math.min(7, 1 + Math.floor(xpOf(done) / XP_PER_LEVEL)); }
+ 
+function missionData() {
+  var xpGain = xpOf(done) - xpOf(weekBase);
+  var stagesGain = done - weekBase;
+  var bosses = 0;
+  for (var s = weekBase + 1; s <= done; s++) { if (isBoss(s)) bosses++; }
+  return [
+    { icon: "📘", title: "Complete Stages", val: Math.min(3, stagesGain), max: 3 },
+    { icon: "⭐", title: "Earn XP", val: Math.min(150, xpGain), max: 150 },
+    { icon: "👑", title: "Beat a Boss", val: Math.min(1, bosses), max: 1 }
+  ];
+}
+ 
+function renderMissions() {
+  var ms = missionData();
+  var completeCount = 0;
+  var html = "";
+  ms.forEach(function(m) {
+    var complete = m.val >= m.max;
+    if (complete) completeCount++;
+    var pct = Math.round((m.val / m.max) * 100);
+    html += '<div class="mission' + (complete ? ' complete' : '') + '">' +
+      '<div class="mission-row"><span class="mission-title">' + m.title + '</span><span class="mission-count">' + m.val + ' / ' + m.max + '</span></div>' +
+      '<div class="mission-bar-row"><span class="mission-ico">' + (complete ? '✅' : m.icon) + '</span>' +
+      '<div class="mission-bar"><div class="mission-fill" style="width:' + pct + '%"></div></div></div>' +
+    '</div>';
+  });
+  document.getElementById("mission-list").innerHTML = html;
+ 
+  var n = daysToNextWeek();
+  document.getElementById("mission-days").textContent = n + (n === 1 ? " day" : " days") + " to next mission";
+ 
+  var ready = completeCount >= 3;
+  var box = document.getElementById("bonus-box");
+  box.classList.toggle("ready", ready);
+  box.setAttribute("data-ready", ready ? "1" : "0");
+  document.getElementById("bonus-count").textContent = completeCount + " / 3";
+  document.getElementById("bonus-ico").textContent = ready ? "🎉" : "🧰";
+  document.getElementById("bonus-sub").textContent = ready ? "Bonus chest unlocked! Tap to open." : "Unlock the bonus chest.";
+}
+ 
+function buildEvents() {
+  var ev = [];
+  BADGES.forEach(function(b, i) {
+    if (done >= b.min) {
+      ev.push({ key: "b" + i, order: b.min, icon: b.icon,
+        html: 'Earned the <b class="hl">' + b.name + '</b> badge.',
+        sub: "Unlocked at stage " + b.min });
+    }
+  });
+  LEVEL_EVENTS.forEach(function(l, i) {
+    if (done >= l.min) {
+      ev.push({ key: "l" + i, order: l.min + 0.5, icon: l.icon,
+        html: 'Completed the <b class="hl">' + l.name + '</b> level.',
+        sub: "Level " + (i + 1) + " cleared" });
+    }
+  });
+  ev.sort(function(a, b) { return b.order - a.order; });
+  return ev;
+}
+ 
+function renderFeed() {
+  var ev = buildEvents();
+  var list = feedExpanded ? ev : ev.slice(0, 3);
+  var html = "";
+ 
+  if (!list.length) {
+    html = '<div class="feed-empty">Your feed is quiet… finish a stage to earn your first badge! 🌱</div>';
+  } else {
+    list.forEach(function(e) {
+      var on = !!cheered[e.key];
+      html += '<div class="feed-item">' +
+        '<div class="feed-main">' +
+          '<div class="feed-user"><span class="feed-avatar">S</span><span class="feed-name">You</span></div>' +
+          '<div class="feed-text">' + e.html + '</div>' +
+          '<div class="feed-time">' + e.sub + '</div>' +
+          '<button class="cheer-btn' + (on ? ' on' : '') + '" data-key="' + e.key + '" type="button">👏 ' + (on ? 'Cheered!' : 'Nice Work!') + '</button>' +
+        '</div>' +
+        '<div class="hex sm"><div class="hex-in"><span>' + e.icon + '</span></div></div>' +
+      '</div>';
+    });
+  }
+  document.getElementById("feed-list").innerHTML = html;
+ 
+  document.getElementById("feed-more").innerHTML = ev.length > 3
+    ? '<button class="btn-ghost" id="feed-toggle" type="button">' + (feedExpanded ? "Show less" : "View all") + '</button>'
+    : "";
+ 
+  var next = null;
+  for (var i = 0; i < BADGES.length; i++) {
+    if (done < BADGES[i].min) { next = BADGES[i]; break; }
+  }
+  document.getElementById("feed-next").innerHTML = next
+    ? '🎯 Next badge: <b>' + next.name + '</b> · ' + next.hint
+    : '🎉 You collected every badge. Legend!';
+}
+ 
+function renderBadges() {
+  var earnedCount = 0;
+  var html = "";
+  BADGES.forEach(function(b) {
+    var earned = done >= b.min;
+    if (earned) earnedCount++;
+    html += '<div class="bd-item ' + (earned ? 'earned' : 'locked') + '" title="' + b.name + ' – ' + b.hint + '">' +
+      '<div class="hex ' + (earned ? '' : 'locked') + '"><div class="hex-in"><span>' + b.icon + '</span></div></div>' +
+      '<div class="bd-name">' + b.name + '</div>' +
+      '<div class="bd-sub">' + (earned ? 'Collected ✓' : '🔒 ' + b.hint) + '</div>' +
+    '</div>';
+  });
+  document.getElementById("badge-grid").innerHTML = html;
+  document.getElementById("badges-count").textContent = earnedCount + "/" + BADGES.length + " collected";
+  document.getElementById("stat-badges").textContent = earnedCount;
+}
+ 
 function updateDashboard() {
+  // Weekly baseline can never be ahead of current progress
+  if (done < weekBase) { weekBase = done; saveWeek(); }
+ 
   var curLvl = done < 10 ? 1 : done < 20 ? 2 : 3;
   var lvlNames = { 1: "Foundations", 2: "Everyday Life", 3: "Conversational Fluency" };
-  
-  // Total XP
-  document.getElementById("dash-xp-val").textContent = xpOf(done) + " XP";
-
-  // Stages completed within current level: e.g. 3/10
+  var xp = xpOf(done);
+ 
+  document.getElementById("dash-xp-val").textContent = xp + " XP";
+ 
   var lvlDone = done >= curLvl * 10 ? 10 : (done % 10);
   document.getElementById("dash-stage-val").textContent = lvlDone + "/10";
-
-  // Progress Bar & Labels
+ 
   var lvlPct = Math.round((lvlDone / 10) * 100);
   document.getElementById("dash-progress-fill").style.width = lvlPct + "%";
   document.getElementById("dash-progress-bar").setAttribute("aria-valuenow", lvlDone);
   document.getElementById("dash-progress-label").textContent = "Level " + curLvl + " progress";
   document.getElementById("dash-pct-label").textContent = lvlPct + "%";
-
-  // Status Pill
+ 
   var statusText = done >= 30 ? "Grand Champion · 30/30" : "Level " + curLvl + " · " + lvlNames[curLvl];
   document.getElementById("dash-status-pill").textContent = statusText;
-
-  // Badges Earned State
-  var b1 = document.getElementById("badge-1");
-  var b2 = document.getElementById("badge-2");
-  var b3 = document.getElementById("badge-3");
-  var b4 = document.getElementById("badge-4");
-
-  b1.className = "badge-item " + (done >= 1 ? "earned" : "locked");
-  document.getElementById("badge-sub-1").textContent = done >= 1 ? "Badge earned" : "Complete 1 stage";
-
-  b2.className = "badge-item " + (done >= 5 ? "earned" : "locked");
-  document.getElementById("badge-sub-2").textContent = done >= 5 ? "Badge earned" : "Complete 5 stages";
-
-  b3.className = "badge-item " + (done >= 10 ? "earned" : "locked");
-  document.getElementById("badge-sub-3").textContent = done >= 10 ? "Badge earned" : "Unlock at Lvl 2";
-
-  b4.className = "badge-item " + (done >= 30 ? "earned" : "locked");
-  document.getElementById("badge-sub-4").textContent = done >= 30 ? "Champion earned" : "Master all 30";
-
+ 
+  // Player level / rank
+  var pl = playerLevel();
+  var inLvl = pl >= 7 ? XP_PER_LEVEL : xp % XP_PER_LEVEL;
+  document.getElementById("plvl-label").textContent = "Level " + pl;
+  document.getElementById("plvl-fill").style.width = Math.round((inLvl / XP_PER_LEVEL) * 100) + "%";
+  document.getElementById("plvl-xp").textContent = pl >= 7 ? "MAX" : inLvl + "/" + XP_PER_LEVEL;
+  document.getElementById("rank-tag").textContent = "[" + RANKS[pl - 1] + "]";
+ 
+  // Stat row
+  document.getElementById("stat-streak").textContent = streak;
+  document.getElementById("stat-stages").textContent = done + "/30";
+  document.getElementById("stat-bosses").textContent = Math.floor(done / 10) + "/3";
+ 
+  renderBadges();
+  renderMissions();
+  renderFeed();
+ 
   // Active level tab
   document.querySelectorAll(".lvl-tab").forEach(function(tab) {
     tab.classList.remove("active");
   });
   if (done >= 30) document.getElementById("tab-lvl-trophy").classList.add("active");
   else document.getElementById("tab-lvl-" + curLvl).classList.add("active");
-
+ 
   // Demo active chips
   document.querySelectorAll(".demo-chip[data-set]").forEach(function(btn) {
     var val = parseInt(btn.dataset.set, 10);
     btn.classList.toggle("active", val === done);
   });
 }
-
+ 
+// Feed interactions (event delegation, the list is re-rendered often)
+document.getElementById("feed-list").addEventListener("click", function(e) {
+  var btn = e.target.closest(".cheer-btn");
+  if (!btn) return;
+  var key = btn.getAttribute("data-key");
+  cheered[key] = !cheered[key];
+  playSound('tap');
+  renderFeed();
+});
+document.getElementById("feed-more").addEventListener("click", function(e) {
+  if (e.target.closest("#feed-toggle")) {
+    feedExpanded = !feedExpanded;
+    playSound('tap');
+    renderFeed();
+  }
+});
+ 
 // Open Stage Details Sheet
 function openStageSheet(s) {
   activeStageModal = s;
   var idx = s - 1;
   var lvlNum = Math.floor(idx / 10) + 1;
   var boss = isBoss(s);
-
+ 
   var isDone = s <= done;
-  var isCur = s === done + 1;
   var isLocked = s > done + 1;
-
+ 
   var badgeEl = document.getElementById("sheet-badge");
   var titleEl = document.getElementById("sheet-title");
   var descEl = document.getElementById("sheet-desc");
   var rewardEl = document.getElementById("sheet-reward");
   var actionBtn = document.getElementById("sheet-action");
-
+ 
   badgeEl.textContent = "Level " + lvlNum + " · Stage " + s + (boss ? " · Boss Challenge" : "");
   titleEl.textContent = ST[idx][0];
   descEl.textContent = ST[idx][1];
-
+ 
   var rewardXP = boss ? 150 : 50;
   rewardEl.innerHTML = "⭐ Reward: +" + rewardXP + " XP" + (boss ? " + Level Master Badge" : "");
-
+ 
   actionBtn.disabled = isLocked;
   if (isLocked) {
     actionBtn.textContent = "Complete Stage " + (s - 1) + " to Unlock";
@@ -1425,42 +1916,36 @@ function openStageSheet(s) {
   } else {
     actionBtn.textContent = "Start Stage (+" + rewardXP + " XP)";
   }
-
+ 
   document.getElementById("shade").classList.add("open");
   document.getElementById("sheet").classList.add("open");
   playSound('tap');
 }
-
+ 
 function closeStageSheet() {
   document.getElementById("shade").classList.remove("open");
   document.getElementById("sheet").classList.remove("open");
 }
-
+ 
 function showToast(msg) {
   var t = document.getElementById("toast");
   t.textContent = msg;
   t.classList.add("open");
   setTimeout(function() { t.classList.remove("open"); }, 2200);
 }
-
-// Image Placeholder Upload Handler
-var targetLvlForUpload = null;
-var fileInput = document.getElementById("image-uploader");
-
-fileInput.addEventListener("change", function(e) {
-  var file = e.target.files[0];
-  if (file && targetLvlForUpload) {
-    var reader = new FileReader();
-    reader.onload = function(evt) {
-      levelImages[targetLvlForUpload] = evt.target.result;
-      saveImages();
-      renderMap();
-      showToast("Level " + targetLvlForUpload + " picture updated!");
-    };
-    reader.readAsDataURL(file);
+ 
+// Bonus chest click
+document.getElementById("bonus-box").addEventListener("click", function() {
+  if (this.getAttribute("data-ready") === "1") {
+    playSound('level');
+    triggerConfetti('stage');
+    showToast("🎉 Bonus chest unlocked!");
+  } else {
+    playSound('tap');
+    showToast("Finish all 3 weekly missions to open the chest!");
   }
 });
-
+ 
 // =========================================================
 // Confetti Celebration System (All-around screen celebration)
 // =========================================================
@@ -1470,7 +1955,7 @@ var triggerConfetti = (function() {
   var ctx = canvas.getContext("2d");
   var particles = [];
   var animId = null;
-
+ 
   function resize() {
     var dpr = window.devicePixelRatio || 1;
     canvas.width = window.innerWidth * dpr;
@@ -1481,13 +1966,13 @@ var triggerConfetti = (function() {
   }
   window.addEventListener("resize", resize);
   resize();
-
+ 
   var COLORS = [
     "#ef4444", "#f97316", "#f59e0b", "#10b981", "#06b6d4",
     "#3b82f6", "#6366f1", "#8b5cf6", "#ec4899", "#f43f5e",
     "#ffd700", "#22c55e", "#a855f7", "#38bdf8"
   ];
-
+ 
   function createParticle(x, y, angle, speed, shape) {
     return {
       x: x,
@@ -1507,7 +1992,7 @@ var triggerConfetti = (function() {
       decay: Math.random() * 0.006 + 0.005
     };
   }
-
+ 
   function addBurst(x, y, count, spread) {
     for (var i = 0; i < count; i++) {
       var angle = (Math.PI * 2 * (i / count)) + (Math.random() - 0.5) * spread;
@@ -1515,7 +2000,7 @@ var triggerConfetti = (function() {
       particles.push(createParticle(x, y, angle, speed));
     }
   }
-
+ 
   function addCannon(x, y, count, dirAngle, spread) {
     for (var i = 0; i < count; i++) {
       var angle = dirAngle + (Math.random() - 0.5) * spread;
@@ -1523,7 +2008,7 @@ var triggerConfetti = (function() {
       particles.push(createParticle(x, y, angle, speed));
     }
   }
-
+ 
   function addRain(count) {
     var w = window.innerWidth;
     for (var i = 0; i < count; i++) {
@@ -1532,13 +2017,13 @@ var triggerConfetti = (function() {
       particles.push(p);
     }
   }
-
+ 
   function drawStar(cx, cy, spikes, outerRadius, innerRadius, color) {
     var rot = Math.PI / 2 * 3;
     var x = cx;
     var y = cy;
     var step = Math.PI / spikes;
-
+ 
     ctx.beginPath();
     ctx.moveTo(cx, cy - outerRadius);
     for (var i = 0; i < spikes; i++) {
@@ -1546,7 +2031,7 @@ var triggerConfetti = (function() {
       y = cy + Math.sin(rot) * outerRadius;
       ctx.lineTo(x, y);
       rot += step;
-
+ 
       x = cx + Math.cos(rot) * innerRadius;
       y = cy + Math.sin(rot) * innerRadius;
       ctx.lineTo(x, y);
@@ -1557,10 +2042,10 @@ var triggerConfetti = (function() {
     ctx.fillStyle = color;
     ctx.fill();
   }
-
+ 
   function step() {
     ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
-
+ 
     for (var i = particles.length - 1; i >= 0; i--) {
       var p = particles[i];
       p.x += p.vx;
@@ -1570,19 +2055,19 @@ var triggerConfetti = (function() {
       p.rotation += p.rotSpeed;
       p.wobble += p.wobbleSpeed;
       p.opacity -= p.decay;
-
+ 
       if (p.opacity <= 0 || p.y > window.innerHeight + 60) {
         particles.splice(i, 1);
         continue;
       }
-
+ 
       ctx.save();
       ctx.globalAlpha = Math.max(0, p.opacity);
       ctx.translate(p.x, p.y);
       ctx.rotate((p.rotation * Math.PI) / 180);
-
+ 
       var wScale = Math.sin(p.wobble);
-
+ 
       if (p.shape === "circle") {
         ctx.beginPath();
         ctx.arc(0, 0, p.size / 2, 0, Math.PI * 2);
@@ -1597,7 +2082,7 @@ var triggerConfetti = (function() {
       }
       ctx.restore();
     }
-
+ 
     if (particles.length > 0) {
       animId = requestAnimationFrame(step);
     } else {
@@ -1605,26 +2090,24 @@ var triggerConfetti = (function() {
       animId = null;
     }
   }
-
+ 
   function ensureLoop() {
     if (!animId) {
       animId = requestAnimationFrame(step);
     }
   }
-
+ 
   return function(type) {
     resize();
     var w = window.innerWidth;
     var h = window.innerHeight;
-
+ 
     if (type === "stage") {
-      // Stage completed: crisp burst from center + side poppers all around
       addBurst(w * 0.5, h * 0.4, 90, 1.4);
       addCannon(w * 0.15, h * 0.85, 45, -Math.PI / 3, 0.7);
       addCannon(w * 0.85, h * 0.85, 45, -Math.PI * 2 / 3, 0.7);
       addRain(35);
     } else if (type === "level") {
-      // Level conquered: massive twin cannon salute + cascading sky shower
       addCannon(w * 0.08, h * 0.85, 85, -Math.PI / 3.2, 0.8);
       addCannon(w * 0.92, h * 0.85, 85, -Math.PI * 2 / 2.8, 0.8);
       addBurst(w * 0.5, h * 0.35, 120, 2);
@@ -1635,12 +2118,11 @@ var triggerConfetti = (function() {
         addRain(60);
       }, 350);
     } else if (type === "trophy") {
-      // All 30 conquered! Grand Finale all-around celebration storm
       addCannon(w * 0.05, h * 0.9, 100, -Math.PI / 3.2, 0.9);
       addCannon(w * 0.95, h * 0.9, 100, -Math.PI * 2 / 2.8, 0.9);
       addBurst(w * 0.5, h * 0.3, 140, 2.2);
       addRain(120);
-
+ 
       var wave = 0;
       var interval = setInterval(function() {
         wave++;
@@ -1658,16 +2140,75 @@ var triggerConfetti = (function() {
     ensureLoop();
   };
 })();
-
+ 
 // Horizontal Track Scrolling Helpers
 var scroller = document.getElementById("path-scroller");
-
+ 
 function scrollToX(x, smooth) {
   if (scroller) {
     scroller.scrollTo({ left: x, behavior: smooth ? "smooth" : "auto" });
   }
 }
-
+ 
+// ---------- Custom path slider (replaces the native scrollbar) ----------
+var sliderEl = document.getElementById("path-slider");
+var thumbEl = document.getElementById("slider-thumb");
+var sliderDrag = null;
+ 
+function updateSlider() {
+  if (!scroller || !sliderEl || !thumbEl) return;
+  var tw = sliderEl.clientWidth;
+  var sw = scroller.scrollWidth;
+  var cw = scroller.clientWidth;
+  var max = sw - cw;
+  if (max <= 0) {
+    thumbEl.style.width = "100%";
+    thumbEl.style.left = "0px";
+    return;
+  }
+  var thumbW = Math.max(48, tw * cw / sw);
+  thumbEl.style.width = thumbW + "px";
+  thumbEl.style.left = (scroller.scrollLeft / max) * (tw - thumbW) + "px";
+}
+ 
+scroller.addEventListener("scroll", updateSlider);
+window.addEventListener("resize", updateSlider);
+window.addEventListener("load", updateSlider);
+ 
+thumbEl.addEventListener("pointerdown", function(e) {
+  sliderDrag = { x: e.clientX, left: scroller.scrollLeft };
+  scroller.style.scrollBehavior = "auto";
+  thumbEl.setPointerCapture(e.pointerId);
+  thumbEl.classList.add("dragging");
+  e.preventDefault();
+});
+thumbEl.addEventListener("pointermove", function(e) {
+  if (!sliderDrag) return;
+  var travel = sliderEl.clientWidth - thumbEl.offsetWidth;
+  var max = scroller.scrollWidth - scroller.clientWidth;
+  if (travel <= 0) return;
+  scroller.scrollLeft = sliderDrag.left + (e.clientX - sliderDrag.x) * (max / travel);
+});
+function endSliderDrag() {
+  if (!sliderDrag) return;
+  sliderDrag = null;
+  scroller.style.scrollBehavior = "";
+  thumbEl.classList.remove("dragging");
+}
+thumbEl.addEventListener("pointerup", endSliderDrag);
+thumbEl.addEventListener("pointercancel", endSliderDrag);
+ 
+sliderEl.addEventListener("click", function(e) {
+  if (e.target === thumbEl) return;
+  var rect = sliderEl.getBoundingClientRect();
+  var thumbW = thumbEl.offsetWidth;
+  var travel = rect.width - thumbW;
+  var max = scroller.scrollWidth - scroller.clientWidth;
+  if (travel <= 0) return;
+  var pos = Math.min(Math.max(e.clientX - rect.left - thumbW / 2, 0), travel);
+  scrollToX((pos / travel) * max, true);
+});
+ 
 // Stage Action Trigger
 document.getElementById("sheet-action").onclick = function() {
   if (activeStageModal === done + 1) {
@@ -1675,7 +2216,7 @@ document.getElementById("sheet-action").onclick = function() {
     saveProgress();
     closeStageSheet();
     renderMap();
-
+ 
     var boss = isBoss(done);
     if (done === 30) {
       playSound('victory');
@@ -1699,21 +2240,19 @@ document.getElementById("sheet-action").onclick = function() {
     showToast("Review session complete! +10 XP");
   }
 };
-
+ 
 // Map Click Delegations
 document.getElementById("scene").addEventListener("click", function(e) {
   var stageBtn = e.target.closest(".stage-btn");
   var trophyBtn = e.target.closest("#trophy-click");
   var placeholderCard = e.target.closest(".level-card-placeholder");
-
+ 
   if (stageBtn) {
     var s = parseInt(stageBtn.dataset.s, 10);
     openStageSheet(s);
   } else if (placeholderCard) {
-    var lvlId = parseInt(placeholderCard.dataset.lvl, 10);
-    targetLvlForUpload = lvlId;
+    // Level illustrations are fixed project assets; no user upload is needed.
     playSound('tap');
-    fileInput.click();
   } else if (trophyBtn) {
     if (done >= 30) {
       playSound('victory');
@@ -1725,7 +2264,7 @@ document.getElementById("scene").addEventListener("click", function(e) {
     }
   }
 });
-
+ 
 // Level Tabs Navigation
 document.querySelectorAll(".lvl-tab").forEach(function(tab) {
   tab.onclick = function() {
@@ -1734,7 +2273,7 @@ document.querySelectorAll(".lvl-tab").forEach(function(tab) {
     playSound('tap');
   };
 });
-
+ 
 document.getElementById("scroll-prev").onclick = function() {
   scroller.scrollBy({ left: -450, behavior: "smooth" });
   playSound('tap');
@@ -1743,20 +2282,20 @@ document.getElementById("scroll-next").onclick = function() {
   scroller.scrollBy({ left: 450, behavior: "smooth" });
   playSound('tap');
 };
-
+ 
 document.getElementById("sheet-close").onclick = closeStageSheet;
 document.getElementById("shade").onclick = closeStageSheet;
 document.getElementById("victory-btn").onclick = function() {
   document.getElementById("victory-modal").classList.remove("open");
 };
-
+ 
 document.addEventListener("keydown", function(e) {
   if (e.key === "Escape") {
     closeStageSheet();
     document.getElementById("victory-modal").classList.remove("open");
   }
 });
-
+ 
 // Sound Toggle
 var soundBtn = document.getElementById("sound-btn");
 soundBtn.onclick = function() {
@@ -1765,7 +2304,7 @@ soundBtn.onclick = function() {
   soundBtn.setAttribute("title", soundEnabled ? "Mute audio" : "Unmute audio");
   if (soundEnabled) playSound('tap');
 };
-
+ 
 // Quick Preview & Demo Bar Actions
 document.querySelectorAll(".demo-chip[data-set]").forEach(function(btn) {
   btn.onclick = function() {
@@ -1791,7 +2330,7 @@ document.querySelectorAll(".demo-chip[data-set]").forEach(function(btn) {
     }
   };
 });
-
+ 
 document.getElementById("demo-plus1").onclick = function() {
   if (done < 30) {
     done++;
@@ -1816,21 +2355,25 @@ document.getElementById("demo-plus1").onclick = function() {
     showToast("Already at max stage 30/30!");
   }
 };
-
+ 
 document.getElementById("demo-reset").onclick = function() {
   done = 0;
+  weekBase = 0;
+  saveWeek();
+  cheered = {};
   saveProgress();
   renderMap();
   playSound('tap');
   showToast("Progress reset to Stage 1");
   scrollToX(0, true);
 };
-
+ 
 // Initial Render
 renderMap();
+updateSlider();
 if (done > 0) {
   var initX = done >= 30 ? 2700 : done >= 20 ? 1900 : done >= 10 ? 950 : 0;
-  setTimeout(function() { scrollToX(initX, false); }, 150);
+  setTimeout(function() { scrollToX(initX, false); updateSlider(); }, 150);
 }
 </script>
 </body>
