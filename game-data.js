@@ -79,3 +79,87 @@ function spApplyAvatar(el, user, name) {
     el.textContent = (name || "S").charAt(0).toUpperCase();
   }
 }
+
+// =====================================================================
+// Gestigo (Mystery Gameplay) data - used by dashboard.html
+// Progress itself is saved by the game under localStorage keys "gestigo_*"
+// =====================================================================
+var GAME_RANKS = [
+  { minXp: 0,    title: "Rookie Sleuth" },
+  { minXp: 500,  title: "Junior Gumshoe" },
+  { minXp: 1600, title: "Field Inspector" },
+  { minXp: 3800, title: "Chief Detective" },
+  { minXp: 7200, title: "Master Sleuth" }
+];
+
+// Game achievements. type: stages = N stages cleared, stage = a specific stage cleared,
+// clues = N clues found, stars = N stars collected, book = Memory Book recovered
+var GAME_BADGES = [
+  { icon: "🕵️", name: "First Case",       type: "stages", n: 1,  hint: "Clear your first stage" },
+  { icon: "🔎", name: "Sharp Eye",        type: "stages", n: 5,  hint: "Clear 5 stages" },
+  { icon: "🚪", name: "Level 1 Cleared",  type: "stage",  n: 10, hint: "Beat the Level 1 boss (stage 10)" },
+  { icon: "🧩", name: "Clue Hunter",      type: "clues",  n: 5,  hint: "Find 5 clues" },
+  { icon: "🌃", name: "City Detective",   type: "stages", n: 15, hint: "Clear 15 stages" },
+  { icon: "🧠", name: "Level 2 Cleared",  type: "stage",  n: 20, hint: "Beat the Level 2 boss (stage 20)" },
+  { icon: "⭐", name: "Star Collector",   type: "stars",  n: 30, hint: "Collect 30 stars" },
+  { icon: "📖", name: "Book Recovered",   type: "book",   n: 1,  hint: "Recover the Memory Book" },
+  { icon: "🏆", name: "Master Detective", type: "stage",  n: 30, hint: "Beat the final boss (stage 30)" },
+  { icon: "💯", name: "Perfect Run",      type: "stars",  n: 90, hint: "Collect all 90 stars" }
+];
+
+function spGameRank(xp) {
+  var r = GAME_RANKS[0], next = null;
+  for (var i = 0; i < GAME_RANKS.length; i++) {
+    if (xp >= GAME_RANKS[i].minXp) { r = GAME_RANKS[i]; next = GAME_RANKS[i + 1] || null; }
+  }
+  return { rank: r, next: next };
+}
+
+function spGameJson(key, fallback) {
+  try {
+    var v = localStorage.getItem(key);
+    return v === null ? fallback : JSON.parse(v);
+  } catch (e) { return fallback; }
+}
+
+// Read the game's progress from localStorage and work out the numbers the dashboard shows
+function spGameStats() {
+  var xpRaw = parseInt(localStorage.getItem("gestigo_xp"), 10);
+  var xp = isNaN(xpRaw) ? 150 : xpRaw;           // the game starts new players on 150 XP
+  var completed = spGameJson("gestigo_completed", {});
+  var clues = spGameJson("gestigo_clues", []);
+  var clues3 = spGameJson("gestigo_level3_clues", []);
+  var ids = Object.keys(completed).map(Number).filter(function (id) { return completed[id] > 0; }).sort(function (a, b) { return a - b; });
+  var stars = 0;
+  ids.forEach(function (id) { stars += Math.min(3, Number(completed[id]) || 0); });
+
+  var perLevel = [0, 0, 0];
+  ids.forEach(function (id) { if (id >= 1 && id <= 30) perLevel[Math.floor((id - 1) / 10)]++; });
+
+  var clueCount = (Array.isArray(clues) ? clues.length : 0) + (Array.isArray(clues3) ? clues3.length : 0);
+  var info = spGameRank(xp);
+  return {
+    xp: xp,
+    rank: info.rank,
+    nextRank: info.next,
+    stagesDone: ids.length,
+    stageIds: ids,
+    completed: completed,
+    stars: stars,
+    perLevel: perLevel,
+    percent: Math.round(ids.length / 30 * 100),
+    bosses: [10, 20, 30].filter(function (b) { return completed[b] > 0; }).length,
+    clues: Array.isArray(clues) ? clues : [],
+    clueCount: clueCount,
+    bookRecovered: localStorage.getItem("gestigo_level3_book_recovered") === "true"
+  };
+}
+
+function spGameBadgeEarned(b, s) {
+  if (b.type === "stages") return s.stagesDone >= b.n;
+  if (b.type === "stage")  return s.completed[b.n] > 0;
+  if (b.type === "clues")  return s.clueCount >= b.n;
+  if (b.type === "stars")  return s.stars >= b.n;
+  if (b.type === "book")   return s.bookRecovered;
+  return false;
+}

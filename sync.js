@@ -1,8 +1,10 @@
 // Firestore sync for SignPlay (used by index.html, dashboard.html, profile.html)
 //
-// Data lives in:  users/{uid}  ->  { displayName, avatar, progress: { done, streak, week }, updatedAt }
+// Data lives in:  users/{uid}  ->  { displayName, avatar, progress: { done, streak, week },
+//                                    game: { keys: { gestigo_xp: "...", ... } }, updatedAt }
 //
-// The learning path keeps reading/writing its progress in localStorage (sp-done, sp-streak, sp-week).
+// The learning path keeps its progress in localStorage (sp-done, sp-streak, sp-week) and the
+// Gestigo mystery game keeps its progress under localStorage keys that start with "gestigo_".
 // This file makes that localStorage belong to the signed-in account:
 //   - on sign-in / page load  -> restore the account's progress from Firestore into localStorage
 //   - before logging out      -> save it to Firestore, then clear it from this browser
@@ -23,7 +25,10 @@ const K_STREAK = "sp-streak";
 const K_WEEK = "sp-week";
 const K_STARS = "sp-stars";   // best stars per stage, e.g. {"4":3}
 const K_OWNER = "sp-owner";     // uid that the progress in this browser belongs to
-const K_SYNCED = "sp-synced";   // last progress value that was saved to / loaded from Firestore
+const K_SYNCED = "sp-synced";   // last learn progress that was saved to / loaded from Firestore
+const K_GSYNCED = "sp-game-synced"; // same, for the Gestigo game
+const GAME_PREFIX = "gestigo_";
+const GAME_SKIP = ["gestigo_lang"]; // language is a device preference, not progress
 
 /* ---------- helpers ---------- */
 export function withTimeout(promise, ms) {
@@ -60,7 +65,37 @@ function writeLocal(p) {
 }
 
 function clearLocal() {
-    [K_DONE, K_STREAK, K_WEEK, K_STARS, K_OWNER, K_SYNCED].forEach(lsDel);
+    [K_DONE, K_STREAK, K_WEEK, K_STARS, K_OWNER, K_SYNCED, K_GSYNCED].forEach(lsDel);
+    gameKeys().forEach(lsDel);
+}
+
+/* ----- Gestigo game progress: every localStorage key that starts with "gestigo_" ----- */
+function gameKeys() {
+    const keys = [];
+    try {
+        for (let i = 0; i < localStorage.length; i++) {
+            const k = localStorage.key(i);
+            if (k && k.indexOf(GAME_PREFIX) === 0 && GAME_SKIP.indexOf(k) === -1) keys.push(k);
+        }
+    } catch (e) {}
+    return keys;
+}
+
+function readGame() {
+    const o = {};
+    gameKeys().forEach(function (k) { o[k] = lsGet(k); });
+    return o;
+}
+
+function writeGame(obj) {
+    gameKeys().forEach(lsDel);
+    Object.keys(obj || {}).forEach(function (k) {
+        if (k.indexOf(GAME_PREFIX) === 0 && GAME_SKIP.indexOf(k) === -1 && obj[k] !== null) lsSet(k, String(obj[k]));
+    });
+}
+
+function gameStr(obj) {
+    return JSON.stringify(Object.keys(obj || {}).sort().map(function (k) { return [k, obj[k]]; }));
 }
 
 // Firestore rejects undefined values, so keep only what exists
@@ -105,13 +140,16 @@ function pickStreak(a, b) {
     return a.count >= b.count ? a : b;
 }
 
-async function pushProgress(user, p) {
+async function pushProgress(user, p, game) {
+    const g = game || readGame();
     await setDoc(doc(db, "users", user.uid), {
         displayName: user.displayName || null,
         progress: clean(p),
+        game: { keys: g },
         updatedAt: serverTimestamp()
     }, { merge: true });
     lsSet(K_SYNCED, JSON.stringify({ done: p.done === undefined ? null : p.done }));
+    lsSet(K_GSYNCED, gameStr(g));
 }
 
 /* ---------- public API ---------- */
@@ -154,9 +192,27 @@ export async function ensureUserProgress(user) {
             finalP = {};          // brand-new account: start fresh
         }
 
+        // ----- Gestigo game progress (same rules as the learning path) -----
+        const rg = remote && remote.game && remote.game.keys ? remote.game.keys : null;
+        const lg = readGame();
+        let finalG;
+
+        if (owner === user.uid) {
+            const gsynced = lsGet(K_GSYNCED);
+            const changedG = gsynced !== null ? gameStr(lg) !== gsynced : Object.keys(lg).length > 0;
+            finalG = (rg && !changedG) ? rg : lg;
+        } else if (rg) {
+            finalG = rg;                         // different account: restore from cloud
+        } else if (!owner && Object.keys(lg).length > 0) {
+            finalG = lg;                         // game progress from before accounts existed: adopt it
+        } else {
+            finalG = {};                         // brand-new account: start fresh
+        }
+
         writeLocal(finalP);
+        writeGame(finalG);
         lsSet(K_OWNER, user.uid);
-        await pushProgress(user, finalP);
+        await pushProgress(user, finalP, finalG);
 
         // Avatar choice lives in the cloud too; mirror it for the pages that read localStorage
         if (remote && remote.avatar !== undefined && remote.avatar !== null) {
@@ -197,4 +253,9 @@ export async function endSession(user) {
         console.warn("SignPlay save-before-logout skipped:", e && e.code ? e.code : e);
     }
     clearLocal();
+}
+
+// Used by the game page: a fingerprint of the current game progress in this browser
+export function gameFingerprint() {
+    return gameStr(readGame());
 }

@@ -245,7 +245,7 @@ main { position: relative; z-index: 1; padding-bottom: 60px; }
 .stat.xp b { color: #c98a0a; }
 .stat.st b { color: #16856f; }
 .stat.sk b { color: #e65f4d; }
-.stat.bd b { color: #9870c7; }
+.stat.badge-stat b { color: #9870c7; }
 .stat.bs b { color: #c64c38; }
 .stat.lv b { color: #3189ce; }
 
@@ -400,6 +400,29 @@ main { position: relative; z-index: 1; padding-bottom: 60px; }
 }
 
 </style>
+<style>
+/* header link to the Mystery Gameplay (Gestigo) */
+.nav-link .short { display: none; }
+@media (max-width: 520px) {
+  .nav-link .long { display: none; }
+  .nav-link .short { display: inline; }
+}
+</style>
+<style>
+/* Learn / Mystery Game tabs */
+.tabs { display: flex; gap: 6px; margin: 0 0 18px; padding: 6px; width: fit-content; max-width: 100%; background: rgba(255,250,240,.75); border: 1px solid var(--panel-line); border-radius: 999px; box-shadow: 0 2px 0 rgba(201,138,10,.12); }
+.tab { appearance: none; border: 2px solid transparent; background: transparent; color: var(--muted); font: 800 1.02rem 'Baloo 2', system-ui, sans-serif; padding: 8px 22px; border-radius: 999px; cursor: pointer; white-space: nowrap; }
+.tab:hover { color: var(--ink); }
+.tab[aria-selected="true"] { background: var(--sun); color: #3b2f1d; border-color: var(--sun-shadow); box-shadow: 0 3px 0 var(--sun-shadow); }
+.tab:focus-visible { outline: 3px solid var(--sky); outline-offset: 2px; }
+.tabpanel[hidden] { display: none !important; }
+@media (max-width: 520px) { .tab { padding: 8px 14px; font-size: .95rem; } }
+.case-total { margin-bottom: 18px; }
+.case-total .lvh span { font-size: 1.05rem; }
+.clue { align-items: flex-start !important; }
+.clue .ft small { font-weight: 600; }
+.empty-note { color: var(--muted); font-weight: 700; text-align: center; padding: 10px; }
+</style>
 </head>
 <body>
 
@@ -409,6 +432,7 @@ main { position: relative; z-index: 1; padding-bottom: 60px; }
   <nav class="main-nav" aria-label="Main navigation">
     <a class="nav-link active" href="dashboard.html" aria-current="page">Dashboard</a>
     <a class="nav-link" href="learn/learningpath.html">Learn</a>
+    <a class="nav-link" href="gestigo-app/index.html">Mystery <span class="long">Gameplay</span><span class="short">Game</span></a>
   </nav>
   <div class="top-actions">
     <div class="profile-menu-wrap">
@@ -425,7 +449,12 @@ main { position: relative; z-index: 1; padding-bottom: 60px; }
 </header>
 <main class="wrap">
   <div class="page-intro"><p class="eyebrow">YOUR SIGN LANGUAGE ADVENTURE</p><h1>Welcome back, <span id="heroName">SignPlayer!</span></h1><p>Keep learning, collect badges and make progress on your SignPlay journey.</p></div>
-  <div class="grid">
+  <div class="tabs" role="tablist" aria-label="Dashboard sections">
+    <button class="tab" id="tab-learn" type="button" role="tab" aria-selected="true" aria-controls="panel-learn">📚 Learn</button>
+    <button class="tab" id="tab-game" type="button" role="tab" aria-selected="false" aria-controls="panel-game" tabindex="-1">🕵️ Mystery Game</button>
+  </div>
+
+  <div class="grid tabpanel" id="panel-learn" role="tabpanel" aria-labelledby="tab-learn">
 
     <!-- Profile -->
     <section class="card" aria-label="Profile">
@@ -454,7 +483,7 @@ main { position: relative; z-index: 1; padding-bottom: 60px; }
         <div class="stat xp"><b id="sXp">0</b><span>Total XP</span></div>
         <div class="stat st"><b id="sStages">0/30</b><span>Stages done</span></div>
         <div class="stat sk"><b id="sStreak">1</b><span>Day streak 🔥</span></div>
-        <div class="stat bd"><b id="sBadges">0/12</b><span>Badges</span></div>
+        <div class="stat badge-stat"><b id="sBadges">0/12</b><span>Badges</span></div>
         <div class="stat bs"><b id="sBosses">0/3</b><span>Bosses 👑</span></div>
         <div class="stat lv"><b id="sLevel">1</b><span>Player level</span></div>
       </div>
@@ -481,7 +510,68 @@ main { position: relative; z-index: 1; padding-bottom: 60px; }
       <div class="next" id="nextBadge"></div>
     </section>
 </div>
-  <p class="note">Progress and avatars are saved in this browser for now.</p>
+
+  <!-- ================= MYSTERY GAME TAB ================= -->
+  <div class="grid tabpanel" id="panel-game" role="tabpanel" aria-labelledby="tab-game" hidden>
+
+    <section class="card" aria-label="Detective profile">
+      <div class="profile">
+        <div class="avatar" id="gAvatar">S</div>
+        <div>
+          <div class="pname" id="gName">SignPlay Detective</div>
+          <div class="pmail">Inspector Gestigo's case file</div>
+          <div class="chips"><span class="chip rank" id="gRankChip">Rookie Sleuth</span></div>
+        </div>
+      </div>
+      <div class="plv">
+        <div class="row"><span id="gRankLabel">Rookie Sleuth</span><span id="gRankXp">0 XP</span></div>
+        <div class="bar"><div class="fill f4" id="gRankFill"></div></div>
+      </div>
+      <div class="actions">
+        <a class="btn main" href="gestigo-app/index.html">Continue mystery →</a>
+      </div>
+    </section>
+
+    <section class="card" aria-label="Game stats">
+      <h2>Game stats</h2>
+      <div class="stats">
+        <div class="stat xp"><b id="gXp">0</b><span>Detective XP</span></div>
+        <div class="stat st"><b id="gStages">0/30</b><span>Stages cleared</span></div>
+        <div class="stat sk"><b id="gStars">0/90</b><span>Stars ⭐</span></div>
+        <div class="stat badge-stat"><b id="gClues">0</b><span>Clues found</span></div>
+        <div class="stat bs"><b id="gBosses">0/3</b><span>Bosses 👑</span></div>
+        <div class="stat lv"><b id="gPercent">0%</b><span>Case solved</span></div>
+      </div>
+    </section>
+
+    <section class="card full" aria-label="Case progress">
+      <h2>Case progress</h2>
+      <div class="lv case-total"><div class="lvh"><span>The whole case</span><small id="gt0">0%</small></div><div class="bar"><div class="fill f4" id="gb0"></div></div></div>
+      <div class="lv"><div class="lvh"><span>Level 1 · The First Clue</span><small id="gt1">0/10</small></div><div class="bar"><div class="fill f1" id="gb1"></div></div></div>
+      <div class="lv"><div class="lvh"><span>Level 2 · Everyday Life &amp; Community</span><small id="gt2">0/10</small></div><div class="bar"><div class="fill f2" id="gb2"></div></div></div>
+      <div class="lv"><div class="lvh"><span>Level 3 · Conversational Fluency</span><small id="gt3">0/10</small></div><div class="bar"><div class="fill f3" id="gb3"></div></div></div>
+    </section>
+
+    <section class="card full" aria-label="Game achievements">
+      <div class="head"><h2>🏅 Achievements</h2><span class="pill" id="gBadgeCount">0/10 collected</span></div>
+      <div class="badges" id="gBadgeGrid"></div>
+    </section>
+
+    <section class="card full" aria-label="Evidence board">
+      <div class="head"><h2>🧾 Evidence board</h2><span class="pill" id="gClueCount">0 clues</span></div>
+      <ul class="feed" id="gClueList"></ul>
+      <button class="linkbtn" id="gClueToggle" type="button" hidden>View all</button>
+    </section>
+
+    <section class="card full" aria-label="Recent case activity">
+      <h2>Recent activity</h2>
+      <ul class="feed" id="gFeed"></ul>
+      <button class="linkbtn" id="gFeedToggle" type="button" hidden>View all</button>
+      <div class="next" id="gNext"></div>
+    </section>
+
+  </div>
+  <p class="note">Your progress is saved to your account.</p>
 </main>
 
 <script src="game-data.js"></script>
@@ -515,6 +605,9 @@ const $ = id => document.getElementById(id);
 let currentUser = null;
 let pickedAvatar = -1;
 let feedExpanded = false;
+let gFeedExpanded = false;
+let gClueExpanded = false;
+let lastUser = null;
 
 function displayName(user) {
     return user.displayName || (user.email ? user.email.split("@")[0] : "SignPlay Learner");
@@ -613,6 +706,115 @@ $("logoutBtn").addEventListener("click", async () => {
     window.location.href = "index.html";
 });
 
+
+/* ---------- Mystery Game tab ---------- */
+function renderGame(user) {
+    const s = spGameStats();
+    const name = displayName(user);
+
+    $("gName").textContent = name;
+    spApplyAvatar($("gAvatar"), user, name);
+
+    // detective rank + progress to the next rank
+    $("gRankChip").textContent = s.rank.title;
+    $("gRankLabel").textContent = s.nextRank ? s.rank.title + " → " + s.nextRank.title : s.rank.title + " (max rank)";
+    let rankPct = 100;
+    if (s.nextRank) {
+        rankPct = Math.round((s.xp - s.rank.minXp) / (s.nextRank.minXp - s.rank.minXp) * 100);
+        $("gRankXp").textContent = s.xp + " / " + s.nextRank.minXp + " XP";
+    } else {
+        $("gRankXp").textContent = s.xp + " XP";
+    }
+    requestAnimationFrame(() => { $("gRankFill").style.width = Math.max(0, Math.min(100, rankPct)) + "%"; });
+
+    // stats
+    $("gXp").textContent = s.xp;
+    $("gStages").textContent = s.stagesDone + "/30";
+    $("gStars").textContent = s.stars + "/90";
+    $("gClues").textContent = s.clueCount;
+    $("gBosses").textContent = s.bosses + "/3";
+    $("gPercent").textContent = s.percent + "%";
+
+    // case progress
+    $("gt0").textContent = s.percent + "%";
+    requestAnimationFrame(() => { $("gb0").style.width = s.percent + "%"; });
+    [1, 2, 3].forEach(lvl => {
+        const n = s.perLevel[lvl - 1];
+        $("gt" + lvl).textContent = n + "/10";
+        requestAnimationFrame(() => { $("gb" + lvl).style.width = (n * 10) + "%"; });
+    });
+
+    // achievements
+    const earned = GAME_BADGES.filter(b => spGameBadgeEarned(b, s)).length;
+    $("gBadgeCount").textContent = earned + "/" + GAME_BADGES.length + " collected";
+    $("gBadgeGrid").innerHTML = GAME_BADGES.map(b => {
+        const ok = spGameBadgeEarned(b, s);
+        return '<div class="bd ' + (ok ? "earned" : "locked") + '" title="' + esc(b.name + " – " + b.hint) + '">' +
+            '<div class="ic">' + b.icon + '</div>' +
+            '<b>' + esc(b.name) + '</b>' +
+            '<small>' + (ok ? "Collected ✓" : "🔒 " + esc(b.hint)) + '</small></div>';
+    }).join("");
+
+    // evidence board
+    $("gClueCount").textContent = s.clueCount + (s.clueCount === 1 ? " clue" : " clues");
+    const clues = s.clues.slice().reverse();
+    const clueShown = gClueExpanded ? clues : clues.slice(0, 4);
+    $("gClueList").innerHTML = clues.length
+        ? clueShown.map(c => '<li class="clue"><span class="fi">🔍</span><div class="ft"><b>' + esc(c && c.name ? c.name : String(c)) + '</b>' +
+            (c && c.desc ? '<small>' + esc(c.desc) + '</small>' : '') + '</div></li>').join("")
+        : '<li class="empty-note" style="display:block">No clues yet… clear a stage to add evidence to the board. 🕵️</li>';
+    $("gClueToggle").hidden = clues.length <= 4;
+    $("gClueToggle").textContent = gClueExpanded ? "Show less" : "View all";
+
+    // recent activity: latest cleared stages first
+    const ev = s.stageIds.slice().reverse().map(id => {
+        const stars = Math.min(3, Number(s.completed[id]) || 0);
+        const boss = id % 10 === 0;
+        return {
+            icon: boss ? "👑" : "✅",
+            html: (boss ? "Defeated the <b>boss of stage " + id + "</b>." : "Cleared <b>stage " + id + "</b>."),
+            sub: "⭐".repeat(stars) + (stars ? " · " : "") + "Level " + (Math.floor((id - 1) / 10) + 1)
+        };
+    });
+    const shown = gFeedExpanded ? ev : ev.slice(0, 4);
+    $("gFeed").innerHTML = ev.length
+        ? shown.map(e => '<li><span class="fi">' + e.icon + '</span><div class="ft">' + e.html + '<small>' + e.sub + '</small></div></li>').join("")
+        : '<li class="empty-note" style="display:block">The case is waiting… start the mystery to see your activity here! 🌱</li>';
+    $("gFeedToggle").hidden = ev.length <= 4;
+    $("gFeedToggle").textContent = gFeedExpanded ? "Show less" : "View all";
+
+    const nextBadge = GAME_BADGES.find(b => !spGameBadgeEarned(b, s));
+    $("gNext").innerHTML = nextBadge
+        ? "🎯 Next achievement: <b>" + esc(nextBadge.name) + "</b> · " + esc(nextBadge.hint)
+        : "🎉 You earned every achievement. Master Detective!";
+}
+
+$("gFeedToggle").addEventListener("click", () => { gFeedExpanded = !gFeedExpanded; if (lastUser) renderGame(lastUser); });
+$("gClueToggle").addEventListener("click", () => { gClueExpanded = !gClueExpanded; if (lastUser) renderGame(lastUser); });
+
+/* ---------- Learn / Mystery Game tabs ---------- */
+function showTab(name, updateHash) {
+    const game = name === "game";
+    $("panel-learn").hidden = game;
+    $("panel-game").hidden = !game;
+    $("tab-learn").setAttribute("aria-selected", String(!game));
+    $("tab-game").setAttribute("aria-selected", String(game));
+    $("tab-learn").tabIndex = game ? -1 : 0;
+    $("tab-game").tabIndex = game ? 0 : -1;
+    if (lastUser) { game ? renderGame(lastUser) : renderProgress(); }   // replay the bar animations
+    if (updateHash) { try { history.replaceState(null, "", game ? "#game" : "#learn"); } catch (e) {} }
+}
+
+$("tab-learn").addEventListener("click", () => showTab("learn", true));
+$("tab-game").addEventListener("click", () => showTab("game", true));
+document.querySelector(".tabs").addEventListener("keydown", e => {
+    if (e.key !== "ArrowLeft" && e.key !== "ArrowRight") return;
+    const toGame = $("tab-learn").getAttribute("aria-selected") === "true";
+    showTab(toGame ? "game" : "learn", true);
+    $(toGame ? "tab-game" : "tab-learn").focus();
+});
+window.addEventListener("hashchange", () => showTab(location.hash === "#game" ? "game" : "learn", false));
+
 /* ---------- auth guard ---------- */
 onAuthStateChanged(auth, async user => {
     if (!user || !user.emailVerified) {
@@ -627,6 +829,9 @@ onAuthStateChanged(auth, async user => {
 
     renderProfile(user);
     renderProgress();
+    lastUser = user;
+    renderGame(user);
+    showTab(location.hash === "#game" ? "game" : "learn", false);
     document.documentElement.classList.remove("auth-pending");
 });
 </script>
