@@ -31,16 +31,48 @@
       return isNew;
     },
 
-    // Adds the "Continue" button under the results screen
+    // Which page runs each stage (same mapping as the learning path)
+    stageUrl: function (s) {
+      if (s % 10 === 0) return "stage-boss.html?stage=" + s;
+      if (s <= 2) return "stage-1-2.html?stage=" + s;
+      if (s === 21) return "stage-21.html";
+      if (s === 22) return "stage-22.html";
+      if (s === 29) return "stage-29.html";
+      if (s >= 26 && s <= 28) return "stage-lesson.html?stage=" + s;
+      return "stage.html?stage=" + s;
+    },
+
+    // Buttons under the results screen:
+    //   passed -> "Next stage" (or "Start next level" after a boss) + "Back to the learning path"
+    //   not passed -> "Back to the learning path"
     addBack: function (ok) {
       var m = document.getElementById("m");
       if (!m || document.getElementById("sp-back")) return;
+      var self = this, id = (window.D && D.id) || 0;
+      var box = document.createElement("div");
+      box.id = "sp-back";
+      box.style.cssText = "display:grid;gap:10px;margin-top:14px";
+      if (ok && id >= 1 && id < 30) {
+        var n = document.createElement("a");
+        n.className = "btn";
+        n.href = self.stageUrl(id + 1);
+        n.textContent = (id % 10 === 0) ? "Start the next level" : "Next stage";
+        // the celebration already played here, so don't replay it on the path
+        n.addEventListener("click", function () { try { localStorage.removeItem("sp-celebrate"); } catch (e) {} });
+        box.appendChild(n);
+      }
       var a = document.createElement("a");
-      a.id = "sp-back";
-      a.className = "btn";
+      a.className = (ok && id < 30) ? "btn alt" : "btn";
       a.href = "learningpath.html";
-      a.textContent = ok ? "Continue on the learning path" : "Back to the learning path";
-      m.appendChild(a);
+      a.textContent = "Back to the learning path";
+      box.appendChild(a);
+      m.appendChild(box);
+    },
+
+    // Locked stages can't be opened by typing the address
+    guard: function () {
+      var id = (window.D && D.id) || 0;
+      if (id > this.done() + 1) window.location.replace("learningpath.html");
     }
   };
 })();
@@ -140,6 +172,7 @@
   }, true);
 
   document.addEventListener("DOMContentLoaded", function () {
+    if (window.SPProgress) SPProgress.guard();
     var _go = window.go;
     if (typeof _go === "function") {
       window.go = function (n) {
