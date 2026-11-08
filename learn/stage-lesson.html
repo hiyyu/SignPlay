@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SignPlay! – Video Lesson Stage</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#fff8e8;--ink:#1f1b4d;--muted:#6c6794;--card:#fff;--lock:#e4e0f5;--sun:#ffc83d;--coral:#ff6b57;--teal:#1fb5a8;--green:#2fcf7f;--line:#1f1b4d;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#15123a;--ink:#fff6dc;--muted:#a49ed6;--card:#201b57;--lock:#2f2a74;--line:#0b0922}}
+:root[data-theme="dark"]{--bg:#15123a;--ink:#fff6dc;--muted:#a49ed6;--card:#201b57;--lock:#2f2a74;--line:#0b0922}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 1.05rem/1.55 Nunito,system-ui,sans-serif}
+h1,h2,h3{font-family:"Baloo 2",system-ui,sans-serif;line-height:1.1;margin:0}
+button,a.btn{font:800 1.1rem "Baloo 2",sans-serif;cursor:pointer}
+button:focus-visible,a:focus-visible{outline:3px solid #3aa0ff;outline-offset:3px}
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:10;background:#2a2272;color:#fff6dc;display:flex;align-items:center;gap:12px;padding:10px 16px;border-bottom:4px solid #0f0c2e}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:#2a2272;z-index:20}
+.dots{flex:1;display:flex;gap:5px}.dots i{flex:1;height:10px;border-radius:9px;background:#0f0c2e;border:2px solid #fff6dc;transition:background .3s}
+.dots i.on{background:var(--sun)}.dots i.now{background:#fff6dc}
+.chip{font:800 .95rem "Baloo 2",sans-serif;background:#fff6dc;color:#1f1b4d;border-radius:99px;padding:0 12px}
+main{max-width:560px;margin:0 auto;padding:22px 16px 60px}
+.tag{font:800 .9rem "Baloo 2",sans-serif;background:var(--sun);color:#1f1b4d;border-radius:99px;padding:0 12px;display:inline-block}
+h1{font-size:clamp(2rem,7vw,2.6rem);margin:10px 0 8px}h2{font-size:1.7rem;margin:6px 0 10px}
+.card{background:var(--card);border:4px solid var(--line);border-radius:24px;box-shadow:0 6px 0 var(--line);padding:20px;margin:16px 0}
+.muted{color:var(--muted)}
+.btn{display:block;width:100%;background:var(--sun);color:#1f1b4d;border:3px solid #0f0c2e;border-radius:999px;padding:10px 20px;box-shadow:0 5px 0 #0f0c2e;text-align:center;text-decoration:none;margin-top:16px}
+.btn.alt{background:var(--card);color:var(--ink);border-color:var(--line);box-shadow:0 5px 0 var(--line)}
+.btn:disabled{background:var(--lock);color:var(--muted);box-shadow:none;cursor:not-allowed}
+.btn:active:not(:disabled){transform:translateY(3px);box-shadow:0 2px 0 #0f0c2e}
+.row{display:flex;gap:10px}.row .btn{margin-top:16px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 0}.chips span{font:700 .95rem Nunito,sans-serif;background:var(--lock);border-radius:99px;padding:2px 12px}
+.demo{aspect-ratio:16/10;background:linear-gradient(135deg,#6b4ce6,#2a2272);border-radius:18px;border:3px solid var(--line);display:grid;place-items:center;color:#fff6dc;text-align:center;padding:12px;overflow:hidden}
+.demo video{width:100%;height:100%;object-fit:cover}
+.demo b{display:block;font:800 2.6rem "Baloo 2",sans-serif;line-height:1}
+.demo small{opacity:.8}
+.word{font:800 2.4rem "Baloo 2",sans-serif;margin:14px 0 4px}
+.note{border-left:5px solid var(--coral);padding:4px 0 4px 12px;margin:12px 0 0;color:var(--muted)}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.opts.one{grid-template-columns:1fr}
+.opt{background:var(--card);color:var(--ink);border:3px solid var(--line);border-radius:16px;padding:12px;box-shadow:0 4px 0 var(--line);font-size:1.05rem}
+.opt.ok{background:var(--green);color:#1f1b4d}.opt.no{background:var(--coral);color:#1f1b4d}
+.fb{min-height:1.6em;font:800 1.1rem "Baloo 2",sans-serif;margin-top:12px}
+.cam{position:relative;aspect-ratio:4/3;background:#0f0c2e;border-radius:18px;border:3px solid var(--line);display:grid;place-items:center;color:#c9c4f2;text-align:center;padding:12px;overflow:hidden}
+.cam video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scaleX(-1)}
+.cam .corner{position:absolute;width:30px;height:30px;border:5px solid var(--sun)}
+.c1{top:10px;left:10px;border-right:0;border-bottom:0;border-radius:10px 0 0 0}.c2{top:10px;right:10px;border-left:0;border-bottom:0;border-radius:0 10px 0 0}
+.c3{bottom:10px;left:10px;border-right:0;border-top:0;border-radius:0 0 0 10px}.c4{bottom:10px;right:10px;border-left:0;border-top:0;border-radius:0 0 10px 0}
+.stars{font-size:3rem;text-align:center;letter-spacing:6px}
+.big{font:800 2.2rem "Baloo 2",sans-serif;text-align:center;color:var(--teal);line-height:1.1}
+.split{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.split .demo,.split .cam{aspect-ratio:3/4;padding:6px}
+.split .demo b{font-size:2rem}
+.focus{margin:12px 0 0;padding-left:20px}.focus li{margin:4px 0}
+.rate{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px}
+.rate .opt{font-size:.95rem;padding:10px 4px}
+.rate .opt.sel{background:var(--sun);color:#1f1b4d}
+.list{display:grid;gap:8px;margin-top:12px}
+.list div{display:flex;justify-content:space-between;gap:10px;background:var(--lock);border-radius:14px;padding:8px 12px;font-weight:700}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="dots" id="dots" aria-hidden="true"></div>
+  <span class="chip" id="xp"></span>
+</header>
+<main id="m"></main>
+
+<script>
+/* ===== VIDEO LESSON STAGE: use for stages 26, 27 and 28 =====
+   Open as lesson.html?stage=26 (or 27, 28). No automatic scoring.
+   Flow: watch the video -> compare and imitate (demo next to your camera) -> rate yourself.
+   lessons: {w, v (video path), t (what to notice), focus:[things to look for], m (common mistake)}
+   quiz: optional comprehension check. It is NOT counted toward passing.
+   The stage is passed when every lesson has been watched and imitated.
+   NOTE: placeholder wording. Please have a Deaf signer check the content before launch. */
+var STAGES={
+26:{id:26,level:3,title:"Classifiers & Visual Scaling",goal:"Use your hands to show the shape, size and movement of things.",xp:100,
+ lessons:[
+  {w:"Vehicle on a winding road",v:"",t:"A vehicle classifier hand travels along a path in front of you.",focus:["Handshape stays the same","The hand follows the bends of the road","Your eyes follow the hand"],m:"Don’t jerk the hand. Move it smoothly along the path."},
+  {w:"Person walking",v:"",t:"A person classifier moves to show where someone walks.",focus:["Which way the person faces","Speed of the walk","Where the path ends"],m:"Keep the handshape steady while it moves."},
+  {w:"Big and small",v:"",t:"Show size with the distance between your hands and your face.",focus:["Hands far apart for big","Hands close for small","Cheeks and mouth show size too"],m:"Don’t keep your face blank. Face and hands work together."}],
+ quiz:[{q:"What stays the same while a classifier hand moves along a path?",o:["The handshape","The speed","The facial expression","The word order"],a:0}]},
+27:{id:27,level:3,title:"Storytelling & Narratives",goal:"Pace a story, take on characters and link your ideas.",xp:100,
+ lessons:[
+  {w:"Pacing the story",v:"",t:"Use pauses and speed to build the story.",focus:["Slow for important moments","Quicker for action","Short pauses between events"],m:"Don’t rush every part at the same speed."},
+  {w:"Role shift (character perspective)",v:"",t:"Shift your body and eye gaze a little to become each character.",focus:["Body turns slightly to each side","Eye gaze changes with the character","Face shows how they feel"],m:"Make the shift clear so the viewer knows who is speaking."},
+  {w:"Linking ideas",v:"",t:"Connect one event to the next so the story flows.",focus:["Clear start and finish for each event","Eye contact when you move on","A clear ending"],m:"Don’t just list events. Show how one leads to the next."}],
+ quiz:[{q:"What helps the viewer know which character is signing?",o:["A body and eye-gaze shift","Signing faster","Signing smaller","Looking at the floor"],a:0}]},
+28:{id:28,level:3,title:"Idioms, Slang & Expressive Nuances",goal:"Understand casual, expressive signing and how meaning goes beyond single signs.",xp:100,
+ lessons:[
+  {w:"Idioms aren’t word for word",v:"",t:"The meaning of an idiom comes from the whole expression, not each sign alone.",focus:["Watch the whole phrase","Notice the face","Ask what it means in context"],m:"Don’t translate sign by sign."},
+  {w:"Slang and regional variation",v:"",t:"Casual signs vary between regions and age groups.",focus:["Ask “Is that sign used here?”","Watch the local community","Expect more than one sign for a word"],m:"Don’t assume one sign is the only correct one."},
+  {w:"Casual pace and expression",v:"",t:"Relaxed signing is faster, smaller and more expressive.",focus:["Smaller movements","More face","Shorter pauses"],m:"Don’t copy casual style until you’re comfortable with the basics."}],
+ quiz:[{q:"How should you understand an idiom?",o:["As a whole expression in context","One sign at a time","By ignoring the face","By fingerspelling every word"],a:0}]}
+};
+var qs=(location.search.match(/stage=(\d+)/)||[])[1];
+var D=STAGES[qs]||STAGES[26];
+document.title="SignPlay! – Stage "+D.id;
+
+var STEPS=["Intro","Watch","Imitate","Check-in","Results"];
+var RATE=["Need practice","Getting close","Matches!"];
+var $=function(i){return document.getElementById(i)};
+var S,stream=null;
+function reset(){S={st:0,i:0,seen:{},done:{},rate:{},qc:0}}
+function stop(){if(stream){stream.getTracks().forEach(function(t){t.stop()});stream=null}}
+function demo(s,id){return '<div class="demo">'+(s.v?'<video '+(id?'id="'+id+'" ':'')+'src="'+s.v+'" '+(id?'':'controls ')+'autoplay loop muted playsinline></video>':'<div><b>▶</b><small>Video: “'+s.w+'”</small></div>')+'</div>'}
+function showCam(){var c=$("cam");if(!c||!stream)return;var v=document.createElement("video");v.autoplay=true;v.muted=true;v.playsInline=true;v.srcObject=stream;c.insertBefore(v,c.firstChild);$("cmsg").textContent="";var b=document.querySelector('[data-a="cam"]');if(b){b.textContent="Camera on";b.disabled=true}}
+function camOn(){if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){$("cmsg").textContent="Camera not available here";return}
+  navigator.mediaDevices.getUserMedia({video:{facingMode:"user"}}).then(function(s){stream=s;showCam()}).catch(function(){$("cmsg").textContent="Camera blocked. Allow access to imitate."})}
+function go(n,i){if(n!==2)stop();if(n===3&&!(D.quiz&&D.quiz.length))n=4;S.st=n;S.i=i||0;draw();window.scrollTo(0,0)}
+function count(o){return Object.keys(o).length}
+function fb(t,c){var f=$("fb");if(f){f.textContent=t;f.style.color=c||"var(--ink)"}}
+function after(fn,ms){setTimeout(fn,ms||900)}
+function draw(){
+  $("xp").textContent="+"+D.xp+" XP";
+  $("dots").innerHTML=STEPS.map(function(_,k){return k===3&&!(D.quiz&&D.quiz.length)?"":'<i class="'+(k<S.st?"on":k===S.st?"now":"")+'"></i>'}).join("");
+  var h="",s,st=S.st,n=D.lessons.length;
+  if(st===0){
+    h='<span class="tag">Level '+D.level+' · Stage '+D.id+'</span><h1>'+D.title+'</h1><p class="muted">'+D.goal+'</p><div class="card"><h2>In this stage</h2><div class="chips">'+D.lessons.map(function(x){return '<span>'+x.w+'</span>'}).join("")+'</div><p class="muted" style="margin:14px 0 0">Watch each video, then copy it next to your own camera view. This stage has no automatic score. You rate yourself.</p><p class="muted" style="margin:10px 0 0">About 10 minutes · Reward: '+D.xp+' XP · Complete all '+n+' lessons to pass</p></div><button class="btn" data-a="next">Start stage</button>';
+  }else if(st===1){
+    s=D.lessons[S.i];
+    h='<span class="tag">Watch '+(S.i+1)+'/'+n+'</span>'+demo(s)+'<div class="word">'+s.w+'</div><p style="margin:0">'+s.t+'</p><p style="margin:12px 0 0"><b>Look for:</b></p><ul class="focus">'+s.focus.map(function(f){return '<li>'+f+'</li>'}).join("")+'</ul><p class="note"><b>Common mistake:</b> '+s.m+'</p><div class="row"><button class="btn alt" data-a="prev"'+(S.i?'':' disabled')+'>Back</button><button class="btn" data-a="nxt">'+(S.i<n-1?"Watched it":"Now imitate")+'</button></div>';
+  }else if(st===2){
+    s=D.lessons[S.i];
+    h='<span class="tag">Imitate '+(S.i+1)+'/'+n+'</span><h2>'+s.w+'</h2><p class="muted" style="margin:0 0 10px">Copy the video. Compare your movement with the demo.</p><div class="split">'+demo(s,"ref")+'<div class="cam" id="cam"><i class="corner c1"></i><i class="corner c2"></i><i class="corner c3"></i><i class="corner c4"></i><span id="cmsg">Camera is off</span></div></div><div class="row"><button class="btn alt" data-a="cam">Turn on camera</button><button class="btn alt" data-a="replay">Replay demo</button></div><p style="margin:16px 0 0"><b>How did it go?</b></p><div class="rate">'+RATE.map(function(r,k){return '<button class="opt'+(S.rate[S.i]===k?" sel":"")+'" data-a="rate" data-k="'+k+'">'+r+'</button>'}).join("")+'</div><div class="fb" id="fb"></div><div class="row"><button class="btn alt" data-a="prev2"'+(S.i?'':' disabled')+'>Back</button><button class="btn" data-a="nxt2"'+(S.rate[S.i]===undefined?' disabled':'')+'>'+(S.i<n-1?"Next lesson":"Finish")+'</button></div>';
+  }else if(st===3){
+    var q=D.quiz[S.i];
+    h='<span class="tag">Check-in '+(S.i+1)+'/'+D.quiz.length+'</span><h2>'+q.q+'</h2><p class="muted" style="margin:0">Just for fun. It doesn’t count toward passing.</p><div class="opts one">'+q.o.map(function(o,k){return '<button class="opt" data-a="qz" data-k="'+k+'">'+o+'</button>'}).join("")+'</div><div class="fb" id="fb"></div>';
+  }else{
+    var ok=count(S.rate)===n&&count(S.seen)===n,sum=0;for(var j in S.rate)sum+=S.rate[j];
+    var avg=n?sum/n:0,stars=!ok?0:avg>=1.6?3:avg>=1?2:1;
+    h='<span class="tag">'+(ok?"Stage complete!":"Almost there")+'</span><h1>'+D.title+'</h1><div class="card"><div class="stars" aria-label="'+stars+' of 3 stars">'+"★".repeat(stars)+'<span style="opacity:.25">'+"★".repeat(3-stars)+'</span></div><div class="big">'+count(S.rate)+'/'+n+' lessons imitated</div><p class="muted" style="text-align:center;margin:6px 0 0">Stars come from your own ratings. No automatic scoring on this stage.</p><div class="list">'+D.lessons.map(function(x,k){return '<div><span>'+x.w+'</span><span>'+(S.rate[k]===undefined?"–":RATE[S.rate[k]])+'</span></div>'}).join("")+'</div>'+(ok?'<p style="text-align:center;font:800 1.4rem \'Baloo 2\',sans-serif;margin:14px 0 0">+'+D.xp+' XP earned</p>':'<p class="muted" style="text-align:center;margin:14px 0 0">Watch and imitate every lesson to pass.</p>')+(D.quiz&&D.quiz.length?'<p class="muted" style="text-align:center;margin:10px 0 0">Check-in: '+S.qc+'/'+D.quiz.length+' (not counted)</p>':'')+'</div><button class="btn alt" data-a="retry">'+(ok?"Play again":"Try again")+'</button>';
+  }
+  $("m").innerHTML=h;
+  if(st===2)showCam();
+}
+document.addEventListener("click",function(e){
+  var b=e.target.closest("[data-a]");if(!b||b.disabled)return;var a=b.dataset.a,k=+b.dataset.k,n=D.lessons.length;
+  if(a==="next")go(1);
+  else if(a==="nxt"){S.seen[S.i]=1;S.i<n-1?go(1,S.i+1):go(2)}
+  else if(a==="prev"){go(1,S.i-1)}
+  else if(a==="cam")camOn();
+  else if(a==="replay"){var v=$("ref");if(v){v.currentTime=0;v.play()}else fb("Add a video path (v) to replay it.")}
+  else if(a==="rate"){S.rate[S.i]=k;draw()}
+  else if(a==="nxt2"){S.i<n-1?go(2,S.i+1):go(3)}
+  else if(a==="prev2"){go(2,S.i-1)}
+  else if(a==="qz"){var q=D.quiz[S.i],ok=k===q.a;if(ok)S.qc++;b.classList.add(ok?"ok":"no");fb(ok?"Correct!":"It was “"+q.o[q.a]+"”",ok?"var(--green)":"var(--coral)");document.querySelectorAll(".opt").forEach(function(x){x.disabled=true});
+    after(function(){S.i<D.quiz.length-1?go(3,S.i+1):go(4)},1100)}
+  else if(a==="retry"){reset();go(0)}
+});
+reset();draw();
+</script>
+</body>
+</html>
