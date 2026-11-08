@@ -21,6 +21,7 @@ const db = getFirestore(auth.app);
 const K_DONE = "sp-done";
 const K_STREAK = "sp-streak";
 const K_WEEK = "sp-week";
+const K_STARS = "sp-stars";   // best stars per stage, e.g. {"4":3}
 const K_OWNER = "sp-owner";     // uid that the progress in this browser belongs to
 const K_SYNCED = "sp-synced";   // last progress value that was saved to / loaded from Firestore
 
@@ -45,6 +46,8 @@ function readLocal() {
         if (s && s.count) p.streak = { last: String(s.last || ""), count: Number(s.count) || 1 };
         const w = JSON.parse(lsGet(K_WEEK) || "null");
         if (w && w.key !== undefined) p.week = { key: String(w.key), base: Number(w.base) || 0 };
+        const st = JSON.parse(lsGet(K_STARS) || "null");
+        if (st && typeof st === "object") p.stars = cleanStars(st);
     } catch (e) {}
     return p;
 }
@@ -53,10 +56,11 @@ function writeLocal(p) {
     if (p.done !== undefined) lsSet(K_DONE, String(p.done)); else lsDel(K_DONE);
     if (p.streak) lsSet(K_STREAK, JSON.stringify({ last: p.streak.last, count: p.streak.count })); else lsDel(K_STREAK);
     if (p.week) lsSet(K_WEEK, JSON.stringify({ key: p.week.key, base: p.week.base })); else lsDel(K_WEEK);
+    if (p.stars && Object.keys(p.stars).length) lsSet(K_STARS, JSON.stringify(p.stars)); else lsDel(K_STARS);
 }
 
 function clearLocal() {
-    [K_DONE, K_STREAK, K_WEEK, K_OWNER, K_SYNCED].forEach(lsDel);
+    [K_DONE, K_STREAK, K_WEEK, K_STARS, K_OWNER, K_SYNCED].forEach(lsDel);
 }
 
 // Firestore rejects undefined values, so keep only what exists
@@ -65,6 +69,25 @@ function clean(p) {
     if (p.done !== undefined) o.done = p.done;
     if (p.streak) o.streak = { last: p.streak.last, count: p.streak.count };
     if (p.week) o.week = { key: p.week.key, base: p.week.base };
+    if (p.stars && Object.keys(p.stars).length) o.stars = cleanStars(p.stars);
+    return o;
+}
+
+// keep only valid stage -> 1..3 stars entries
+function cleanStars(s) {
+    const o = {};
+    Object.keys(s || {}).forEach(function (k) {
+        const n = parseInt(k, 10), v = Number(s[k]);
+        if (n >= 1 && n <= 30 && v >= 1 && v <= 3) o[n] = Math.round(v);
+    });
+    return o;
+}
+
+// best stars per stage from two copies
+function mergeStars(a, b) {
+    const o = cleanStars(a);
+    const c = cleanStars(b);
+    Object.keys(c).forEach(function (k) { if (!o[k] || c[k] > o[k]) o[k] = c[k]; });
     return o;
 }
 
@@ -116,10 +139,12 @@ export async function ensureUserProgress(user) {
                 finalP = {
                     done: rp.done !== undefined ? rp.done : local.done,
                     streak: pickStreak(local.streak, rp.streak),
-                    week: rp.week || local.week
+                    week: rp.week || local.week,
+                    stars: mergeStars(local.stars, rp.stars)
                 };
             } else {
                 finalP = local;   // progress was made here: this is the newest
+                finalP.stars = mergeStars(local.stars, rp && rp.stars);
             }
         } else if (rp) {
             finalP = rp;          // different account (or fresh browser): restore from cloud

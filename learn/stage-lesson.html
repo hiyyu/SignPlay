@@ -68,6 +68,7 @@ h1{font-size:clamp(2rem,7vw,2.6rem);margin:10px 0 8px}h2{font-size:1.7rem;margin
   <span class="chip" id="xp"></span>
 </header>
 <main id="m"></main>
+<script src="progress.js"></script>
 
 <script>
 /* ===== VIDEO LESSON STAGE: use for stages 26, 27 and 28 =====
@@ -132,7 +133,7 @@ function draw(){
     h='<span class="tag">Check-in '+(S.i+1)+'/'+D.quiz.length+'</span><h2>'+q.q+'</h2><p class="muted" style="margin:0">Just for fun. It doesn’t count toward passing.</p><div class="opts one">'+q.o.map(function(o,k){return '<button class="opt" data-a="qz" data-k="'+k+'">'+o+'</button>'}).join("")+'</div><div class="fb" id="fb"></div>';
   }else{
     var ok=count(S.rate)===n&&count(S.seen)===n,sum=0;for(var j in S.rate)sum+=S.rate[j];
-    var avg=n?sum/n:0,stars=!ok?0:avg>=1.6?3:avg>=1?2:1;
+    var avg=n?sum/n:0,stars=!ok?0:avg>=1.6?3:avg>=1?2:1;if(window.SPProgress){setTimeout(function(){SPProgress.addBack(ok)},0);if(ok)SPProgress.complete(D.id,Math.round(stars*100/3),stars)}
     h='<span class="tag">'+(ok?"Stage complete!":"Almost there")+'</span><h1>'+D.title+'</h1><div class="card"><div class="stars" aria-label="'+stars+' of 3 stars">'+"★".repeat(stars)+'<span style="opacity:.25">'+"★".repeat(3-stars)+'</span></div><div class="big">'+count(S.rate)+'/'+n+' lessons imitated</div><p class="muted" style="text-align:center;margin:6px 0 0">Stars come from your own ratings. No automatic scoring on this stage.</p><div class="list">'+D.lessons.map(function(x,k){return '<div><span>'+x.w+'</span><span>'+(S.rate[k]===undefined?"–":RATE[S.rate[k]])+'</span></div>'}).join("")+'</div>'+(ok?'<p style="text-align:center;font:800 1.4rem \'Baloo 2\',sans-serif;margin:14px 0 0">+'+D.xp+' XP earned</p>':'<p class="muted" style="text-align:center;margin:14px 0 0">Watch and imitate every lesson to pass.</p>')+(D.quiz&&D.quiz.length?'<p class="muted" style="text-align:center;margin:10px 0 0">Check-in: '+S.qc+'/'+D.quiz.length+' (not counted)</p>':'')+'</div><button class="btn alt" data-a="retry">'+(ok?"Play again":"Try again")+'</button>';
   }
   $("m").innerHTML=h;

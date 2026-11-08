@@ -64,6 +64,8 @@ h1{font-size:clamp(2rem,7vw,2.6rem);margin:10px 0 8px}h2{font-size:1.7rem;margin
   <span class="chip" id="xp">+50 XP</span>
 </header>
 <main id="m"></main>
+<script src="progress.js"></script>
+<script src="stage-data.js"></script>
 
 <script>
 /* ===== STAGE DATA: swap this object to make any other stage ===== */
@@ -77,6 +79,8 @@ signs:[
  {w:"Sorry",v:"",t:"Fist on your chest, rub in a circle.",m:"Use a fist. A flat hand means “please”."},
  {w:"Help",v:"",t:"Fist on top of your open palm, lift both hands up together.",m:"Lift both hands together as one movement."},
  {w:"Bathroom",v:"",t:"Make a T-shape fist (thumb between index and middle) and shake it side to side.",m:"Shake the hand, don’t wave it."}]};
+/* other vocabulary stages: stage.html?stage=N loads that stage from stage-data.js */
+(function(){var n=parseInt(new URLSearchParams(location.search).get("stage"),10);if(n&&n!==4&&window.STAGE_DATA&&STAGE_DATA[n])D=STAGE_DATA[n]})();
 /* v = path to the demo video for each sign, e.g. "videos/hello.mp4". Empty shows a placeholder. */
 
 var STEPS=["Intro","Review","Learn","Recognise","Practise","Play","Results"];
@@ -111,7 +115,7 @@ function draw(){
   }else if(st===5){
     h='<span class="tag">Play</span><h2>Match the sign to its word</h2><p class="muted" style="margin:0 0 12px">Tap a description, then tap its word.</p><div class="pairs"><div style="display:grid;gap:10px">'+S.left.map(function(x){return '<button data-a="pl" data-w="'+x.w+'" class="'+(S.gone[x.w]?"gone ":"")+(S.sel===x.w?"sel":"")+'">'+x.t+'</button>'}).join("")+'</div><div style="display:grid;gap:10px">'+S.right.map(function(x){return '<button data-a="pr" data-w="'+x.w+'" class="'+(S.gone[x.w]?"gone":"")+'">'+x.w+'</button>'}).join("")+'</div></div><div class="fb" id="fb"></div>';
   }else{
-    var p=total(),ok=p>=D.pass,stars=p>=90?3:p>=80?2:p>=D.pass?1:0;
+    var p=total(),ok=p>=D.pass,stars=p>=90?3:p>=80?2:p>=D.pass?1:0;if(window.SPProgress){setTimeout(function(){SPProgress.addBack(ok)},0);if(ok)SPProgress.complete(D.id,p,stars)}
     h='<span class="tag">'+(ok?"Stage complete!":"Almost there")+'</span><h1>'+D.title+'</h1><div class="card"><div class="stars" aria-label="'+stars+' of 3 stars">'+"★".repeat(stars)+'<span style="opacity:.25">'+"★".repeat(3-stars)+'</span></div><div class="big">'+p+'%</div><p class="muted" style="text-align:center;margin:6px 0 0">Recognise '+S.rc+'/'+S.Q.length+' · Practise '+S.pc+'/'+S.P.length+' · Play '+S.mg+'/'+S.G.length+'</p>'+(ok?'<p style="text-align:center;font:800 1.4rem \'Baloo 2\',sans-serif;margin:14px 0 0">+'+D.xp+' XP earned</p>':'<p class="muted" style="text-align:center;margin:14px 0 0">You need '+D.pass+'% to pass. Review the signs and try again.</p>')+'</div><div class="chips">'+D.signs.map(function(x){return '<span>✓ '+x.w+'</span>'}).join("")+'</div>'+'<button class="btn alt" data-a="retry">'+(ok?"Play again":"Try again")+'</button>';
   }
   $("m").innerHTML=h;

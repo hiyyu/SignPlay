@@ -63,6 +63,7 @@ h1{font-size:clamp(2rem,7vw,2.6rem);margin:10px 0 8px}h2{font-size:1.7rem;margin
   <span class="chip" id="xp"></span>
 </header>
 <main id="m"></main>
+<script src="progress.js"></script>
 
 <script>
 /* ===== BOSS STAGE DATA =====
@@ -162,7 +163,7 @@ function draw(){
     var s=D.scen.steps[S.i];
     h='<span class="tag boss">Scenario '+(S.i+1)+'/'+D.scen.steps.length+'</span><p class="note" style="margin:12px 0 0">'+D.scen.intro+'</p><h2 style="margin-top:12px">'+s.q+'</h2><div class="opts one">'+s.o.map(function(o,k){return '<button class="opt" data-a="sc" data-k="'+k+'">'+o+'</button>'}).join("")+'</div><div class="fb" id="fb"></div>';
   }else{
-    var p=total(),ok=p>=D.pass,stars=p>=95?3:p>=88?2:p>=D.pass?1:0;
+    var p=total(),ok=p>=D.pass,stars=p>=95?3:p>=88?2:p>=D.pass?1:0;if(window.SPProgress){setTimeout(function(){SPProgress.addBack(ok)},0);if(ok)SPProgress.complete(D.id,p,stars)}
     h='<span class="tag boss">'+(ok?"Boss defeated!":"Almost there")+'</span><h1>'+D.title+'</h1><div class="card"><div class="stars" aria-label="'+stars+' of 3 stars">'+"★".repeat(stars)+'<span style="opacity:.25">'+"★".repeat(3-stars)+'</span></div><div class="big">'+p+'%</div><p class="muted" style="text-align:center;margin:6px 0 0">Quiz '+S.qc+'/'+D.quiz.length+' · Chain '+S.cc+'/'+D.chain.length+' · Scenario '+S.sc+'/'+D.scen.steps.length+'</p><div class="badge '+(ok?"":"locked")+'"><span>'+D.badge.e+'</span>'+D.badge.n+'</div>'+(ok?'<p style="text-align:center;font:800 1.4rem \'Baloo 2\',sans-serif;margin:14px 0 0">+'+D.xp+' XP earned</p>':'<p class="muted" style="text-align:center;margin:14px 0 0">You need '+D.pass+'% to pass and win the badge. Review the earlier stages and try again.</p>')+'</div><button class="btn alt" data-a="retry">'+(ok?"Play again":"Try again")+'</button>';
   }
   $("m").innerHTML=h;
