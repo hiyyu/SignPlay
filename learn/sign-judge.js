@@ -5,7 +5,7 @@ const BASE = new URL("../models/", import.meta.url).href;
 const WASM = "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/wasm";
 const N_FRAMES = 48;
 const POSE_KEEP = [0, 11, 12, 13, 14, 15, 16];
-const ALIAS = { GOODBYE: "BYE" };
+const ALIAS = { GOODBYE: "BYE", POLICE: "POLICEMAN" };
 let hand, pose, session, meta, loading = null;
 
 const sleep = ms => new Promise(r => setTimeout(r, ms));

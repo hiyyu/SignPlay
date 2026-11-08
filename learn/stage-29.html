@@ -57,6 +57,7 @@ h1{font-size:clamp(2rem,7vw,2.6rem);margin:10px 0 8px}h2{font-size:1.7rem;margin
   <span class="chip" id="xp"></span>
 </header>
 <main id="m"></main>
+<script src="progress.js"></script>
 
 <script>
 /* ===== STAGE 29 DATA: Deaf Culture & Etiquette =====
@@ -107,7 +108,7 @@ function draw(){
   }else if(st===3){
     h=qcard(S.C[S.i],"What would you do? "+(S.i+1)+"/"+S.C.length,"sc");
   }else{
-    var p=total(),ok=p>=D.pass,stars=p>=90?3:p>=80?2:p>=D.pass?1:0;
+    var p=total(),ok=p>=D.pass,stars=p>=90?3:p>=80?2:p>=D.pass?1:0;if(window.SPProgress){setTimeout(function(){SPProgress.addBack(ok)},0);if(ok)SPProgress.complete(D.id,p,stars)}
     h='<span class="tag">'+(ok?"Stage complete!":"Almost there")+'</span><h1>'+D.title+'</h1><div class="card"><div class="stars" aria-label="'+stars+' of 3 stars">'+"★".repeat(stars)+'<span style="opacity:.25">'+"★".repeat(3-stars)+'</span></div><div class="big">'+p+'%</div><p class="muted" style="text-align:center;margin:6px 0 0">Quiz '+S.qc+'/'+S.Q.length+' · Scenarios '+S.sc+'/'+S.C.length+'</p>'+(ok?'<p style="text-align:center;font:800 1.4rem \'Baloo 2\',sans-serif;margin:14px 0 0">+'+D.xp+' XP earned</p>':'<p class="muted" style="text-align:center;margin:14px 0 0">You need '+D.pass+'% to pass. Re-read the cards and try again.</p>')+'</div><button class="btn alt" data-a="retry">'+(ok?"Play again":"Try again")+'</button>';
   }
   $("m").innerHTML=h;

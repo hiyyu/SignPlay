@@ -1994,7 +1994,7 @@ function openStageSheet(s) {
   if (isLocked) {
     actionBtn.textContent = "Complete Stage " + (s - 1) + " to Unlock";
   } else if (isDone) {
-    actionBtn.textContent = "Review & Practice (+10 XP)";
+    actionBtn.textContent = "Review & Practice";
   } else {
     actionBtn.textContent = "Start Stage (+" + rewardXP + " XP)";
   }
@@ -2292,36 +2292,52 @@ sliderEl.addEventListener("click", function(e) {
 });
  
 // Stage Action Trigger
-document.getElementById("sheet-action").onclick = function() {
-  if (activeStageModal === done + 1) {
-    done++;
-    saveProgress();
-    closeStageSheet();
-    renderMap();
- 
-    var boss = isBoss(done);
-    if (done === 30) {
-      playSound('victory');
-      triggerConfetti('trophy');
-      document.getElementById("victory-modal").classList.add("open");
-      scrollToX(2700, true);
-    } else if (boss) {
-      playSound('level');
-      triggerConfetti('level');
-      showToast("Level Conquered! +150 XP ★ Scrolling to next level!");
-      var nextX = done === 10 ? 950 : done === 20 ? 1900 : 0;
-      setTimeout(function() { scrollToX(nextX, true); }, 350);
-    } else {
-      playSound('complete');
-      triggerConfetti('stage');
-      showToast("Stage Complete! +50 XP");
-    }
-  } else if (activeStageModal <= done) {
-    closeStageSheet();
+// Which page runs each stage
+function stageUrl(s) {
+  if (s % 10 === 0) return "stage-boss.html?stage=" + s;
+  if (s <= 2) return "stage-1-2.html?stage=" + s;
+  if (s === 21) return "stage-21.html";
+  if (s === 22) return "stage-22.html";
+  if (s === 29) return "stage-29.html";
+  if (s >= 26 && s <= 28) return "stage-lesson.html?stage=" + s;
+  return "stage.html?stage=" + s;
+}
+
+// Celebration after coming back from a stage page
+function celebrateStage(c) {
+  closeStageSheet();
+  renderMap();
+  if (!c.isNew) {
     playSound('tap');
-    showToast("Review session complete! +10 XP");
+    showToast("Stage " + c.stage + " practised! " + "\u2605".repeat(c.stars || 0));
+    return;
+  }
+  var boss = isBoss(c.stage);
+  if (c.stage === 30) {
+    playSound('victory');
+    triggerConfetti('trophy');
+    document.getElementById("victory-modal").classList.add("open");
+    scrollToX(2700, true);
+  } else if (boss) {
+    playSound('level');
+    triggerConfetti('level');
+    showToast("Level Conquered! +150 XP \u2605 Scrolling to next level!");
+    var nextX = c.stage === 10 ? 950 : c.stage === 20 ? 1900 : 0;
+    setTimeout(function() { scrollToX(nextX, true); }, 350);
+  } else {
+    playSound('complete');
+    triggerConfetti('stage');
+    showToast("Stage Complete! +50 XP " + "\u2605".repeat(c.stars || 0));
+  }
+}
+
+// Stage Action Trigger: open the real stage page (only unlocked stages)
+document.getElementById("sheet-action").onclick = function() {
+  if (activeStageModal >= 1 && activeStageModal <= done + 1) {
+    window.location.href = stageUrl(activeStageModal);
   }
 };
+
  
 // Map Click Delegations
 document.getElementById("scene").addEventListener("click", function(e) {
@@ -2456,6 +2472,7 @@ document.getElementById("demo-reset").onclick = function() {
   scrollToX(0, true);
 };
  
+
 // Initial Render
 renderMap();
 updateSlider();
@@ -2463,6 +2480,13 @@ if (done > 0) {
   var initX = done >= 30 ? 2700 : done >= 20 ? 1900 : done >= 10 ? 950 : 0;
   setTimeout(function() { scrollToX(initX, false); updateSlider(); }, 150);
 }
+
+// Returning from a stage page? Play the celebration once.
+try {
+  var _c = JSON.parse(localStorage.getItem("sp-celebrate") || "null");
+  localStorage.removeItem("sp-celebrate");
+  if (_c && _c.stage) setTimeout(function() { celebrateStage(_c); if (window.spCloudSave) window.spCloudSave(); }, 400);
+} catch (e) {}
 </script>
 
 <script>
