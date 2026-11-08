@@ -81,10 +81,10 @@ var STAGES={
   {q:"You need the toilet. Which sign do you use?",v:"",o:["Bathroom","Help","Please","Hello"],a:0},
   {q:"What does a flat hand rubbing a slow circle on the chest mean?",v:"",o:["Sorry","Hello","Please","Thank you"],a:2}],
  chain:[
-  {w:"Say hello",t:"Flat hand at your forehead, then a small salute outward.",m:"Keep it small, and away from the head."},
-  {w:"Say “please help”",t:"Sign PLEASE, then HELP (fist on open palm, lift both hands).",m:"Keep the circle on the chest, then lift both hands together."},
-  {w:"Say “thank you”",t:"Fingertips at the chin, then move forward and down.",m:"Start at the chin and move toward the person."},
-  {w:"Say goodbye",t:"Open hand facing out, fold the fingers down and up.",m:"Fold the fingers. Don’t swing the whole arm."}],
+  {w:"Say hello",g:["Hello"],t:"Flat hand at your forehead, then a small salute outward.",m:"Keep it small, and away from the head."},
+  {w:"Say “please help”",g:["Please","Help"],t:"Sign PLEASE, then HELP (fist on open palm, lift both hands).",m:"Keep the circle on the chest, then lift both hands together."},
+  {w:"Say “thank you”",g:["Thank you"],t:"Fingertips at the chin, then move forward and down.",m:"Start at the chin and move toward the person."},
+  {w:"Say goodbye",g:["Goodbye"],t:"Open hand facing out, fold the fingers down and up.",m:"Fold the fingers. Don’t swing the whole arm."}],
  scen:{intro:"You meet a Deaf friend of a friend at a café.",steps:[
   {q:"They wave to get your attention. What do you do first?",o:["Make eye contact and sign HELLO","Look at your phone","Speak loudly","Walk away"],a:0,e:"Eye contact is how you show you are listening."},
   {q:"You didn’t understand a sign. What now?",o:["Pretend you understood","Sign SORRY, then PLEASE and ask them to repeat","Say “never mind”","Look away"],a:1,e:"Asking again politely is always welcome."},
@@ -168,12 +168,27 @@ function draw(){
   $("m").innerHTML=h;
   if(st===2){showCam();startTimer()}
 }
+function passed(){clearInterval(tm);S.cc++;fb("Great sign!","var(--green)");after(nextChain,900)}
+function realCheck(b){
+  var c=D.chain[S.i],vid=document.querySelector("#cam video");
+  b.disabled=true;
+  fb("Loading the checker...");
+  SignJudge.supports(c.g[0]).then(function(sup){
+    if(!sup){b.disabled=false;if(judge()){passed()}else{fb("Almost! Hint: "+c.m,"var(--coral)")}return}
+    return SignJudge.check(vid,c.g,function(t){fb(t)}).then(function(r){
+      b.disabled=false;
+      if(r.error){fb(r.error,"var(--coral)");return}
+      if(r.ok){passed()}else{fb("Not quite. I saw: "+r.top[0].word+". Hint: "+c.m,"var(--coral)")}
+    });
+  }).catch(function(){b.disabled=false;fb("The checker could not load. Try again.","var(--coral)")});
+}
 document.addEventListener("click",function(e){
   var b=e.target.closest("[data-a]");if(!b||b.disabled)return;var a=b.dataset.a,k=+b.dataset.k;
   if(a==="next")go(1);
   else if(a==="qz"){var q=S.Q[S.i],ok=k===q.a;if(ok)S.qc++;b.classList.add(ok?"ok":"no");fb(ok?"Correct!":"Not quite: "+q.o[q.a],ok?"var(--green)":"var(--coral)");document.querySelectorAll(".opt").forEach(function(x){x.disabled=true});
     after(function(){S.i<S.Q.length-1?go(1,S.i+1):go(2)},1100)}
   else if(a==="cam")camOn();
+  else if(a==="chk"&&window.SignJudge&&D.chain[S.i].g&&document.querySelector("#cam video")){realCheck(b)}
   else if(a==="chk"){if(judge()){clearInterval(tm);S.cc++;fb("Great sign!","var(--green)");after(nextChain,900)}
     else fb("Almost! Hint: "+D.chain[S.i].m,"var(--coral)")}
   else if(a==="pskip"){nextChain()}
@@ -183,5 +198,6 @@ document.addEventListener("click",function(e){
 });
 reset();draw();
 </script>
+<script type="module" src="sign-judge.js"></script>
 </body>
 </html>
