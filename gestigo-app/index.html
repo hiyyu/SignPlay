@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Gestigo — Case Map & Investigation Stages</title>
+
+  <!-- Inside SignPlay (/gestigo-app/): hide the page until we know the player is signed in -->
+  <style>
+    html.auth-pending body { visibility: hidden; }
+    .signplay-only { display: none !important; }
+    html.in-signplay .signplay-only { display: inline-flex !important; }
+  </style>
+  <script>if (location.pathname.indexOf('/gestigo-app/') !== -1) document.documentElement.classList.add('auth-pending', 'in-signplay');</script>
+  
+  <script>
+    window.onerror = function(msg, url, line, col, err) {
+      if (!url || msg === 'Script error.' || line === 0) return true;
+      console.warn('Application notice:', msg, 'at', url, ':', line);
+      return false;
+    };
+  </script>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            cyberDark: '#0a0e17',
+            cyberCard: '#121a2b',
+            neonGreen: '#22c55e',
+            neonCyan: '#06b6d4',
+            neonAmber: '#f59e0b',
+            neonPurple: '#a855f7'
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Lucide Icons (Deferred) -->
+  <script src="https://unpkg.com/lucide@latest" defer></script>
+
+  <!-- MediaPipe Hands CDN for Camera Gesture Detection (Deferred, non-blocking) -->
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous" defer></script>
+
+  <!-- Custom Stylesheet -->
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body class="bg-[#0a0e17] text-slate-100 min-h-screen flex flex-col font-sans selection:bg-purple-500 selection:text-white">
+  <header class="sticky top-0 z-50 bg-[#0f172a]/95 backdrop-blur-md border-b border-slate-800/80 px-3 sm:px-6 py-2.5">
+    <div class="max-w-6xl mx-auto flex items-center justify-between">
+      
+      <!-- Brand & Mascot Logo (Gestigo Official Emblem) -->
+      <a href="index.html" class="flex items-center gap-3 cursor-pointer">
+        <div class="relative w-10 h-10 sm:w-11 sm:h-11 rounded-2xl overflow-hidden border-2 border-purple-500/80 shadow-[0_0_20px_rgba(168,85,247,0.5)] bg-[#1e293b] flex items-center justify-center flex-shrink-0">
+          <img src="assets/gestigo-logo.png" alt="Gestigo Logo" class="w-full h-full object-cover" />
+        </div>
+        <div>
+          <span class="text-lg sm:text-xl font-black tracking-tight text-white leading-none block" data-i18n="appName">GESTIGO</span>
+          <p class="text-[9px] sm:text-[10px] text-purple-300 font-mono tracking-wide mt-0.5" data-i18n="appTagline">THE MYSTERY OF THE MISSING SIGNS</p>
+        </div>
+      </a>
+
+      <!-- Back to the SignPlay dashboard (only shown when the game runs inside SignPlay) -->
+      <a href="../dashboard.html" class="signplay-only items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-600 text-xs sm:text-sm font-bold transition-all whitespace-nowrap" title="Back to your SignPlay dashboard">
+        <span aria-hidden="true">←</span><span>Dashboard</span>
+      </a>
+
+      <!-- Main Navigation Menu (Case Map) -->
+      <nav class="flex items-center gap-2 bg-slate-900/90 px-3 py-1.5 rounded-2xl border border-slate-700/60 shadow-lg">
+        <a href="index.html" class="nav-link-btn px-4 sm:px-5 py-2 text-xs sm:text-sm font-bold rounded-xl text-amber-300 bg-amber-950/70 border border-amber-500/40 shadow-[0_0_15px_rgba(245,158,11,0.3)] transition-all flex items-center gap-2 cursor-pointer">
+          <i data-lucide="map" class="w-4 h-4 text-emerald-400"></i>
+          <span data-i18n="navMap">Case Map</span>
+        </a>
+      </nav>
+
+      <!-- Player HUD & Controls -->
+      <div class="flex items-center gap-2 sm:gap-3">
+        <!-- Gio Memory Recovery Gauge Pill -->
+        <div class="hidden md:flex items-center gap-2 bg-purple-950/50 px-2.5 py-1 rounded-xl border border-purple-500/30 hover:border-purple-400 transition-all cursor-pointer" title="Case Investigation Progress">
+          <img src="assets/gio-avatar.png" class="w-4 h-4 rounded-full object-cover border border-purple-400" />
+          <span class="text-[10px] font-mono font-bold text-purple-300">
+            CASE: <span id="headerGioMemoryPct" class="text-amber-300">3%</span>
+          </span>
+          <div class="w-10 h-1.5 bg-slate-800 rounded-full overflow-hidden border border-purple-500/30">
+            <div id="headerGioMemoryBar" class="h-full bg-gradient-to-r from-purple-500 to-amber-400 transition-all duration-300" style="width: 3%"></div>
+          </div>
+        </div>
+        
+        <!-- Bilingual Toggle Button (EN | BM) -->
+        <button onclick="gestigoI18n.toggleLang()" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer" title="Switch Language / Tukar Bahasa">
+          <i data-lucide="globe" class="w-3.5 h-3.5 text-emerald-400"></i>
+          <span id="langToggleText" class="font-mono">EN</span>
+        </button>
+
+        <!-- XP Counter -->
+        <div class="flex items-center gap-1 bg-emerald-950/40 px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-xl border border-emerald-500/30">
+          <i data-lucide="zap" class="w-3.5 h-3.5 text-amber-400"></i>
+          <span class="user-xp-display text-xs font-bold text-amber-300">150 XP</span>
+        </div>
+
+        <!-- Audio Mute Button -->
+        <button id="soundToggleBtn" onclick="gestigoApp.toggleSound()" class="p-1.5 sm:p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 transition-all cursor-pointer" title="Toggle Sound FX">
+          <i data-lucide="volume-2" class="w-4 h-4 text-emerald-400"></i>
+        </button>
+      </div>
+
+    </div>
+  </header>  <main class="max-w-6xl mx-auto w-full p-3 sm:p-6 flex-1 flex flex-col space-y-4">
+    <!-- ==================== 1. CONTINUOUS 30-STAGE CASE MAP ==================== -->
+    <section id="mysteryView" class="space-y-4 flex-1 flex flex-col">
+      
+      <!-- Top Reference Module Header Banner -->
+      <div class="w-full bg-slate-900/90 backdrop-blur-md border border-slate-800 rounded-2xl p-4 sm:p-6 flex items-start justify-between shadow-2xl relative overflow-hidden">
+        <div class="relative z-10 max-w-xl">
+          <div id="pathwayLevelTag" class="text-xs sm:text-sm font-bold text-emerald-400 font-mono tracking-wider uppercase flex items-center gap-2 mb-1">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span data-i18n="module1Tag">MODULE 1 • LEVEL 1: FOUNDATIONS (STAGES 1–10)</span>
+          </div>
+          <h1 id="pathwayMainTitle" class="text-xl sm:text-2xl lg:text-3xl font-black text-white tracking-tight" data-i18n="module1Title">
+            The Story Museum: The Missing Memory Book
+          </h1>
+          <p id="pathwayMainSubtitle" class="text-xs sm:text-sm text-slate-300 mt-1.5 leading-relaxed font-sans" data-i18n="module1Subtitle">
+            Master static handshapes, manual alphabet (A–Z), numbers (1–100), and immediate survival vocabulary to investigate the vanished Memory Book in Luma City.
+          </p>
+          <div class="mt-3 flex items-center gap-2">
+            <button onclick="gestigoApp.openStoryPrologue()" class="inline-flex items-center gap-2.5 px-4 sm:px-5 py-2 rounded-xl bg-amber-500/25 hover:bg-amber-500/35 text-amber-300 border border-amber-500/50 text-xs sm:text-sm font-bold transition-all shadow-[0_0_20px_rgba(245,158,11,0.25)] hover:scale-105 cursor-pointer">
+              <i data-lucide="play" class="w-4 h-4 fill-amber-300 text-amber-300"></i>
+              <span data-i18n="replayPrologueBtn">Story Prologue</span>
+            </button>
+          </div>
+        </div>
+        
+        <!-- Right Side Dual-Brain Padlock Emblem matching reference image! -->
+        <div class="flex-shrink-0 ml-4 hidden sm:flex items-center justify-center">
+          <div class="w-16 h-16 lg:w-20 lg:h-20 relative flex items-center justify-center">
+            <svg width="76" height="76" viewBox="0 0 100 100" fill="none" class="filter drop-shadow-[0_0_15px_rgba(56,189,248,0.5)]">
+              <!-- Dual Brains -->
+              <g stroke="#38bdf8" stroke-width="2.5" fill="rgba(56, 189, 248, 0.25)">
+                <!-- Left Brain -->
+                <circle cx="28" cy="24" r="14" />
+                <path d="M22 24 Q 28 18 34 24" />
+                <path d="M22 28 Q 28 32 34 28" />
+                <!-- Right Brain -->
+                <circle cx="72" cy="24" r="14" />
+                <path d="M66 24 Q 72 18 78 24" />
+                <path d="M66 28 Q 72 32 78 28" />
+              </g>
+              <!-- Neural Synapses connecting to Lock -->
+              <path d="M28 38 C 28 50, 44 54, 46 62" stroke="#94a3b8" stroke-width="3.5" stroke-linecap="round" fill="none" />
+              <path d="M72 38 C 72 50, 56 54, 54 62" stroke="#94a3b8" stroke-width="3.5" stroke-linecap="round" fill="none" />
+              <!-- Cyber Padlock Shackle -->
+              <path d="M42 66 V 55 C 42 50, 58 50, 58 55 V 66" stroke="#e2e8f0" stroke-width="4" fill="none" />
+              <!-- Cyber Padlock Body -->
+              <rect x="34" y="66" width="32" height="26" rx="6" fill="#0f172a" stroke="#38bdf8" stroke-width="3" />
+              <circle cx="50" cy="77" r="3.5" fill="#38bdf8" />
+              <line x1="50" y1="80" x2="50" y2="86" stroke="#38bdf8" stroke-width="2.5" stroke-linecap="round" />
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- Static Scrollable Pathway Container (Centered, responsive, beginner-friendly!) -->
+      <div class="static-pathway-scroll-container px-2 sm:px-6 py-4">
+        <!-- Responsive DOM Pathway Container (100% Reliable, Beginner-Friendly, Instant Launch!) -->
+        <div id="pathwayContainer" class="w-full"></div>
+      </div>
+    </section>
+  </main>
+
+
+  <!-- ==================== BEGINNER-FRIENDLY FIRST-PERSON POV MYSTERY MODAL ==================== -->
+  <div id="mysteryModal" class="fixed inset-0 z-50 bg-black/90 backdrop-blur-md hidden flex items-center justify-center p-3 sm:p-5 lg:p-6 overflow-y-auto">
+    <div class="bg-gradient-to-b from-[#111827] via-[#0d1322] to-[#070b12] border border-slate-700/80 rounded-3xl max-w-5xl xl:max-w-6xl w-full p-4 sm:p-6 shadow-[0_0_60px_rgba(0,0,0,0.85)] space-y-4 my-auto relative">
+      
+      <!-- Top Modal Header: Case Tag, Title & Close Button -->
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <div class="flex items-center gap-2.5 sm:gap-3">
+          <span id="modalStageTag" class="text-xs font-mono font-bold text-emerald-400 bg-emerald-950/70 px-2.5 py-1 rounded-lg border border-emerald-500/30 uppercase tracking-wide">
+            CASE #1
+          </span>
+          <div>
+            <h3 id="modalCaseTitle" class="text-base sm:text-lg font-black text-white leading-tight">
+              THE WAX SEAL CIPHER
+            </h3>
+            <p id="modalOrnateSubtitle" class="text-[10px] sm:text-xs text-slate-400 font-mono">
+              STORY MUSEUM • STAGE 1 OF 10
+            </p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <!-- Boss Timer (Only shown for Stage 10) -->
+          <div id="bossTimerBox" class="hidden px-2.5 py-1 rounded-lg bg-red-950/80 border border-red-500/60 text-red-300 text-xs font-mono font-bold flex items-center gap-1.5 animate-pulse">
+            <span>⏱️</span>
+            <span id="bossTimeLeft" class="text-amber-300 font-black">45s</span>
+          </div>
+
+          <button onclick="gestigoMystery.closeStage()" class="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white transition-all cursor-pointer" title="Close Stage">
+            <i data-lucide="x" class="w-5 h-5"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- MAIN LANDSCAPE 2-COLUMN GRID -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-6 items-stretch">
+        
+        <!-- LEFT COLUMN: Evidence Specimen & Forensic Analysis (5 Cols on desktop) -->
+        <div class="lg:col-span-5 flex flex-col justify-between space-y-3 bg-[#0f172a]/90 border border-slate-700/80 rounded-2xl p-4 shadow-inner">
+          
+          <div>
+            <!-- Specimen Clue Header & Mode Banner -->
+            <div class="flex items-center justify-between text-[11px] font-mono font-bold text-amber-400 uppercase tracking-widest mb-2">
+              <span class="flex items-center gap-1.5">
+                <span>🔍</span><span id="clueHeaderTitle">EVIDENCE CLUE #1 OF 4</span>
+              </span>
+              <span class="text-slate-400 text-[10px] font-normal">FORENSIC SPECIMEN</span>
+            </div>
+
+            <!-- Special Mode Gameplay Banner (Sequence / Word Blank / Shift Rule) -->
+            <div id="specialModeBanner" class="hidden mb-2.5 px-3 py-1.5 rounded-xl bg-amber-500/15 border border-amber-400/50 text-amber-300 font-mono font-black text-xs tracking-wider shadow-inner text-center">
+            </div>
+
+            <!-- Clue Evidence Image Container -->
+            <div id="clueHandImageContainer" class="relative w-full h-full min-h-[380px] mx-auto rounded-2xl bg-[#090d16] border-2 border-amber-500/40 p-2 shadow-[0_0_30px_rgba(245,158,11,0.2)] flex items-center justify-center transition-transform duration-200">
+              <img id="clueHandImage" src="assets/signs/forensic/clue_L.png" alt="Mystery Hand Sign Clue" class="w-full h-full object-contain filter contrast-110 drop-shadow-md" />
+            </div>
+          </div>
+
+        </div>
+
+        <!-- RIGHT COLUMN: Partner Dialogue & Deductive Deduction Grid (7 Cols on desktop) -->
+        <div class="lg:col-span-7 flex flex-col space-y-3.5">
+          
+          <!-- Progress Track & Question Counter -->
+          <div class="space-y-1.5 bg-slate-900/60 p-3 rounded-2xl border border-slate-800">
+            <div class="flex items-center justify-between text-xs font-mono">
+              <span class="text-slate-400 font-semibold flex items-center gap-1.5">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+                <span id="stepCounterLabel" class="text-slate-300 uppercase">INVESTIGATION QUESTION</span>
+              </span>
+              <span id="stepCounter" class="text-amber-400 font-bold bg-amber-950/60 px-2.5 py-0.5 rounded border border-amber-500/30">
+                Question 1 of 4
+              </span>
+            </div>
+            <!-- Visual Progress Bar -->
+            <div class="w-full h-2 rounded-full bg-slate-800 overflow-hidden">
+              <div id="stepProgressBar" class="h-full bg-gradient-to-r from-emerald-500 to-green-400 transition-all duration-300" style="width: 25%;"></div>
+            </div>
+          </div>
+
+          <!-- Detective Gio Live Speech Bubble & Expression -->
+          <div class="bg-[#161f36]/90 border border-purple-500/40 rounded-2xl p-3.5 flex items-center gap-3.5 shadow-lg relative cursor-pointer" onclick="gestigoMystery.finishMysteryTypewriter()" title="Click to show full text">
+            <div class="flex-shrink-0 text-center">
+              <div id="dialogueAvatarFrame" class="w-14 h-14 rounded-2xl overflow-hidden border-2 border-purple-400/80 bg-[#1e293b] shadow-[0_0_15px_rgba(168,85,247,0.35)] flex items-center justify-center">
+                <img id="gioExpressionImg" src="assets/player-detective.png" alt="Player Detective" class="w-full h-full object-cover" />
+              </div>
+              <span id="gioExpressionName" class="text-[9px] font-mono text-center block text-purple-300 font-bold mt-1">
+                Analyzing...
+              </span>
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center gap-1.5 mb-1">
+                <span id="dialogueSpeakerLabel" class="text-[10px] font-mono font-black text-amber-400 uppercase tracking-wider flex items-center gap-1.5">GIO (PARTNER)</span>
+              </div>
+              <p id="gioDialogueText" class="text-xs sm:text-sm text-slate-100 font-medium leading-relaxed">
+                "Look closely at this mystery handshape stamped on the evidence. Which letter does it represent?"
+              </p>
+            </div>
+          </div>
+
+          <!-- Feedback Banner (Appears on answer) -->
+          <div id="stepFeedbackBanner" class="hidden p-2.5 rounded-xl text-center text-xs font-bold transition-all"></div>
+
+          <!-- THE 4 DEDUCTIVE CHOICES (2x2 Grid) -->
+          <div class="space-y-3 w-full">
+            <div class="flex items-center justify-between text-[11px] font-mono font-bold text-slate-300 uppercase">
+              <span id="choicesHeaderLabel">SELECT MATCHING DEDUCTION:</span>
+              <span class="text-emerald-400 flex items-center gap-1">TOUCH OR CLICK TO SOLVE</span>
+            </div>
+            
+            <div id="signChoicesGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <!-- Populated dynamically with 4 clean, large choice buttons -->
+            </div>
+
+            <!-- Evidence Instruction & Collapsible Hint (Positioned neatly under answer options) -->
+            <div id="hintAndInstructionDeck" class="space-y-2 pt-1">
+              <p id="clueCaptionText" class="text-xs text-slate-300 font-mono text-center leading-relaxed bg-slate-900/80 p-2.5 rounded-xl border border-slate-800">
+                Observe finger positions and thumb placement to deduce the letter.
+              </p>
+
+              <button id="toggleHintBtn" onclick="gestigoMystery.revealHint()" class="w-full py-2 px-3 rounded-xl bg-slate-850 hover:bg-slate-800 border border-slate-700/80 hover:border-amber-400/50 text-slate-300 hover:text-amber-300 text-xs font-mono font-semibold transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm">
+                <span>💡</span>
+                <span id="hintBtnLabel">Need a hint? (Click to view Gio's clue)</span>
+              </button>
+
+              <div id="stepHint" class="hidden p-3 rounded-xl bg-amber-950/70 border border-amber-500/50 text-amber-200 text-xs leading-relaxed shadow-md">
+                💡 <strong>Gio's Hint:</strong> <span id="hintContentText">The index finger points straight up while the thumb forms a 90-degree right angle.</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- Footer Info -->
+      <div class="pt-2 border-t border-slate-800 flex items-center justify-between text-[10px] sm:text-xs font-mono text-slate-400">
+        <div class="flex items-center gap-1.5">
+          <span class="text-emerald-400 font-bold">● LEVEL 1</span>
+          <span class="hidden sm:inline">• BEGINNER ASL FORENSIC DECODER</span>
+        </div>
+        <div class="text-amber-400 font-bold">
+          REWARD: <span id="stageRewardXp">+150 XP</span>
+        </div>
+      </div>
+
+      <!-- Hidden fallbacks for legacy/optional refs -->
+      <div class="hidden">
+        <img id="crimeSceneImg" src="assets/dialogue.png" alt="" />
+        <span id="stepPrompt"></span>
+        <div id="gameplayInventorySlots"></div>
+        <div id="simulatorButtonList"></div>
+        <div id="gioTheoryBox"></div>
+        <div id="webcamBoxContainer"></div>
+        <div id="modalLocation"></div>
+        <div id="levelModeBadge"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ==================== STAGE CLEAR VICTORY MODAL (NO CLIFFHANGER) ==================== -->
+  <div id="stageClearModal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md hidden flex items-center justify-center p-3 sm:p-5 overflow-y-auto">
+    <div class="bg-gradient-to-b from-[#111827] to-[#0a0f1d] border-2 border-emerald-500/60 rounded-3xl max-w-lg w-full p-5 sm:p-7 text-center shadow-[0_0_60px_rgba(16,185,129,0.35)] space-y-4 my-auto relative animate-fadeIn">
+      
+      <!-- Trophy / Key Icon -->
+      <div id="stageClearIconBadge" class="w-16 h-16 rounded-2xl bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 flex items-center justify-center mx-auto text-3xl shadow-[0_0_20px_rgba(16,185,129,0.4)]">
+        🎉
+      </div>
+
+      <div>
+        <span class="text-xs font-mono font-bold text-emerald-400 uppercase tracking-widest" data-i18n="caseSolved">CASE SOLVED</span>
+        <h3 id="completeStageName" class="text-xl sm:text-2xl font-black text-white mt-1">The Wax Seal Cipher</h3>
+        <p class="text-xs text-slate-300 mt-1">Forensic physical evidence verified and decoded!</p>
+      </div>
+
+      <div class="flex items-center justify-center gap-2 text-2xl text-yellow-400" id="completeStars">
+        ⭐⭐⭐
+      </div>
+
+      <!-- XP & Progress Badges -->
+      <div class="flex items-center justify-center gap-4 bg-slate-950 p-3 rounded-2xl border border-slate-800 text-xs font-mono">
+        <div>
+          <span class="text-slate-400 block">XP REWARD</span>
+          <span id="completeXpEarned" class="text-amber-400 font-bold">+150 XP</span>
+        </div>
+        <div class="border-l border-slate-800 pl-4">
+          <span class="text-slate-400 block">EVIDENCE DISCOVERED</span>
+          <span id="completeClueName" class="text-purple-400 font-bold">The Purple Wax Envelope</span>
+        </div>
+      </div>
+
+      <!-- Discovered Clue Preview Box -->
+      <div class="p-3 rounded-xl bg-purple-950/40 border border-purple-500/30 text-left space-y-1">
+        <div class="flex items-center gap-2 text-[10px] font-mono font-bold text-purple-300 uppercase">
+          <span>📜</span><span>ARCHIVED EVIDENCE RECORD</span>
+        </div>
+        <p id="completeClueDesc" class="text-xs text-slate-200">
+          The wax seal reveals the word LUMA, the sacred name of the city and festival.
+        </p>
+      </div>
+
+      <!-- STORY BRIDGE / NEXT DESTINATION (NO CLIFFHANGER!) -->
+      <div id="completeNextTrailBox" class="p-3.5 rounded-2xl bg-gradient-to-br from-[#1e293b]/90 to-[#0f172a] border border-amber-500/40 text-left space-y-2 shadow-lg">
+        <div class="flex items-center justify-between flex-wrap gap-1">
+          <div class="flex items-center gap-1.5 text-[10px] font-mono font-bold text-amber-400 uppercase tracking-wider">
+            <span>📍</span><span>NEXT INVESTIGATION TRAIL</span>
+          </div>
+          <span id="completeNextDestination" class="text-[10px] font-mono text-emerald-400 font-bold bg-emerald-950/60 px-2 py-0.5 rounded border border-emerald-500/30">
+            Story Museum • Sacred Vitrine
+          </span>
+        </div>
+
+        <div class="flex items-start gap-3 pt-1">
+          <div class="w-11 h-11 rounded-xl overflow-hidden border border-purple-400/80 bg-slate-900 flex-shrink-0 shadow-sm">
+            <img id="completeGioImg" src="assets/gio-excited.png" alt="Gio Partner" class="w-full h-full object-cover" />
+          </div>
+          <p id="completeNextStory" class="text-xs text-slate-100 font-medium leading-relaxed">
+            "Gio unseals the purple envelope! The note inside reveals: 'The heart of Luma was taken from its glass prison. Seek the vitrine with four locked tumblers.' Let's examine the crime scene vitrine lock!"
+          </p>
+        </div>
+      </div>
+
+      <!-- Two Action Buttons: Direct Proceed or Return to Map -->
+      <div class="space-y-2 pt-1">
+        <button id="proceedNextStageBtn" type="button" onclick="gestigoMystery.proceedToNextStage()" class="btn-primary w-full justify-center text-sm py-3.5 font-black cursor-pointer shadow-[0_0_25px_rgba(34,197,94,0.35)] flex items-center justify-center gap-2 transform hover:scale-[1.01] transition-all">
+          <span>🔍</span>
+          <span id="proceedNextStageBtnText">Investigate Stage 2: The Vitrine Lock →</span>
+        </button>
+
+        <button type="button" onclick="gestigoMystery.closeStage()" class="w-full py-2.5 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-300 hover:text-white font-semibold text-xs border border-slate-700 transition-all cursor-pointer flex items-center justify-center gap-2">
+          <span>🗺️</span>
+          <span>View Full Case Map</span>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ==================== LEVEL 3: 3D LUMA CITY INVESTIGATION MODAL ==================== -->
+  <div id="luma3DModal" class="fixed inset-0 z-50 bg-[#070b14] hidden flex flex-col overflow-hidden">
+    
+    <!-- Top HUD Navigation Bar -->
+    <header class="w-full bg-[#0a0f1d]/90 backdrop-blur-md border-b border-purple-500/40 px-3 sm:px-6 py-2.5 flex items-center justify-between z-20 flex-shrink-0 shadow-lg">
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-xl bg-purple-500/20 text-purple-300 border border-purple-500/50 flex items-center justify-center text-lg shadow-[0_0_15px_rgba(168,85,247,0.4)]">
+          🏛️
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h2 class="text-sm sm:text-base font-black text-amber-300 tracking-wide flex items-center gap-1.5 font-sans"><span>🏛️</span> 3D LUMA CITY INVESTIGATION</h2>
+            <span class="text-[9px] font-mono font-bold text-purple-300 bg-purple-950/80 px-2 py-0.5 rounded border border-purple-500/40 uppercase">LEVEL 3 FINALE</span>
+          </div>
+          <p class="text-[10px] sm:text-xs text-slate-400 font-mono mt-0.5">
+            Realistic 3D Scenario • Festival & Story Museum • 10 Witnesses & Suspects
+          </p>
+        </div>
+      </div>
+
+      <!-- Center Alibi Counter & Accuse Button -->
+      <div class="flex items-center gap-2 sm:gap-3">
+        <!-- Player Detective Username Pill (Clickable to change) -->
+        <button id="luma3dPlayerTagBtn" onclick="gestigoLuma3D.promptChangePlayerName()" class="flex items-center gap-1.5 bg-slate-900/90 hover:bg-slate-800 px-3 py-1.5 rounded-xl border border-amber-500/50 text-xs font-mono text-amber-300 cursor-pointer transition-all shadow-sm" title="Click to customize your detective username">
+          <span>🕵️</span>
+          <span class="text-slate-400 text-[10px] hidden lg:inline">YOU:</span>
+          <span id="luma3dPlayerNameDisplay" class="font-black text-amber-300">PLAYER (YOU)</span>
+          <span class="text-[10px] text-slate-500">✏️</span>
+        </button>
+
+        <div class="flex items-center gap-2 bg-slate-900/90 px-3 py-1.5 rounded-xl border border-slate-700 font-mono text-xs">
+          <span class="text-slate-400 text-[11px] hidden sm:inline">ALIBIS LOGGED:</span>
+          <span class="text-amber-300 font-bold"><span id="luma3dAlibiCount">0</span> / 10</span>
+        </div>
+
+        <!-- Dynamic Suspect Radar Tracker Pill (Guides player directly to nearest suspect) -->
+        <div id="luma3dSuspectTracker" class="hidden md:flex items-center gap-2 bg-purple-950/90 px-3 py-1.5 rounded-xl border border-purple-400 font-mono text-xs text-purple-200 shadow-[0_0_15px_rgba(192,132,252,0.4)]">
+          <span class="w-2 h-2 rounded-full bg-purple-400 animate-ping"></span>
+          <span id="luma3dSuspectTrackerText">📍 NEAREST SUSPECT: PROF. ELIAS CARTER (18m North)</span>
+        </div>
+
+        <!-- 2-Minute Final Evaluation Timer Badge (Unlocked when all 10 alibis logged) -->
+        <div id="luma3dEvaluationTimerBadge" class="hidden items-center gap-2 bg-amber-950/95 px-3 py-1.5 rounded-xl border-2 border-amber-400 font-mono text-xs text-amber-300 shadow-[0_0_20px_rgba(245,158,11,0.6)] animate-pulse">
+          <span class="text-sm">⏳</span>
+          <span class="hidden sm:inline font-bold text-amber-400">EVALUATION:</span>
+          <span id="luma3dCountdownTimerText" class="font-black text-amber-200 tracking-wider">02:00</span>
+        </div>
+
+        <!-- Festival Interactive Action Buttons -->
+        <button id="luma3dMusicBtn" onclick="gestigoLuma3D.toggleFestivalMusic()" class="px-2.5 sm:px-3 py-1.5 rounded-xl bg-purple-950/80 hover:bg-purple-900 text-purple-200 border border-purple-500/50 text-[11px] font-mono font-bold flex items-center gap-1.5 cursor-pointer transition-all shadow-md" title="Toggle Festival Music [M]">
+          <span>🎵</span>
+          <span class="hidden md:inline">MUSIC:</span>
+          <span id="luma3dMusicState" class="text-emerald-400 font-bold">ON</span>
+        </button>
+
+        <button id="luma3dFireworkBtn" onclick="gestigoLuma3D.launchFestivalFireworks()" class="px-2.5 sm:px-3 py-1.5 rounded-xl bg-amber-950/80 hover:bg-amber-900 text-amber-300 border border-amber-500/60 text-[11px] font-mono font-bold flex items-center gap-1.5 cursor-pointer transition-all shadow-[0_0_15px_rgba(245,158,11,0.3)] active:scale-95" title="Launch Festival Fireworks [F]">
+          <span>🎆</span>
+          <span class="hidden md:inline">FIREWORKS</span>
+          <span class="text-[9px] bg-amber-500/20 text-amber-300 px-1 py-0.5 rounded font-mono">[F]</span>
+        </button>
+
+        <button id="luma3dDanceBtn" onclick="gestigoLuma3D.triggerCelebrateEmote()" class="px-2.5 sm:px-3 py-1.5 rounded-xl bg-rose-950/80 hover:bg-rose-900 text-rose-300 border border-rose-500/60 text-[11px] font-mono font-bold flex items-center gap-1.5 cursor-pointer transition-all shadow-[0_0_15px_rgba(244,63,94,0.3)] active:scale-95" title="Celebration Dance Emote [G]">
+          <span>🎉</span>
+          <span class="hidden md:inline">DANCE</span>
+          <span class="text-[9px] bg-rose-500/20 text-rose-300 px-1 py-0.5 rounded font-mono">[G]</span>
+        </button>
+
+        <button id="luma3dEvidenceBtn" onclick="gestigoLuma3D.openEvidenceBoard()" class="px-2.5 sm:px-3 py-1.5 rounded-xl bg-cyan-950/80 hover:bg-cyan-900 text-cyan-300 border border-cyan-500/60 text-[11px] font-mono font-bold flex items-center gap-1.5 cursor-pointer transition-all shadow-[0_0_15px_rgba(6,182,212,0.3)]" title="Open Case File & Evidence Board">
+          <span>📋</span>
+          <span class="hidden md:inline">CASE FILE:</span>
+          <span id="luma3dClueCountText" class="text-cyan-200">0/8</span>
+        </button>
+
+        <button id="luma3dAccuseBtn" onclick="gestigoLuma3D.openAccusationChamber()" class="px-3.5 sm:px-4 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-xs font-mono tracking-wider shadow-[0_0_20px_rgba(245,158,11,0.5)] cursor-pointer transition-all flex items-center gap-1.5 opacity-50 pointer-events-none">
+          <span>⚖️</span>
+          <span class="hidden sm:inline">ACCUSE CULPRIT</span>
+          <span class="sm:hidden">ACCUSE</span>
+        </button>
+
+        <button onclick="gestigoLuma3D.close()" class="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white transition-all cursor-pointer border border-slate-700" title="Return to Case Map">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+    </header>
+
+    <!-- 3D Canvas Viewport -->
+    <div class="flex-1 relative w-full h-full overflow-hidden bg-[#070b14]">
+      <div id="luma3dCanvasContainer" class="w-full h-full relative cursor-grab active:cursor-grabbing"></div>
+
+      <!-- Navigation & Controls Guidance Overlay -->
+      <div class="absolute top-3 left-3 bg-slate-950/85 backdrop-blur-md px-3.5 py-2 rounded-2xl border border-purple-500/50 text-[11px] font-mono text-slate-200 pointer-events-none z-10 flex flex-wrap items-center gap-2.5 shadow-xl">
+        <span class="text-amber-300 font-extrabold flex items-center gap-1">
+          <i data-lucide="footprints" class="w-3.5 h-3.5 text-amber-400"></i>
+          WASD: Walk
+        </span>
+        <span class="text-slate-600">•</span>
+        <span class="text-emerald-300 font-bold">[E]: Interview / Spin Wheel</span>
+        <span class="text-slate-600">•</span>
+        <span class="text-amber-300 font-bold">[F]: Fireworks</span>
+        <span class="text-slate-600">•</span>
+        <span class="text-rose-300 font-bold">[G]: Dance</span>
+        <span class="text-slate-600">•</span>
+        <span class="text-purple-300 font-bold">[M]: Music</span>
+      </div>
+
+      <!-- Current Location Zone Pill (Top Right) -->
+      <div id="luma3dLocationBadge" class="absolute top-3 right-14 bg-slate-950/85 backdrop-blur-md px-3 py-1.5 rounded-xl border border-amber-500/40 text-[11px] font-mono font-bold text-amber-300 pointer-events-none z-10 flex items-center gap-1.5 shadow-lg">
+        <i data-lucide="map-pin" class="w-3.5 h-3.5 text-amber-400"></i>
+        <span id="luma3dLocationName">Festival Central Piazza</span>
+      </div>
+
+      <!-- Proximity Interaction Prompt Banner (Centered near bottom) -->
+      <div id="luma3dProximityPrompt" class="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 hidden pointer-events-auto transition-all duration-200">
+        <button id="luma3dProximityBtn" onclick="gestigoLuma3D.triggerNearestInteraction()" class="px-5 py-2.5 rounded-2xl bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 text-slate-950 font-black text-xs font-mono uppercase tracking-wider shadow-[0_0_30px_rgba(245,158,11,0.7)] cursor-pointer transition-all hover:scale-105 flex items-center gap-2 animate-bounce">
+          <span class="bg-black/85 text-amber-300 px-1.5 py-0.5 rounded text-[10px] font-bold">[E]</span>
+          <span id="luma3dPromptText">INTERVIEW SORA DAIN</span> →
+        </button>
+      </div>
+
+      <!-- Mobile / Touch On-Screen D-Pad Controls (Bottom Left) -->
+      <div id="luma3dTouchPad" class="absolute bottom-5 left-4 z-20 flex flex-col items-center gap-1 sm:hidden select-none opacity-80 hover:opacity-100">
+        <button class="w-10 h-10 rounded-xl bg-slate-900/90 border border-slate-700 text-white font-bold flex items-center justify-center text-sm active:bg-amber-500 active:text-black shadow-lg" ontouchstart="gestigoLuma3D.setTouchDir('up', true)" ontouchend="gestigoLuma3D.setTouchDir('up', false)">▲</button>
+        <div class="flex gap-2">
+          <button class="w-10 h-10 rounded-xl bg-slate-900/90 border border-slate-700 text-white font-bold flex items-center justify-center text-sm active:bg-amber-500 active:text-black shadow-lg" ontouchstart="gestigoLuma3D.setTouchDir('left', true)" ontouchend="gestigoLuma3D.setTouchDir('left', false)">◄</button>
+          <button class="w-10 h-10 rounded-xl bg-slate-900/90 border border-slate-700 text-white font-bold flex items-center justify-center text-sm active:bg-amber-500 active:text-black shadow-lg" ontouchstart="gestigoLuma3D.setTouchDir('down', true)" ontouchend="gestigoLuma3D.setTouchDir('down', false)">▼</button>
+          <button class="w-10 h-10 rounded-xl bg-slate-900/90 border border-slate-700 text-white font-bold flex items-center justify-center text-sm active:bg-amber-500 active:text-black shadow-lg" ontouchstart="gestigoLuma3D.setTouchDir('right', true)" ontouchend="gestigoLuma3D.setTouchDir('right', false)">►</button>
+        </div>
+      </div>
+
+      <!-- Interactive Interrogation Dialogue Box Overlay (Centered on screen) -->
+      <div id="luma3dInterrogationBox" class="absolute top-24 sm:top-28 inset-x-0 bottom-0 z-30 hidden flex items-start sm:items-center justify-center p-2 sm:p-4 bg-black/80 backdrop-blur-md overflow-y-auto">
+        <!-- Injected dynamically by GestigoLuma3DEngine -->
+      </div>
+
+      <!-- The Final Accusation Chamber Overlay -->
+      <div id="luma3dAccusationModal" class="fixed inset-0 z-[70] hidden flex items-center justify-center p-3 sm:p-6 bg-slate-950/90 backdrop-blur-md overflow-y-auto">
+        <!-- Injected dynamically by GestigoLuma3DEngine -->
+      </div>
+      <!-- The Evidence Board & Case File Modal -->
+      <div id="luma3dEvidenceModal" class="fixed inset-0 z-[70] hidden flex items-center justify-center p-3 sm:p-6 bg-slate-950/90 backdrop-blur-md overflow-y-auto">
+        <!-- Injected dynamically by GestigoLuma3DEngine -->
+      </div>
+    </div>
+
+    <!-- Bottom Quick-Select Character Carousel Drawer -->
+    <footer class="w-full bg-[#0a0f1d]/95 backdrop-blur-md border-t border-purple-500/40 p-2 sm:p-3 z-20 flex-shrink-0">
+      <div class="max-w-6xl mx-auto flex items-center gap-2">
+
+        <div id="luma3dCharacterCarousel" class="flex items-center gap-2 overflow-x-auto w-full py-1">
+          <!-- Rendered dynamically -->
+        </div>
+      </div>
+    </footer>
+
+  </div>
+
+
+  <!-- ==================== CINEMATIC STORY OPENING CUTSCENE (Matching Reference RPG Game) ==================== -->
+  <div id="storyPrologueModal" class="fixed inset-0 z-50 bg-black hidden flex flex-col justify-between overflow-hidden select-none transition-opacity duration-500">
+    
+    <!-- Audio Unlock & Clean Start Overlay -->
+    <div id="prologueStartOverlay" class="absolute inset-0 z-40 bg-black/80 backdrop-blur-md flex flex-col items-center justify-center p-4 transition-all duration-500" onclick="gestigoApp.beginPrologueWithAudio(event)">
+      <div class="max-w-md w-full bg-[#0b0f19]/95 border-2 border-amber-400/90 rounded-3xl p-6 sm:p-8 shadow-[0_0_60px_rgba(245,158,11,0.5)] flex flex-col items-center text-center space-y-4" onclick="event.stopPropagation()">
+        
+        <!-- Gestigo Official Logo -->
+        <div class="w-18 h-18 sm:w-20 sm:h-20 rounded-2xl bg-[#1e293b] border-2 border-amber-400/80 overflow-hidden shadow-[0_0_25px_rgba(245,158,11,0.6)] flex-shrink-0 p-1.5">
+          <img src="assets/gestigo-logo.png" alt="Gestigo Logo" class="w-full h-full object-cover rounded-xl" />
+        </div>
+
+        <div>
+          <span id="startCaseTag" class="text-xs font-mono font-bold text-amber-400 uppercase tracking-widest block">GESTIGO • CASE #001</span>
+          <h3 id="startCaseTitle" class="text-2xl sm:text-3xl font-serif font-black text-white tracking-wide mt-1">The Festival of Stories</h3>
+          <p id="startCaseSub" class="text-xs text-slate-300 font-mono mt-1.5">Story Museum • Luma City</p>
+        </div>
+
+        <!-- Start Button (Clean, no Sound On text) -->
+        <div class="w-full pt-2">
+          <button id="startInvestigationBtn" type="button" onclick="gestigoApp.beginPrologueWithAudio(event)" class="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-amber-500 via-amber-400 to-amber-500 hover:from-amber-400 hover:to-amber-300 text-slate-950 font-black text-sm uppercase tracking-wider flex items-center justify-center gap-2.5 shadow-[0_0_30px_rgba(245,158,11,0.7)] transition-all transform hover:scale-[1.02] cursor-pointer">
+            <span class="text-base">▶</span>
+            <span id="startInvestigationBtnText">START INVESTIGATION</span>
+          </button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- 1. FULL-SCREEN EDGE-TO-EDGE CINEMATIC BACKGROUND (Immersive, full bleed) -->
+    <div class="absolute inset-0 z-0 overflow-hidden">
+      <img id="prologueBgImg" src="assets/festival-luma-city.jpg" alt="Luma City Background" 
+           class="w-full h-full object-cover filter brightness-[1.02] contrast-[1.04] transition-all duration-700"
+           style="object-position: center 70%;" />
+      
+      <!-- Subtle Cinematic Vignette (Soft top/bottom shading) -->
+      <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-transparent to-black/60 pointer-events-none"></div>
+    </div>
+
+    <!-- 2. Top Cinematic Status Bar with Gestigo Logo, Language, SFX, Hide UI, and Skip -->
+    <div class="relative z-20 w-full px-3 sm:px-6 py-2.5 sm:py-4 flex items-center justify-between flex-shrink-0">
+      <!-- Gestigo Brand -->
+      <div class="flex items-center gap-2.5 bg-black/75 backdrop-blur-md px-3 py-1.5 rounded-2xl border border-purple-500/40 shadow-xl">
+        <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-xl overflow-hidden border border-purple-400/60 shadow-[0_0_12px_rgba(168,85,247,0.5)] bg-[#1e293b] flex-shrink-0">
+          <img src="assets/gestigo-logo.png" alt="Gestigo Logo" class="w-full h-full object-cover" />
+        </div>
+        <div>
+          <span class="text-xs sm:text-sm font-black text-white tracking-wide block leading-none">GESTIGO</span>
+          <span id="prologueChapterTag" class="text-[9px] sm:text-[10px] font-mono font-bold text-amber-300 uppercase tracking-wider">
+            ✦ PROLOGUE: THE FESTIVAL OF STORIES
+          </span>
+        </div>
+      </div>
+
+      <!-- Action Controls -->
+      <div class="flex items-center gap-1.5 sm:gap-2">
+        <!-- Language Selector -->
+        <button id="prologueLangToggle" type="button" onclick="gestigoApp.togglePrologueLanguage(event)" class="px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full bg-slate-900/80 hover:bg-slate-800 text-slate-200 hover:text-white border border-slate-700/80 backdrop-blur-md text-xs font-mono font-bold transition-all flex items-center gap-1.5 cursor-pointer shadow-lg" title="Switch Language">
+          <span id="prologueLangFlag">🇬🇧</span>
+          <span id="prologueLangText" class="text-amber-300">EN</span>
+        </button>
+
+        <!-- SFX Toggle Button -->
+        <button id="prologueAudioToggle" type="button" onclick="gestigoAudio.toggleMute(); this.querySelector('.audio-icon').textContent = gestigoAudio.muted ? '🔇' : '🔊';" class="px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700/80 backdrop-blur-md text-xs font-mono font-bold transition-all flex items-center gap-1.5 cursor-pointer shadow-lg" title="Toggle Sound">
+          <span class="audio-icon">🔊</span>
+          <span class="hidden sm:inline text-[11px] text-amber-300">SFX</span>
+        </button>
+
+        <!-- Hide/Show Dialogue Box Toggle (👁️) -->
+        <button id="prologueHideUiBtn" type="button" onclick="gestigoApp.togglePrologueUi(event)" class="px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700/80 backdrop-blur-md text-xs font-mono font-bold transition-all flex items-center gap-1 cursor-pointer shadow-lg" title="Hide/Show Dialogue Box [H]">
+          <span>👁️</span>
+          <span id="prologueHideUiLabel" class="hidden sm:inline text-[11px] text-amber-300">View Scene</span>
+        </button>
+
+        <!-- Clean Skip Intro Button -->
+        <button type="button" onclick="gestigoApp.closeStoryPrologue(event)" class="px-3 sm:px-3.5 py-1 sm:py-1.5 rounded-full bg-slate-900/80 hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700/80 backdrop-blur-md text-xs font-mono font-bold transition-all flex items-center gap-1.5 cursor-pointer shadow-lg">
+          <span id="prologueSkipLabel">Skip Intro</span>
+          <span class="text-amber-400">⏭</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Floating Clue Spotlight Card (Sealed or Opened Envelope with Encrypted Message) -->
+    <div id="prologueClueCard" style="z-index: 45;" class="absolute top-12 sm:top-16 md:top-20 left-1/2 -translate-x-1/2 flex flex-col items-center pointer-events-auto transition-all duration-500 hidden" onclick="event.stopPropagation()">
+      <div id="prologueClueFrame" onclick="gestigoApp.openClueLightbox(event)" style="z-index: 46;" class="group relative w-48 h-30 sm:w-64 sm:h-40 md:w-76 md:h-48 rounded-2xl overflow-hidden border-2 border-amber-400/90 shadow-[0_0_35px_rgba(168,85,247,0.7)] bg-slate-950/90 backdrop-blur-md p-1.5 flex flex-col items-center justify-center cursor-pointer transition-transform hover:scale-105 pointer-events-auto" title="Click to view full size / Klik untuk besarkan">
+        <img id="prologueClueImg" src="assets/clue-envelope.jpg" alt="Evidence Clue" class="w-full h-full object-cover rounded-xl transition-all duration-500 group-hover:brightness-110" />
+        
+        <!-- Hover Enlarge Button Overlay -->
+        <div class="absolute inset-0 bg-black/45 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center rounded-xl pointer-events-none">
+          <span class="px-3 py-1 rounded-full bg-amber-500 text-slate-950 font-mono font-black text-xs flex items-center gap-1.5 shadow-xl transform scale-95 group-hover:scale-100 transition-transform">
+            <span>⛶</span>
+            <span id="clueEnlargeBtnText">Enlarge</span>
+          </span>
+        </div>
+        
+        <!-- Subtle bottom badge on card -->
+        <div class="absolute bottom-2 right-2 px-1.5 py-0.5 rounded-md bg-black/80 border border-amber-400/50 text-[9px] font-mono font-bold text-amber-300 flex items-center gap-1 backdrop-blur-sm shadow pointer-events-none">
+          <span>🔍</span>
+          <span>⛶</span>
+        </div>
+      </div>
+      
+      <!-- Clue Label Badge below frame -->
+      <div onclick="gestigoApp.openClueLightbox(event)" style="z-index: 46;" class="mt-1.5 text-[9px] sm:text-xs font-mono font-black text-amber-300 bg-black/90 px-3 py-0.5 rounded-full border border-amber-500/50 uppercase tracking-wider shadow-xl flex items-center gap-1 cursor-pointer hover:border-amber-400 hover:text-white transition-all pointer-events-auto">
+        <span>🔍</span>
+        <span id="prologueClueLabel">CLUE #1: WAX-SEALED PURPLE ENVELOPE</span>
+      </div>
+    </div>
+
+    <!-- Full-Body Detective Gio Sprite (A bit larger, clear of top wording) -->
+    <div id="prologueGioSprite" class="absolute bottom-0 sm:bottom-1 md:bottom-2 left-1 sm:left-3 md:left-6 z-20 pointer-events-none transition-all duration-700 opacity-0 block">
+      <img id="prologueGioFullImg" src="assets/gio-fullbody.png" alt="Gio Detective Partner" 
+           class="h-[430px] sm:h-[530px] md:h-[630px] lg:h-[710px] max-h-[76vh] sm:max-h-[79vh] object-contain object-bottom drop-shadow-[0_25px_50px_rgba(0,0,0,0.95)] filter brightness-[1.04] transition-all duration-500" />
+    </div>
+
+    <!-- Clickable Screen Area to advance dialogue -->
+    <div class="flex-1 w-full z-10 cursor-pointer" onclick="gestigoApp.nextPrologueSlide(event)" title="Click anywhere to continue"></div>
+
+    <!-- 3. Bottom Cinematic Dialogue Box (Translucent Glassmorphism, Sleek Height, Anchored to Bottom so Pedestal & Festival Stalls are in Clear View Above!) -->
+    <div id="prologueDialogueBoxWrap" class="relative z-30 w-full px-3 sm:px-6 pb-2.5 sm:pb-5 flex justify-center flex-shrink-0 transition-all duration-300">
+      <div onclick="gestigoApp.nextPrologueSlide(event)" class="w-full max-w-4xl bg-[#090d19]/85 backdrop-blur-xl border border-amber-500/50 rounded-2xl sm:rounded-3xl p-3 sm:p-5 shadow-[0_20px_50px_rgba(0,0,0,0.95),0_0_30px_rgba(245,158,11,0.2)] cursor-pointer transition-all hover:border-amber-400/80 space-y-2 relative overflow-hidden">
+        
+        <!-- Decorative Ambient Corner Glow -->
+        <div class="absolute top-0 right-0 w-32 h-32 bg-amber-500/10 rounded-full blur-2xl pointer-events-none"></div>
+
+        <!-- Speaker Name Row with Detective Gio Avatar & Decorative Underline -->
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2.5 sm:gap-3">
+            <!-- Detective Gio Avatar Portrait -->
+            <div id="prologueAvatarWrap" class="w-10 h-10 sm:w-13 sm:h-13 rounded-2xl overflow-hidden border-2 border-amber-400 shadow-[0_0_15px_rgba(245,158,11,0.5)] flex-shrink-0 bg-[#1e293b]">
+              <img id="prologueSpeakerAvatar" src="assets/gio-excited.png" alt="Gio Detective-in-Training" class="w-full h-full object-cover" />
+            </div>
+
+            <div>
+              <div class="flex items-center gap-2">
+                <h3 id="prologueSpeakerName" class="text-base sm:text-xl font-serif font-black text-amber-200 tracking-wide drop-shadow-md">
+                  Gio
+                </h3>
+                <span id="prologueSpeakerBadge" class="text-[9px] sm:text-[10px] font-mono font-bold text-amber-400 bg-amber-950/80 px-2 py-0.5 rounded-full border border-amber-500/40 uppercase">
+                  DETECTIVE-IN-TRAINING
+                </span>
+              </div>
+              <div class="w-28 sm:w-44 h-0.5 bg-gradient-to-r from-amber-400 via-amber-300 to-transparent mt-0.5"></div>
+            </div>
+          </div>
+
+          <!-- Slide Counter -->
+          <span id="prologueSlideCounter" class="text-[11px] sm:text-xs font-mono font-bold text-amber-300 bg-amber-950/50 px-2.5 py-0.5 rounded-xl border border-amber-500/30">
+            1 / 8
+          </span>
+        </div>
+
+        <!-- Dialogue Text Body -->
+        <p id="prologueDialogueText" class="text-xs sm:text-sm md:text-base text-slate-100 font-sans leading-relaxed min-h-[40px] sm:min-h-[48px] py-0.5 select-none font-normal transition-opacity duration-150">
+          Welcome to Luma City! Tonight is the opening of the grand Festival of Stories, where everyone in the city gathers to celebrate legendary tales told in sign language. But without the sacred Memory Book to open the ceremony, the entire festival cannot begin!
+        </p>
+
+        <!-- Bottom Action Row: Dots Indicator & (A) Continue Button Prompt -->
+        <div class="flex items-center justify-between pt-1 border-t border-slate-800/80">
+          <!-- Progress Dots -->
+          <div id="prologueDotsContainer" class="flex items-center gap-1.5">
+            <!-- Rendered dynamically -->
+          </div>
+
+          <!-- (A) Continue Button Prompt -->
+          <div class="flex items-center gap-2">
+            <button id="prologueContinueBtn" class="px-3.5 sm:px-4 py-1.5 rounded-xl bg-gradient-to-r from-amber-500 via-amber-400 to-amber-500 hover:from-amber-400 hover:to-amber-300 text-slate-950 font-black text-xs sm:text-sm tracking-wide shadow-[0_0_20px_rgba(245,158,11,0.6)] transition-all flex items-center gap-1.5 cursor-pointer">
+              <span class="w-4 h-4 rounded-full bg-slate-950 text-amber-300 font-extrabold flex items-center justify-center text-[10px] shadow-sm">A</span>
+              <span id="prologueContinueLabel">Continue →</span>
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- High-Res Clue Lightbox Inspection Modal (Enlarges Letter, Book, or Pedestal) -->
+    <div id="prologueLightboxModal" style="z-index: 80;" class="absolute inset-0 bg-black/95 backdrop-blur-xl hidden flex items-center justify-center p-3 sm:p-6 transition-opacity duration-300 opacity-0 pointer-events-none" onclick="gestigoApp.closeClueLightbox(event)">
+      <div class="relative max-w-4xl w-full bg-[#0b0f19] border-2 border-amber-400/90 rounded-2xl sm:rounded-3xl overflow-hidden shadow-[0_0_60px_rgba(245,158,11,0.5)] flex flex-col p-4 sm:p-6 space-y-4" onclick="event.stopPropagation()">
+        
+        <!-- Lightbox Header -->
+        <div class="flex items-center justify-between pb-3 border-b border-amber-500/30">
+          <div class="flex items-center gap-3">
+            <div class="w-9 h-9 rounded-xl bg-amber-500/20 border border-amber-400/60 flex items-center justify-center text-amber-300 text-base font-bold shadow-[0_0_15px_rgba(245,158,11,0.4)]">
+              🔍
+            </div>
+            <div>
+              <h4 id="lightboxTitle" class="text-xs sm:text-sm font-mono font-black text-amber-300 uppercase tracking-wider">
+                EVIDENCE INSPECTION
+              </h4>
+              <span id="lightboxSub" class="text-[10px] font-mono text-slate-400 block">High-Resolution Clue Archive</span>
+            </div>
+          </div>
+
+          <button type="button" onclick="gestigoApp.closeClueLightbox(event)" class="w-8 h-8 rounded-full bg-slate-800 hover:bg-rose-900/80 text-slate-300 hover:text-white border border-slate-600 flex items-center justify-center font-bold text-sm cursor-pointer transition-all shadow-md" title="Close [Esc]">
+            ✕
+          </button>
+        </div>
+
+        <!-- Main High-Res Image Display -->
+        <div class="relative w-full max-h-[65vh] flex items-center justify-center overflow-hidden rounded-xl bg-black/80 border border-slate-800 p-2">
+          <img id="lightboxImg" src="assets/clue-envelope-open.jpg" alt="Enlarged Clue" class="max-h-[60vh] w-auto max-w-full object-contain rounded-lg shadow-2xl drop-shadow-[0_15px_35px_rgba(0,0,0,0.9)]" />
+        </div>
+
+        <!-- Lightbox Caption & Hint -->
+        <div class="flex items-center justify-between pt-2 border-t border-slate-800/80 text-xs font-mono text-slate-300">
+          <p id="lightboxCaption" class="text-amber-200/90 leading-relaxed pr-4">
+            Inspect the ancient message and sign language handshape clues.
+          </p>
+          <button type="button" onclick="gestigoApp.closeClueLightbox(event)" class="px-4 py-1.5 rounded-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-mono font-bold text-xs uppercase tracking-wider flex-shrink-0 cursor-pointer shadow-lg transition-all">
+            <span id="lightboxCloseBtnText">Close [Esc]</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  
+  <!-- Background Audio Asset Preloads -->
+  <audio id="audioClick" src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3" preload="auto"></audio>
+  <audio id="audioSuccess" src="https://assets.mixkit.co/active_storage/sfx/1435/1435-preview.mp3" preload="auto"></audio>
+  <audio id="audioError" src="https://assets.mixkit.co/active_storage/sfx/2573/2573-preview.mp3" preload="auto"></audio>
+  <audio id="audioLevelUp" src="https://assets.mixkit.co/active_storage/sfx/2019/2019-preview.mp3" preload="auto"></audio>
+
+  <!-- Core Scripts -->
+  <script src="js/data.js"></script>
+  <script src="js/interviews.js"></script>
+  <script src="js/i18n.js"></script>
+  <script src="js/audio.js"></script>
+  <script src="js/camera.js"></script>
+  <script src="js/scenes.js"></script>
+  <script src="js/pathway.js"></script>
+  <script src="js/lib/three.min.js"></script>
+  <script src="js/luma3d.js"></script>
+  <script src="js/mystery.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      
+      setTimeout(() => {
+        if (window.gestigoPathway) {
+          gestigoPathway.render();
+          gestigoPathway.scrollToActiveStage();
+        }
+      }, 150);
+
+    });
+  </script>
+
+  <!-- SignPlay account: login check + save game progress to Firestore.
+       Only runs when the game is served inside SignPlay (/gestigo-app/); standalone copies work as before. -->
+  <script type="module">
+    (async function () {
+      var done = function () { document.documentElement.classList.remove('auth-pending'); };
+      if (location.pathname.indexOf('/gestigo-app/') === -1) { done(); return; }
+
+      try {
+        const { auth } = await import('../firebase-config.js');
+        const { onAuthStateChanged } = await import('https://www.gstatic.com/firebasejs/13.2.0/firebase-auth.js');
+        const sync = await import('../sync.js');
+        let started = false;
+
+        onAuthStateChanged(auth, async function (user) {
+          if (!user || !user.emailVerified) { location.replace('../index.html'); return; }
+          if (started) return;
+          started = true;
+
+          // Load this account's saved game progress. The game already read localStorage while loading,
+          // so if the account's progress is different, reload once to show the right data.
+          const before = sync.gameFingerprint();
+          await sync.withTimeout(sync.ensureUserProgress(user), 5000);
+          const after = sync.gameFingerprint();
+          if (before !== after && !sessionStorage.getItem('gestigo-sync-reload')) {
+            sessionStorage.setItem('gestigo-sync-reload', '1');
+            location.reload();
+            return;
+          }
+          sessionStorage.removeItem('gestigo-sync-reload');
+
+          // Save to Firestore (debounced) whenever the game changes its saved progress
+          let timer = null;
+          const schedule = function () {
+            clearTimeout(timer);
+            timer = setTimeout(function () { sync.saveProgressNow(user); }, 800);
+          };
+          const watched = function (k) { k = String(k); return k.indexOf('gestigo_') === 0 && k !== 'gestigo_lang'; };
+          const origSet = Storage.prototype.setItem;
+          const origRemove = Storage.prototype.removeItem;
+          Storage.prototype.setItem = function (k, v) { origSet.call(this, k, v); if (this === window.localStorage && watched(k)) schedule(); };
+          Storage.prototype.removeItem = function (k) { origRemove.call(this, k); if (this === window.localStorage && watched(k)) schedule(); };
+
+          document.addEventListener('visibilitychange', function () {
+            if (document.visibilityState === 'hidden') sync.saveProgressNow(user);
+          });
+          window.addEventListener('pagehide', function () { sync.saveProgressNow(user); });
+
+          done();
+        });
+      } catch (err) {
+        console.warn('SignPlay account features unavailable:', err);
+        done();
+      }
+    })();
+  </script>
+</body>
+</html>

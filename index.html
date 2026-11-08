@@ -267,7 +267,7 @@ section{padding:56px 20px}
           <span class="tag" data-i="m2tag">Mystery Mode</span>
           <h3 data-i="m2h">Sign Language Mystery Quest</h3>
           <p data-i="m2p">Become a detective! Use your sign language knowledge to decode secret messages, discover clues and solve mysteries.</p>
-          <a class="btn main" href="#quest" data-i="m2b">Solve a mystery</a>
+          <a class="btn main" id="solveMystery" href="gestigo-app/index.html" data-i="m2b">Solve a mystery</a>
         </div>
       </article>
     </div>
@@ -526,6 +526,16 @@ document.getElementById("startLearning").addEventListener("click", function (e) 
     e.preventDefault();
     var target = this.href;
     withTimeout(syncing, 4000).then(function () { window.location.href = target; });
+});
+
+// "Solve a mystery" needs an account too: signed out -> login popup, signed in -> the game
+document.getElementById("solveMystery").addEventListener("click", function (e) {
+    e.preventDefault();
+    if (!currentUser) {
+        openAuthPopup("login");
+        return;
+    }
+    window.location.href = this.href;
 });
 
 // Already signed in? Login / Register buttons just continue to the learning path

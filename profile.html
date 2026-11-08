@@ -464,6 +464,14 @@ main { position: relative; z-index: 1; padding-bottom: 60px; }
 }
 
 </style>
+<style>
+/* header link to the Mystery Gameplay (Gestigo) */
+.nav-link .short { display: none; }
+@media (max-width: 520px) {
+  .nav-link .long { display: none; }
+  .nav-link .short { display: inline; }
+}
+</style>
 </head>
 <body>
 
@@ -473,6 +481,7 @@ main { position: relative; z-index: 1; padding-bottom: 60px; }
   <nav class="main-nav" aria-label="Main navigation">
     <a class="nav-link" href="dashboard.html">Dashboard</a>
     <a class="nav-link" href="learn/learningpath.html">Learn</a>
+    <a class="nav-link" href="gestigo-app/index.html">Mystery <span class="long">Gameplay</span><span class="short">Game</span></a>
   </nav>
   <div class="top-actions">
     <div class="profile-menu-wrap">

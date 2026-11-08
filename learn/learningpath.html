@@ -1269,16 +1269,7 @@ svg.scene {
   </div>
 </header>
  
-<!-- Quick Jump & Demo Bar (Instant preview of any state) -->
-<nav class="demo-strip" aria-label="Fast Demo Preview">
-  <span>⚡ Preview:</span>
-  <button class="demo-chip" data-set="0" title="Level 1 enrolled, others grey">Lvl 1 (0/30)</button>
-  <button class="demo-chip" data-set="10" title="Level 2 enrolled & shines, Level 3 and Trophy grey">Lvl 2 (10/30)</button>
-  <button class="demo-chip" data-set="20" title="Level 3 enrolled & shines, Trophy grey">Lvl 3 (20/30)</button>
-  <button class="demo-chip" data-set="30" title="All 30 complete, Trophy shines!">Champion (30/30)</button>
-  <button class="demo-chip" id="demo-plus1" title="Complete +1 stage">+1 Stage</button>
-  <button class="demo-chip" id="demo-reset" title="Reset all progress">Reset</button>
-</nav>
+
  
 <div class="main-wrapper">
   <div class="page-layout">
@@ -1960,11 +1951,6 @@ function updateDashboard() {
   if (done >= 30) document.getElementById("tab-lvl-trophy").classList.add("active");
   else document.getElementById("tab-lvl-" + curLvl).classList.add("active");
  
-  // Demo active chips
-  document.querySelectorAll(".demo-chip[data-set]").forEach(function(btn) {
-    var val = parseInt(btn.dataset.set, 10);
-    btn.classList.toggle("active", val === done);
-  });
 }
  
 // Open Stage Details Sheet
@@ -2308,7 +2294,8 @@ function celebrateStage(c) {
   closeStageSheet();
   renderMap();
   if (!c.isNew) {
-    playSound('tap');
+    playSound('complete');
+    triggerConfetti('stage');
     showToast("Stage " + c.stage + " practised! " + "\u2605".repeat(c.stars || 0));
     return;
   }
@@ -2410,69 +2397,6 @@ soundBtn.onclick = function() {
   if (soundEnabled) playSound('tap');
 };
  
-// Quick Preview & Demo Bar Actions
-document.querySelectorAll(".demo-chip[data-set]").forEach(function(btn) {
-  btn.onclick = function() {
-    var target = parseInt(btn.dataset.set, 10);
-    done = target;
-    saveProgress();
-    renderMap();
-    if (done >= 30) {
-      playSound('victory');
-      triggerConfetti('trophy');
-      document.getElementById("victory-modal").classList.add("open");
-      scrollToX(2700, true);
-    } else if (done > 0 && done % 10 === 0) {
-      playSound('level');
-      triggerConfetti('level');
-      showToast("Enrolled in Level " + (done / 10 + 1) + "! Lamp is shining!");
-      scrollToX(done === 10 ? 950 : 1900, true);
-    } else {
-      playSound('tap');
-      showToast("Jumped to " + done + "/30 stages");
-      var jumpX = done < 10 ? 0 : done < 20 ? 950 : 1900;
-      scrollToX(jumpX, true);
-    }
-  };
-});
- 
-document.getElementById("demo-plus1").onclick = function() {
-  if (done < 30) {
-    done++;
-    saveProgress();
-    renderMap();
-    if (done === 30) {
-      playSound('victory');
-      triggerConfetti('trophy');
-      document.getElementById("victory-modal").classList.add("open");
-      scrollToX(2700, true);
-    } else if (isBoss(done)) {
-      playSound('level');
-      triggerConfetti('level');
-      showToast("Level Boss Defeated! Next Level Enrolled!");
-      scrollToX(done === 10 ? 950 : 1900, true);
-    } else {
-      playSound('complete');
-      triggerConfetti('stage');
-      showToast("Stage " + done + " Complete! +50 XP");
-    }
-  } else {
-    showToast("Already at max stage 30/30!");
-  }
-};
- 
-document.getElementById("demo-reset").onclick = function() {
-  done = 0;
-  weekBase = 0;
-  saveWeek();
-  saveProgress();
-  renderMap();
-  playSound('tap');
-  showToast("Progress reset to Stage 1");
-  scrollToX(0, true);
-};
- 
-
 // Initial Render
 renderMap();
 updateSlider();
