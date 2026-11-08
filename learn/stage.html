@@ -118,6 +118,7 @@ function draw(){
 }
 function fb(t,c){var f=$("fb");if(f){f.textContent=t;f.style.color=c||"var(--ink)"}}
 function after(fn,ms){setTimeout(fn,ms||900)}
+function judged(){S.pc++;S.att=0;fb("Great sign!","var(--green)");after(function(){S.i<S.P.length-1?go(4,S.i+1):go(5)},900)}
 document.addEventListener("click",function(e){
   var b=e.target.closest("[data-a]");if(!b||b.disabled)return;var a=b.dataset.a,k=+b.dataset.k;
   if(a==="next")go(D.review.length?1:2);
@@ -131,9 +132,23 @@ document.addEventListener("click",function(e){
   else if(a==="cam"){
     if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){$("cmsg").textContent="Camera not available here";return}
     navigator.mediaDevices.getUserMedia({video:{facingMode:"user"}}).then(function(s){stream=s;var v=document.createElement("video");v.autoplay=true;v.muted=true;v.playsInline=true;v.srcObject=s;$("cam").insertBefore(v,$("cam").firstChild);$("cmsg").textContent="";b.textContent="Camera on";b.disabled=true}).catch(function(){$("cmsg").textContent="Camera blocked. Allow access, or use the simulated check."})}
-  else if(a==="chk"){S.att++;
-    if(S.att<2){fb("Almost! Hint: "+S.P[S.i].m,"var(--coral)")}
-    else{S.pc++;S.att=0;fb("Great sign!","var(--green)");after(function(){S.i<S.P.length-1?go(4,S.i+1):go(5)},900)}}
+      else if(a==="chk"){
+    var sg=S.P[S.i],vid=document.querySelector("#cam video");
+    if(!vid){fb("Turn on the camera first.","var(--coral)")}
+    else if(!window.SignJudge){fb("The checker is still loading. Try again in a moment.","var(--coral)")}
+    else{
+      b.disabled=true;
+      fb("Loading the checker...");
+      SignJudge.supports(sg.w).then(function(sup){
+        if(!sup){b.disabled=false;S.att++;if(S.att<2){fb("Almost! Hint: "+sg.m,"var(--coral)")}else{judged()}return}
+        return SignJudge.check(vid,[sg.w],function(t){fb(t)}).then(function(r){
+          b.disabled=false;
+          if(r.error){fb(r.error,"var(--coral)");return}
+          if(r.ok){judged()}else{fb("Not quite. I saw: "+r.top[0].word+". Hint: "+sg.m,"var(--coral)")}
+        });
+      }).catch(function(){b.disabled=false;fb("The checker could not load. Try again.","var(--coral)")});
+    }
+  }
   else if(a==="pskip"){S.att=0;S.i<S.P.length-1?go(4,S.i+1):go(5)}
   else if(a==="pl"){S.sel=b.dataset.w;draw()}
   else if(a==="pr"){if(!S.sel){fb("Pick a description first");return}
@@ -145,5 +160,6 @@ document.addEventListener("click",function(e){
 /* a pair counts as a first-try match when no misses came before it */
 reset();draw();
 </script>
+<script type="module" src="sign-judge.js"></script>
 </body>
 </html>
