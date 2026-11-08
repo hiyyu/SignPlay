@@ -148,9 +148,11 @@ body {
 /* Hand illustration */
 
 .hand-illustration {
-    width: 240px;
+    width: 180px;
+    height: 280px;
     max-width: 100%;
     margin: 0 auto 15px;
+    overflow: visible;
 
     filter: drop-shadow(0 9px 0 rgba(15,12,46,.2));
 }
@@ -428,6 +430,7 @@ input:focus {
 
     .hand-illustration {
         width: 125px;
+        height: 194px;
         margin-bottom: 5px;
     }
 
@@ -646,6 +649,18 @@ input {
     }
 }
 
+.wave {
+    transform-origin: 180px 290px;
+    animation: wave 4s ease-in-out infinite;
+}
+@keyframes wave {
+    0%, 60%, 100% { transform: rotate(0); }
+    12% { transform: rotate(-14deg); }
+    24% { transform: rotate(14deg); }
+    36% { transform: rotate(-14deg); }
+    48% { transform: rotate(14deg); }
+}
+
 </style>
 </head>
 
@@ -672,63 +687,33 @@ input {
 
                 <!-- Hand illustration -->
                 <svg class="hand-illustration"
-                     viewBox="0 0 250 270"
-                     xmlns="http://www.w3.org/2000/svg">
-
-                    <circle cx="125" cy="125" r="115"
-                            fill="#ffffff" opacity=".13"/>
-
-                    <g stroke="#1f1b4d"
-                       stroke-width="7"
-                       stroke-linejoin="round"
-                       stroke-linecap="round">
-
-                        <rect x="72" y="25" width="34" height="125"
-                              rx="17" fill="#ff6b57"/>
-
-                        <rect x="109" y="8" width="34" height="142"
-                              rx="17" fill="#ffc83d"/>
-
-                        <rect x="146" y="24" width="34" height="126"
-                              rx="17" fill="#1fb5a8"/>
-
-                        <rect x="183" y="52" width="34" height="105"
-                              rx="17" fill="#3aa0ff"/>
-
-                        <rect x="34" y="126" width="38" height="95"
-                              rx="19" fill="#b48cff"
-                              transform="rotate(-35 53 173)"/>
-
-                        <rect x="65" y="112" width="150" height="120"
-                              rx="45" fill="#ff9a8b"/>
-
-                        <rect x="94" y="220" width="91" height="42"
-                              rx="15" fill="#fff6dc"/>
-
-                        <g stroke="none">
-                            <circle cx="111" cy="170" r="8"
-                                    fill="#1f1b4d"/>
-
-                            <circle cx="169" cy="170" r="8"
-                                    fill="#1f1b4d"/>
-
-                            <circle cx="88" cy="196" r="11"
-                                    fill="#ff6b57" opacity=".6"/>
-
-                            <circle cx="193" cy="196" r="11"
-                                    fill="#ff6b57" opacity=".6"/>
-                        </g>
-
-                        <path d="M119 205 Q140 226 161 205"
-                              fill="none"/>
-                    </g>
-
-                    <g fill="#ffc83d">
-                        <path d="M220 25 L227 40 L242 47 L227 54 L220 69 L213 54 L198 47 L213 40Z"/>
-                        <path d="M26 100 L31 110 L41 115 L31 120 L26 130 L21 120 L11 115 L21 110Z"/>
-                    </g>
-
-                </svg>
+     viewBox="80 25 180 280"
+     xmlns="http://www.w3.org/2000/svg"
+     role="img" aria-label="SignPlay waving hand mascot">
+    <circle cx="180" cy="160" r="120" fill="#ffffff" opacity=".13"/>
+    <g transform="translate(0,-30)">
+    <g class="wave" stroke="#0f0c2e" stroke-width="5" stroke-linejoin="round" stroke-linecap="round">
+        <rect x="148" y="84" width="21" height="130" rx="10.5" fill="#ff6b57"/>
+        <rect x="171" y="68" width="21" height="146" rx="10.5" fill="#ffc83d"/>
+        <rect x="194" y="78" width="21" height="136" rx="10.5" fill="#1fb5a8"/>
+        <rect x="217" y="100" width="21" height="114" rx="10.5" fill="#3aa0ff"/>
+        <rect x="98" y="190" width="26" height="72" rx="13" fill="#b48cff" transform="rotate(-38 124 250)"/>
+        <rect x="146" y="176" width="94" height="106" rx="30" fill="#ff9a8b"/>
+        <rect x="160" y="270" width="66" height="56" rx="14" fill="#fff6dc"/>
+        <g stroke="none">
+            <circle cx="176" cy="218" r="6" fill="#0f0c2e"/>
+            <circle cx="210" cy="218" r="6" fill="#0f0c2e"/>
+            <circle cx="163" cy="236" r="7" fill="#ff6b57" opacity=".55"/>
+            <circle cx="223" cy="236" r="7" fill="#ff6b57" opacity=".55"/>
+        </g>
+        <path d="M181 234Q193 248 205 234" fill="none"/>
+    </g>
+</g>
+    <g fill="#ffc83d">
+        <path d="M220 25 L227 40 L242 47 L227 54 L220 69 L213 54 L198 47 L213 40Z"/>
+        <path d="M26 100 L31 110 L41 115 L31 120 L26 130 L21 120 L11 115 L21 110Z"/>
+    </g>
+</svg>
 
                 <h2>
                     Welcome back,
@@ -932,71 +917,133 @@ function openRegister(e) {
 }
 
 
-// LOGIN FORM VALIDATION
+</script>
 
-document.getElementById("loginForm").addEventListener(
-    "submit",
-    function(e) {
 
-        e.preventDefault();
+<script type="module">
+import { auth, googleProvider } from "./firebase-config.js";
+import {
+    signInWithEmailAndPassword,
+    signInWithPopup,
+    sendPasswordResetEmail,
+    sendEmailVerification,
+    signOut,
+    setPersistence,
+    browserLocalPersistence,
+    browserSessionPersistence
+} from "https://www.gstatic.com/firebasejs/13.2.0/firebase-auth.js";
 
-        const email = document.getElementById("email").value;
-        const password = document.getElementById("password").value;
-        const message = document.getElementById("message");
+const form = document.getElementById("loginForm");
+const message = document.getElementById("message");
+const submitBtn = form.querySelector(".login-btn");
+const googleBtn = document.getElementById("googleBtn");
 
-        if (!email || !password) {
+function show(text, color) {
+    message.style.color = color;
+    message.textContent = text;
+}
 
-            message.style.color = "#ff6b57";
-            message.textContent = "Please fill in all fields.";
+function friendlyError(err) {
+    switch (err.code) {
+        case "auth/invalid-email": return "That email address doesn't look right.";
+        case "auth/user-not-found":
+        case "auth/wrong-password":
+        case "auth/invalid-credential": return "Incorrect email or password.";
+        case "auth/user-disabled": return "This account has been disabled.";
+        case "auth/too-many-requests": return "Too many attempts. Please wait a moment and try again.";
+        case "auth/network-request-failed": return "Network error. Check your connection.";
+        case "auth/popup-closed-by-user":
+        case "auth/cancelled-popup-request": return "Google sign-in was cancelled.";
+        case "auth/popup-blocked": return "Your browser blocked the Google popup. Please allow popups and try again.";
+        case "auth/operation-not-allowed": return "This sign-in method isn't enabled in Firebase yet.";
+        case "auth/unauthorized-domain": return "This domain isn't authorised in Firebase (Authentication > Settings > Authorized domains).";
+        default: return "Something went wrong (" + (err.code || "unknown") + ").";
+    }
+}
 
+function goToLearning() {
+    if (window.parent !== window) {
+        window.parent.postMessage({ type: "signplay-auth-success" }, window.location.origin);
+    } else {
+        window.location.href = "dashboard.html";
+    }
+}
+
+async function applyPersistence() {
+    const remember = document.getElementById("remember").checked;
+    await setPersistence(auth, remember ? browserLocalPersistence : browserSessionPersistence);
+}
+
+form.addEventListener("submit", async function (e) {
+    e.preventDefault();
+
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value;
+
+    if (!email || !password) {
+        show("Please fill in all fields.", "#ff6b57");
+        return;
+    }
+
+    submitBtn.disabled = true;
+    show("Logging in...", "#5b3fd1");
+
+    try {
+        await applyPersistence();
+        const cred = await signInWithEmailAndPassword(auth, email, password);
+
+        if (!cred.user.emailVerified) {
+            try { await sendEmailVerification(cred.user); } catch (e) {}
+            await signOut(auth);
+            show("Please verify your email first. We just sent a new verification link to " + email + ".", "#ff6b57");
+            submitBtn.disabled = false;
             return;
-
         }
 
-        message.style.color = "#1fb5a8";
-
-        message.textContent =
-            "Login form validated! Authentication setup is still needed.";
-
+        show("Welcome back! Taking you to your dashboard...", "#1fb5a8");
+        goToLearning();
+    } catch (err) {
+        show(friendlyError(err), "#ff6b57");
+        submitBtn.disabled = false;
     }
-);
+});
 
+googleBtn.addEventListener("click", async function () {
+    googleBtn.disabled = true;
+    show("Opening Google...", "#5b3fd1");
 
-// FORGOT PASSWORD
-
-document.getElementById("forgotLink").addEventListener(
-    "click",
-    function(e) {
-
-        e.preventDefault();
-
-        const message = document.getElementById("message");
-
-        message.style.color = "#5b3fd1";
-
-        message.textContent =
-            "Password recovery will be available once authentication is connected.";
-
+    try {
+        await applyPersistence();
+        await signInWithPopup(auth, googleProvider);
+        show("Welcome! Taking you to your dashboard...", "#1fb5a8");
+        goToLearning();
+    } catch (err) {
+        show(friendlyError(err), "#ff6b57");
+        googleBtn.disabled = false;
     }
-);
+});
 
+document.getElementById("forgotLink").addEventListener("click", async function (e) {
+    e.preventDefault();
 
-// GOOGLE SIGN-IN
+    const email = document.getElementById("email").value.trim();
 
-document.getElementById("googleBtn").addEventListener(
-    "click",
-    function() {
-
-        const message = document.getElementById("message");
-
-        message.style.color = "#5b3fd1";
-
-        message.textContent =
-            "Google authentication setup is still needed.";
-
+    if (!email) {
+        show("Type your email above first, then click Forgot Password.", "#ff6b57");
+        return;
     }
-);
 
+    try {
+        await sendPasswordResetEmail(auth, email);
+        show("Password reset email sent! Check your inbox (and spam folder).", "#1fb5a8");
+    } catch (err) {
+        show(friendlyError(err), "#ff6b57");
+    }
+});
+
+document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape") closeLogin();
+});
 </script>
 
 </body>

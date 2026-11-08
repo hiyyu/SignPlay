@@ -256,7 +256,7 @@ section{padding:56px 20px}
           <span class="tag" data-i="m1tag">Learn Mode</span>
           <h3 data-i="m1h">Sign Language Learning</h3>
           <p data-i="m1p">Learn sign language step by step through visual demonstrations, vocabulary lessons and webcam-based practice.</p>
-          <a class="btn main" href="#learn" data-i="m1b">Start learning</a>
+          <a class="btn main" id="startLearning" href="learn/learningpath.html" data-i="m1b">Start learning</a>
         </div>
       </article>
       <article class="mode quest">
@@ -458,6 +458,12 @@ window.addEventListener("message", function(e) {
 
     if (e.source !== authFrame.contentWindow) return;
 
+    // LOGIN / REGISTER SUCCESS -> LEARNING PATH
+    if (e.data?.type === "signplay-auth-success") {
+        window.location.href = "dashboard.html";
+        return;
+    }
+
     // CLOSE POPUP
     if (e.data?.type === "signplay-close-auth") {
         closeAuthPopup();
@@ -488,5 +494,51 @@ document.addEventListener("keydown", function(e) {
 });
 
 </script>
+
+<script type="module">
+import { auth } from "./firebase-config.js";
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-auth.js";
+import { ensureUserProgress, withTimeout } from "./sync.js";
+
+let currentUser = null;
+let syncing = Promise.resolve();
+
+// Opened from the dashboard's "Switch account" button
+if (new URLSearchParams(window.location.search).get("login") === "1") {
+    history.replaceState(null, "", window.location.pathname);
+    openAuthPopup("login");
+}
+
+onAuthStateChanged(auth, function (user) {
+    currentUser = (user && user.emailVerified) ? user : null;
+    // Load this account's progress from Firestore so the learning path shows the right data
+    if (currentUser) syncing = ensureUserProgress(currentUser);
+});
+
+// "Start learning" needs an account: open the login popup if signed out
+document.getElementById("startLearning").addEventListener("click", function (e) {
+    if (!currentUser) {
+        e.preventDefault();
+        openAuthPopup("login");
+        return;
+    }
+    // Signed in: make sure progress is loaded before opening the learning path
+    e.preventDefault();
+    var target = this.href;
+    withTimeout(syncing, 4000).then(function () { window.location.href = target; });
+});
+
+// Already signed in? Login / Register buttons just continue to the learning path
+document.querySelectorAll("[data-open-auth]").forEach(function (btn) {
+    btn.addEventListener("click", function (e) {
+        if (currentUser) {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            window.location.href = "dashboard.html";
+        }
+    }, true);
+});
+</script>
+
 </body>
 </html>
