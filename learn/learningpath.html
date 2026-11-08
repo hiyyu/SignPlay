@@ -60,6 +60,7 @@ body {
 }
  
 .brand {
+  text-decoration: none;
   font-family: 'Baloo 2', sans-serif;
   font-weight: 800;
   font-size: 1.8rem;
@@ -76,6 +77,68 @@ body {
   align-items: center;
   gap: 10px;
 }
+/* Main navigation */
+.main-nav {
+  display: flex; align-items: center; gap: 10px;
+  margin-left: auto; margin-right: 8px;
+}
+.nav-link {
+  color: #fff7e6; text-decoration: none; font-weight: 800; font-size: .92rem;
+  padding: 8px 17px; border: 1px solid transparent; border-radius: 999px;
+  transition: background .2s, color .2s, border-color .2s;
+}
+.nav-link:hover { background: rgba(255,255,255,.12); border-color: rgba(255,255,255,.18); }
+.nav-link.active {
+  color: #2b2458; background: #ffc83d; border-color: #ffc83d;
+  box-shadow: 0 2px 0 #d99c19;
+}
+
+/* Avatar dropdown */
+.profile-menu-wrap { position: relative; }
+.nav-avatar {
+  width: 42px; height: 42px; border-radius: 50%;
+  border: 2px solid #ffe7a3;
+  background: linear-gradient(135deg, #ff8b78, #e85d91);
+  color: #fff; font-family: 'Baloo 2', sans-serif; font-size: 1.15rem;
+  font-weight: 800; display: grid; place-items: center; cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0,0,0,.18);
+  transition: transform .18s, box-shadow .18s;
+}
+.nav-avatar:hover, .nav-avatar[aria-expanded="true"] {
+  transform: translateY(-1px); box-shadow: 0 0 0 4px rgba(255,200,61,.2);
+}
+.profile-dropdown {
+  position: absolute; top: calc(100% + 12px); right: 0; width: 242px;
+  padding: 8px; background: #202b43; color: #f8fafc;
+  border: 1px solid rgba(255,255,255,.12); border-radius: 14px;
+  box-shadow: 0 14px 34px rgba(15,23,42,.32);
+  opacity: 0; visibility: hidden; transform: translateY(-8px);
+  transition: opacity .18s, transform .18s, visibility .18s; z-index: 80;
+}
+.profile-dropdown.open { opacity: 1; visibility: visible; transform: translateY(0); }
+.profile-menu-item {
+  width: 100%; min-height: 42px; display: flex; align-items: center; gap: 11px;
+  padding: 9px 11px; border: 0; border-radius: 9px; background: transparent;
+  color: #f8fafc; text-decoration: none; text-align: left;
+  font: 700 .9rem 'Nunito', sans-serif; cursor: pointer;
+}
+.profile-menu-item:hover { background: rgba(255,255,255,.1); }
+.profile-menu-item .menu-icon { width: 20px; text-align: center; font-size: 1.05rem; }
+.menu-divider { height: 1px; background: rgba(255,255,255,.13); margin: 5px 4px; }
+.sound-menu-item { justify-content: flex-start; }
+.sound-switch {
+  width: 38px; height: 21px; border-radius: 999px; margin-left: auto;
+  background: #64748b; position: relative; transition: background .2s;
+}
+.sound-switch::after {
+  content: ""; position: absolute; top: 3px; left: 3px; width: 15px; height: 15px;
+  border-radius: 50%; background: #fff; transition: transform .2s;
+}
+.sound-switch.on { background: #22c55e; }
+.sound-switch.on::after { transform: translateX(17px); }
+.logout-menu-item { color: #fecaca; }
+.logout-menu-item:hover { background: rgba(248,113,113,.13); }
+
  
 .btn-icon {
   background: #fff3d2;
@@ -593,9 +656,11 @@ svg.scene {
   border-top: 1px solid var(--panel-line);
 }
 .metric-block:last-child { text-align: right; }
+.metric-block:nth-child(2) { text-align: center; }
+.metric-val { white-space: nowrap; }
 .metric-val {
   font-family: 'Baloo 2', sans-serif;
-  font-size: 2rem;
+  font-size: 1.7rem;
   font-weight: 800;
   line-height: 1;
 }
@@ -813,6 +878,13 @@ svg.scene {
 @media (max-width: 560px) {
   .badge-grid { grid-template-columns: repeat(3, 1fr); gap: 8px; }
   .path-panel, .badge-panel { padding: 18px 16px; }
+  .top-bar { padding: 9px 12px; gap: 8px; }
+  .brand { font-size: 1.45rem; }
+  .top-actions { gap: 5px; }
+  .main-nav { gap: 4px; margin-right: 0; }
+  .nav-link { font-size: .8rem; padding: 7px 10px; }
+  .nav-avatar { width: 38px; height: 38px; }
+  .profile-dropdown { right: 0; width: 220px; }
 }
  
 /* Bottom Sheet / Modal */
@@ -1015,14 +1087,185 @@ svg.scene {
   * { animation: none !important; transition: none !important; }
 }
 </style>
+<style>html.auth-pending body{visibility:hidden}</style>
+<script>document.documentElement.className+=" auth-pending"</script>
+<style>
+
+/* === Shared SignPlay navigation: identical on Dashboard, Learn and Profile === */
+.top-bar {
+  position: sticky; top: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; padding: 10px 20px;
+  color: #fff7e6; background: rgba(43, 40, 88, .97);
+  border-bottom: 3px solid #39336f;
+  box-shadow: 0 4px 18px rgba(35, 28, 83, .22);
+  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+}
+.top-bar .brand {
+  display: flex; align-items: center; gap: 0; white-space: nowrap;
+  margin: 0; text-decoration: none;
+  font-family: 'Baloo 2', sans-serif; font-size: 1.8rem; font-weight: 800;
+  line-height: 1; color: #ffc83d; text-shadow: 0 2px 0 #fbe3a6;
+}
+.top-bar .brand span { color: #ff6b57; }
+.top-bar .main-nav {
+  display: flex; align-items: center; justify-content: flex-end;
+  gap: 10px; margin-left: auto; margin-right: 8px;
+}
+.top-bar .nav-link {
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 8px 17px; border: 1px solid transparent; border-radius: 999px;
+  color: #fff7e6; background: transparent; text-decoration: none;
+  font-family: 'Nunito', sans-serif; font-size: .92rem; font-weight: 800;
+  line-height: 1.4; white-space: nowrap;
+  transition: background .2s, color .2s, border-color .2s;
+}
+.top-bar .nav-link:hover { background: rgba(255,255,255,.12); border-color: rgba(255,255,255,.18); }
+.top-bar .nav-link.active {
+  color: #2b2458; background: #ffc83d; border-color: #ffc83d;
+  box-shadow: 0 2px 0 #d99c19;
+}
+.top-bar .top-actions { display: flex; align-items: center; gap: 10px; }
+.top-bar .profile-menu-wrap { position: relative; }
+.top-bar .nav-avatar {
+  display: grid; place-items: center; width: 42px; height: 42px; padding: 0;
+  border: 2px solid #ffe7a3; border-radius: 50%; cursor: pointer;
+  background: linear-gradient(135deg, #ff8b78, #e85d91); color: #fff;
+  font-family: 'Baloo 2', sans-serif; font-size: 1.15rem; font-weight: 800;
+  box-shadow: 0 2px 8px rgba(0,0,0,.18);
+  transition: transform .18s, box-shadow .18s;
+}
+.top-bar .nav-avatar:hover, .top-bar .nav-avatar[aria-expanded='true'] {
+  transform: translateY(-1px); box-shadow: 0 0 0 4px rgba(255,200,61,.2);
+}
+.top-bar .profile-dropdown {
+  position: absolute; top: calc(100% + 12px); right: 0; z-index: 110;
+  width: 242px; padding: 8px; color: #f8fafc; background: #202b43;
+  border: 1px solid rgba(255,255,255,.12); border-radius: 14px;
+  box-shadow: 0 14px 34px rgba(15,23,42,.32);
+}
+@media (max-width: 620px) {
+  .top-bar { gap: 6px; padding: 9px 12px; }
+  .top-bar .brand { font-size: 1.5rem; }
+  .top-bar .main-nav { gap: 2px; margin-right: 2px; }
+  .top-bar .nav-link { padding: 7px 9px; font-size: .8rem; }
+  .top-bar .nav-avatar { width: 38px; height: 38px; }
+}
+
+</style>
+<style>
+
+/* === SignPlay shared header: identical across Dashboard, Learn and Profile === */
+.top-bar {
+  position: sticky !important; top: 0 !important; z-index: 100 !important;
+  display: flex !important; align-items: center !important; justify-content: space-between !important;
+  gap: 12px !important; padding: 10px 20px !important;
+  color: #fff7e6 !important; background: rgba(43, 40, 88, .97) !important;
+  border-bottom: 3px solid #39336f !important;
+  box-shadow: 0 4px 18px rgba(35, 28, 83, .22) !important;
+  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+}
+.top-bar .brand {
+  display: flex !important; align-items: center !important; gap: 0 !important;
+  margin: 0 !important; padding: 0 !important; white-space: nowrap !important;
+  text-decoration: none !important; font-family: 'Baloo 2', sans-serif !important;
+  font-size: 1.8rem !important; font-weight: 800 !important; line-height: 1 !important;
+  color: #ffc83d !important; text-shadow: 0 2px 0 #fbe3a6 !important;
+}
+.top-bar .brand span { color: #ff6b57 !important; }
+.top-bar .main-nav {
+  display: flex !important; align-items: center !important; justify-content: flex-end !important;
+  gap: 10px !important; margin-left: auto !important; margin-right: 8px !important;
+}
+.top-bar .nav-link {
+  display: inline-flex !important; align-items: center !important; justify-content: center !important;
+  padding: 8px 17px !important; border: 1px solid transparent !important; border-radius: 999px !important;
+  color: #fff7e6 !important; background: transparent !important; text-decoration: none !important;
+  font-family: 'Nunito', sans-serif !important; font-size: .92rem !important; font-weight: 800 !important;
+  line-height: 1.4 !important; white-space: nowrap !important;
+}
+.top-bar .nav-link:hover { background: rgba(255,255,255,.12) !important; border-color: rgba(255,255,255,.18) !important; }
+.top-bar .nav-link.active {
+  color: #2b2458 !important; background: #ffc83d !important; border-color: #ffc83d !important;
+  box-shadow: 0 2px 0 #d99c19 !important;
+}
+.top-bar .top-actions { display: flex !important; align-items: center !important; gap: 10px !important; }
+.top-bar .profile-menu-wrap { position: relative !important; }
+.top-bar .nav-avatar {
+  display: grid !important; place-items: center !important; width: 42px !important; height: 42px !important;
+  padding: 0 !important; border: 2px solid #ffe7a3 !important; border-radius: 50% !important;
+  cursor: pointer !important; background: linear-gradient(135deg, #ff8b78, #e85d91) !important;
+  color: #fff !important; font-family: 'Baloo 2', sans-serif !important; font-size: 1.15rem !important;
+  font-weight: 800 !important; box-shadow: 0 2px 8px rgba(0,0,0,.18) !important;
+}
+.top-bar .nav-avatar:hover, .top-bar .nav-avatar[aria-expanded='true'] {
+  transform: translateY(-1px); box-shadow: 0 0 0 4px rgba(255,200,61,.2) !important;
+}
+.top-bar .profile-dropdown {
+  position: absolute !important; top: calc(100% + 12px) !important; right: 0 !important; z-index: 110 !important;
+  width: 242px !important; padding: 8px !important; color: #f8fafc !important; background: #202b43 !important;
+  border: 1px solid rgba(255,255,255,.12) !important; border-radius: 14px !important;
+  box-shadow: 0 14px 34px rgba(15,23,42,.32) !important;
+  opacity: 0 !important; visibility: hidden !important; transform: translateY(-8px) !important;
+  transition: opacity .18s, transform .18s, visibility .18s !important;
+}
+.top-bar .profile-dropdown.open { opacity: 1 !important; visibility: visible !important; transform: translateY(0) !important; }
+.top-bar .profile-menu-item {
+  width: 100% !important; min-height: 42px !important; display: flex !important; align-items: center !important;
+  gap: 11px !important; padding: 9px 11px !important; border: 0 !important; border-radius: 9px !important;
+  background: transparent !important; color: #f8fafc !important; text-decoration: none !important;
+  text-align: left !important; font: 700 .9rem 'Nunito', sans-serif !important; cursor: pointer !important;
+}
+.top-bar .profile-menu-item:hover { background: rgba(255,255,255,.1) !important; }
+.top-bar .profile-menu-item .menu-icon { width: 20px !important; text-align: center !important; font-size: 1.05rem !important; }
+.top-bar .menu-divider { height: 1px !important; background: rgba(255,255,255,.13) !important; margin: 5px 4px !important; }
+.top-bar .sound-switch { width: 38px !important; height: 21px !important; border-radius: 999px !important; margin-left: auto !important; background: #64748b !important; position: relative !important; }
+.top-bar .sound-switch::after { content: ''; position: absolute; top: 3px; left: 3px; width: 15px; height: 15px; border-radius: 50%; background: #fff; transition: transform .2s; }
+.top-bar .sound-switch.on { background: #22c55e !important; }
+.top-bar .sound-switch.on::after { transform: translateX(17px); }
+.top-bar .logout-menu-item { color: #fecaca !important; }
+@media (max-width: 620px) {
+  .top-bar { gap: 6px !important; padding: 9px 12px !important; }
+  .top-bar .brand { font-size: 1.5rem !important; }
+  .top-bar .main-nav { gap: 2px !important; margin-right: 2px !important; }
+  .top-bar .nav-link { padding: 7px 9px !important; font-size: .8rem !important; }
+  .top-bar .nav-avatar { width: 38px !important; height: 38px !important; }
+}
+
+</style>
 </head>
 <body>
  
 <!-- Header -->
 <header class="top-bar">
-  <div class="brand">Sign<span>Play</span>!</div>
+  <a class="brand" href="../index.html" aria-label="SignPlay home">Sign<span>Play</span>!</a>
+
+  <nav class="main-nav" aria-label="Main navigation">
+    <a class="nav-link" href="../dashboard.html">Dashboard</a>
+    <a class="nav-link active" href="./learningpath.html" aria-current="page">Learn</a>
+  </nav>
+
   <div class="top-actions">
-    <button class="btn-icon" id="sound-btn" aria-label="Toggle sound" title="Toggle audio effects">🔊</button>
+    <div class="profile-menu-wrap">
+      <button class="nav-avatar" id="profile-menu-btn" type="button"
+              aria-label="Open profile menu" aria-haspopup="true" aria-expanded="false"
+              aria-controls="profile-dropdown">S</button>
+      <div class="profile-dropdown" id="profile-dropdown" role="menu" aria-label="Profile menu">
+        <a class="profile-menu-item" href="../profile.html" role="menuitem">
+          <span class="menu-icon">👤</span><span>View Profile</span>
+        </a>
+        <div class="menu-divider"></div>
+        <button class="profile-menu-item sound-menu-item" id="sound-btn" type="button"
+                role="menuitemcheckbox" aria-checked="true">
+          <span class="menu-icon">🔊</span><span>Sound</span>
+          <span class="sound-switch on" id="sound-switch" aria-hidden="true"></span>
+        </button>
+        <div class="menu-divider"></div>
+        <button class="profile-menu-item logout-menu-item" id="logout-btn" type="button" role="menuitem">
+          <span class="menu-icon">↪</span><span>Log out</span>
+        </button>
+      </div>
+    </div>
   </div>
 </header>
  
@@ -1146,17 +1389,6 @@ svg.scene {
         </div>
       </section>
  
-      <!-- Badge collection -->
-      <section class="panel badge-panel" id="badge-collection" aria-label="Badge Collection">
-        <div class="panel-head">
-          <div>
-            <div class="side-title">🎖️ Badge Collection</div>
-            <div class="panel-sub">Complete stages to collect them all</div>
-          </div>
-          <div class="count-pill" id="badges-count">0/12</div>
-        </div>
-        <div class="badge-grid" id="badge-grid"></div>
-      </section>
     </div>
  
     <!-- RIGHT COLUMN: sidebar -->
@@ -1170,9 +1402,9 @@ svg.scene {
         </div>
  
         <div class="profile-row">
-          <div class="avatar">S</div>
+          <div class="avatar" id="user-avatar">S</div>
           <div class="profile-info">
-            <div class="profile-name">SignPlay Learner <span id="rank-tag">[ROOKIE]</span></div>
+            <div class="profile-name"><b id="user-name" style="font-weight:inherit">SignPlay Learner</b> <span id="rank-tag">[ROOKIE]</span></div>
             <div class="plvl-row">
               <span class="plvl-label" id="plvl-label">Level 1</span>
               <div class="plvl-bar"><div class="plvl-fill" id="plvl-fill"></div></div>
@@ -1190,24 +1422,13 @@ svg.scene {
             <div class="metric-val stage-val" id="dash-stage-val">0/10</div>
             <div class="metric-sub">Stages completed</div>
           </div>
-        </div>
- 
-        <div class="dash-progress-wrap">
-          <div class="dash-progress-bar" role="progressbar" id="dash-progress-bar">
-            <div class="dash-progress-fill" id="dash-progress-fill"></div>
-          </div>
-          <div class="dash-progress-labels">
-            <span id="dash-progress-label">Level 1 progress</span>
-            <span id="dash-pct-label">0%</span>
+          <div class="metric-block">
+            <div class="metric-val" id="stat-streak" style="color:#e2553f">1</div>
+            <div class="metric-sub">Day streak 🔥</div>
           </div>
         </div>
+        <a href="../profile.html" style="display:block;text-align:center;font-weight:800;color:#5b3fd1;text-decoration:none;margin-top:6px">View profile &amp; account →</a>
  
-        <div class="stat-row">
-          <div><div class="stat-ico">🔥</div><div class="stat-val" id="stat-streak">1</div><div class="stat-lbl">Day streak</div></div>
-          <div><div class="stat-ico">🚪</div><div class="stat-val" id="stat-stages">0/30</div><div class="stat-lbl">Stages</div></div>
-          <div><div class="stat-ico">🏅</div><div class="stat-val" id="stat-badges">0</div><div class="stat-lbl">Badges</div></div>
-          <div><div class="stat-ico">👑</div><div class="stat-val" id="stat-bosses">0/3</div><div class="stat-lbl">Bosses</div></div>
-        </div>
       </section>
  
       <!-- Weekly Mission -->
@@ -1233,13 +1454,6 @@ svg.scene {
         </div>
       </section>
  
-      <!-- Feed -->
-      <section class="panel side-card feed-card" aria-label="Feed">
-        <div class="side-title">Feed</div>
-        <div class="feed-list" id="feed-list"></div>
-        <div class="feed-more" id="feed-more"></div>
-        <div class="feed-next" id="feed-next"></div>
-      </section>
     </aside>
  
   </div>
@@ -1272,10 +1486,11 @@ svg.scene {
 <!-- Full-Screen Celebration Confetti Canvas -->
 <canvas id="confetti-canvas"></canvas>
  
+<script src="../game-data.js"></script>
 <script>
 // Web Audio API Synthesizer (Instant feedback, zero external MP3 dependencies)
 var audioCtx = null;
-var soundEnabled = true;
+var soundEnabled = localStorage.getItem("sp-sound-enabled") !== "false";
  
 function initAudio() {
   if (!audioCtx) {
@@ -1367,33 +1582,6 @@ var P2 = [[1200,200],[1265,200],[1330,200],[1395,200],[1460,200],[1525,200],[159
 var P3 = [[2160,200],[2225,200],[2290,200],[2355,200],[2420,200],[2485,200],[2550,200],[2615,200],[2680,200],[2745,200]];
 var STAGE_COORDS = P1.concat(P2).concat(P3);
  
-// Badges: add or edit entries here
-var BADGES = [
-  { icon: "👋", name: "First Sign",       min: 1,  hint: "Complete 1 stage" },
-  { icon: "🔢", name: "Number Whiz",      min: 2,  hint: "Complete 2 stages" },
-  { icon: "🔍", name: "Clue Finder",      min: 5,  hint: "Complete 5 stages" },
-  { icon: "👨‍👩‍👧", name: "Family Friend",    min: 6,  hint: "Complete 6 stages" },
-  { icon: "🤝", name: "Dialogue Pro",     min: 10, hint: "Unlock at Lvl 2" },
-  { icon: "😊", name: "Emotion Reader",   min: 11, hint: "Complete 11 stages" },
-  { icon: "🚀", name: "Halfway Hero",     min: 15, hint: "Complete 15 stages" },
-  { icon: "⚔️", name: "Boss Slayer",      min: 20, hint: "Beat 2 bosses" },
-  { icon: "❓", name: "Question Master",  min: 22, hint: "Complete 22 stages" },
-  { icon: "📖", name: "Storyteller",      min: 27, hint: "Complete 27 stages" },
-  { icon: "🌍", name: "Culture Keeper",   min: 29, hint: "Complete 29 stages" },
-  { icon: "🏆", name: "Sign Champion",    min: 30, hint: "Master all 30" }
-];
- 
-// Level milestones shown in the feed
-var LEVEL_EVENTS = [
-  { min: 10, icon: "🎓", name: "Foundations" },
-  { min: 20, icon: "🌟", name: "Everyday Life" },
-  { min: 30, icon: "👑", name: "Conversational Fluency" }
-];
- 
-// Player ranks (a new player level every 300 XP)
-var RANKS = ["ROOKIE", "EXPLORER", "SIGNER", "STORYTELLER", "EXPERT", "MASTER", "LEGEND"];
-var XP_PER_LEVEL = 300;
- 
 var done = 0;
 var activeStageModal = 0;
 // Default illustrations are loaded from image files in the same folder as this HTML.
@@ -1449,17 +1637,11 @@ try {
  
 function saveProgress() {
   try { localStorage.setItem("sp-done", done); } catch(e) {}
+  if (window.spCloudSave) window.spCloudSave();
 }
  
 function saveImages() {
   try { localStorage.setItem("sp-lvl-imgs", JSON.stringify(levelImages)); } catch(e) {}
-}
- 
-function isBoss(s) { return s % 10 === 0; }
-function xpOf(n) {
-  var t = 0;
-  for (var i = 1; i <= n; i++) t += isBoss(i) ? 150 : 50;
-  return t;
 }
  
 // Render SVG Components & Update Dashboard
@@ -1742,79 +1924,6 @@ function renderMissions() {
   document.getElementById("bonus-sub").textContent = ready ? "Bonus chest unlocked! Tap to open." : "Unlock the bonus chest.";
 }
  
-function buildEvents() {
-  var ev = [];
-  BADGES.forEach(function(b, i) {
-    if (done >= b.min) {
-      ev.push({ key: "b" + i, order: b.min, icon: b.icon,
-        html: 'Earned the <b class="hl">' + b.name + '</b> badge.',
-        sub: "Unlocked at stage " + b.min });
-    }
-  });
-  LEVEL_EVENTS.forEach(function(l, i) {
-    if (done >= l.min) {
-      ev.push({ key: "l" + i, order: l.min + 0.5, icon: l.icon,
-        html: 'Completed the <b class="hl">' + l.name + '</b> level.',
-        sub: "Level " + (i + 1) + " cleared" });
-    }
-  });
-  ev.sort(function(a, b) { return b.order - a.order; });
-  return ev;
-}
- 
-function renderFeed() {
-  var ev = buildEvents();
-  var list = feedExpanded ? ev : ev.slice(0, 3);
-  var html = "";
- 
-  if (!list.length) {
-    html = '<div class="feed-empty">Your feed is quiet… finish a stage to earn your first badge! 🌱</div>';
-  } else {
-    list.forEach(function(e) {
-      var on = !!cheered[e.key];
-      html += '<div class="feed-item">' +
-        '<div class="feed-main">' +
-          '<div class="feed-user"><span class="feed-avatar">S</span><span class="feed-name">You</span></div>' +
-          '<div class="feed-text">' + e.html + '</div>' +
-          '<div class="feed-time">' + e.sub + '</div>' +
-          '<button class="cheer-btn' + (on ? ' on' : '') + '" data-key="' + e.key + '" type="button">👏 ' + (on ? 'Cheered!' : 'Nice Work!') + '</button>' +
-        '</div>' +
-        '<div class="hex sm"><div class="hex-in"><span>' + e.icon + '</span></div></div>' +
-      '</div>';
-    });
-  }
-  document.getElementById("feed-list").innerHTML = html;
- 
-  document.getElementById("feed-more").innerHTML = ev.length > 3
-    ? '<button class="btn-ghost" id="feed-toggle" type="button">' + (feedExpanded ? "Show less" : "View all") + '</button>'
-    : "";
- 
-  var next = null;
-  for (var i = 0; i < BADGES.length; i++) {
-    if (done < BADGES[i].min) { next = BADGES[i]; break; }
-  }
-  document.getElementById("feed-next").innerHTML = next
-    ? '🎯 Next badge: <b>' + next.name + '</b> · ' + next.hint
-    : '🎉 You collected every badge. Legend!';
-}
- 
-function renderBadges() {
-  var earnedCount = 0;
-  var html = "";
-  BADGES.forEach(function(b) {
-    var earned = done >= b.min;
-    if (earned) earnedCount++;
-    html += '<div class="bd-item ' + (earned ? 'earned' : 'locked') + '" title="' + b.name + ' – ' + b.hint + '">' +
-      '<div class="hex ' + (earned ? '' : 'locked') + '"><div class="hex-in"><span>' + b.icon + '</span></div></div>' +
-      '<div class="bd-name">' + b.name + '</div>' +
-      '<div class="bd-sub">' + (earned ? 'Collected ✓' : '🔒 ' + b.hint) + '</div>' +
-    '</div>';
-  });
-  document.getElementById("badge-grid").innerHTML = html;
-  document.getElementById("badges-count").textContent = earnedCount + "/" + BADGES.length + " collected";
-  document.getElementById("stat-badges").textContent = earnedCount;
-}
- 
 function updateDashboard() {
   // Weekly baseline can never be ahead of current progress
   if (done < weekBase) { weekBase = done; saveWeek(); }
@@ -1827,12 +1936,6 @@ function updateDashboard() {
  
   var lvlDone = done >= curLvl * 10 ? 10 : (done % 10);
   document.getElementById("dash-stage-val").textContent = lvlDone + "/10";
- 
-  var lvlPct = Math.round((lvlDone / 10) * 100);
-  document.getElementById("dash-progress-fill").style.width = lvlPct + "%";
-  document.getElementById("dash-progress-bar").setAttribute("aria-valuenow", lvlDone);
-  document.getElementById("dash-progress-label").textContent = "Level " + curLvl + " progress";
-  document.getElementById("dash-pct-label").textContent = lvlPct + "%";
  
   var statusText = done >= 30 ? "Grand Champion · 30/30" : "Level " + curLvl + " · " + lvlNames[curLvl];
   document.getElementById("dash-status-pill").textContent = statusText;
@@ -1847,12 +1950,8 @@ function updateDashboard() {
  
   // Stat row
   document.getElementById("stat-streak").textContent = streak;
-  document.getElementById("stat-stages").textContent = done + "/30";
-  document.getElementById("stat-bosses").textContent = Math.floor(done / 10) + "/3";
  
-  renderBadges();
   renderMissions();
-  renderFeed();
  
   // Active level tab
   document.querySelectorAll(".lvl-tab").forEach(function(tab) {
@@ -1867,23 +1966,6 @@ function updateDashboard() {
     btn.classList.toggle("active", val === done);
   });
 }
- 
-// Feed interactions (event delegation, the list is re-rendered often)
-document.getElementById("feed-list").addEventListener("click", function(e) {
-  var btn = e.target.closest(".cheer-btn");
-  if (!btn) return;
-  var key = btn.getAttribute("data-key");
-  cheered[key] = !cheered[key];
-  playSound('tap');
-  renderFeed();
-});
-document.getElementById("feed-more").addEventListener("click", function(e) {
-  if (e.target.closest("#feed-toggle")) {
-    feedExpanded = !feedExpanded;
-    playSound('tap');
-    renderFeed();
-  }
-});
  
 // Open Stage Details Sheet
 function openStageSheet(s) {
@@ -2298,10 +2380,17 @@ document.addEventListener("keydown", function(e) {
  
 // Sound Toggle
 var soundBtn = document.getElementById("sound-btn");
+var soundSwitch = document.getElementById("sound-switch");
+soundBtn.setAttribute("aria-checked", String(soundEnabled));
+soundSwitch.classList.toggle("on", soundEnabled);
+soundBtn.querySelector(".menu-icon").textContent = soundEnabled ? "🔊" : "🔇";
 soundBtn.onclick = function() {
   soundEnabled = !soundEnabled;
-  soundBtn.textContent = soundEnabled ? "🔊" : "🔇";
+  localStorage.setItem("sp-sound-enabled", String(soundEnabled));
+  soundBtn.setAttribute("aria-checked", String(soundEnabled));
   soundBtn.setAttribute("title", soundEnabled ? "Mute audio" : "Unmute audio");
+  soundSwitch.classList.toggle("on", soundEnabled);
+  soundBtn.querySelector(".menu-icon").textContent = soundEnabled ? "🔊" : "🔇";
   if (soundEnabled) playSound('tap');
 };
  
@@ -2360,7 +2449,6 @@ document.getElementById("demo-reset").onclick = function() {
   done = 0;
   weekBase = 0;
   saveWeek();
-  cheered = {};
   saveProgress();
   renderMap();
   playSound('tap');
@@ -2376,5 +2464,91 @@ if (done > 0) {
   setTimeout(function() { scrollToX(initX, false); updateSlider(); }, 150);
 }
 </script>
+
+<script>
+// Header profile dropdown: open/close by avatar, outside click, or Escape.
+(function () {
+  var menuButton = document.getElementById("profile-menu-btn");
+  var dropdown = document.getElementById("profile-dropdown");
+  if (!menuButton || !dropdown) return;
+
+  function closeProfileMenu() {
+    dropdown.classList.remove("open");
+    menuButton.setAttribute("aria-expanded", "false");
+  }
+
+  menuButton.addEventListener("click", function (event) {
+    event.stopPropagation();
+    var isOpen = dropdown.classList.toggle("open");
+    menuButton.setAttribute("aria-expanded", String(isOpen));
+  });
+  dropdown.addEventListener("click", function (event) { event.stopPropagation(); });
+  document.addEventListener("click", closeProfileMenu);
+  document.addEventListener("keydown", function (event) {
+    if (event.key === "Escape") closeProfileMenu();
+  });
+})();
+</script>
+
+<script type="module">
+import { auth } from "../firebase-config.js";
+import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-auth.js";
+import { ensureUserProgress, saveProgressNow, endSession, withTimeout } from "../sync.js";
+
+var currentUser = null;
+var saveTimer = null;
+
+// Called by saveProgress() after every stage: save to Firestore shortly after (debounced)
+window.spCloudSave = function () {
+    if (!currentUser) return;
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(function () { saveProgressNow(currentUser); }, 800);
+};
+
+// Best-effort save when the tab is hidden or closed
+document.addEventListener("visibilitychange", function () {
+    if (document.visibilityState === "hidden" && currentUser) saveProgressNow(currentUser);
+});
+window.addEventListener("pagehide", function () {
+    if (currentUser) saveProgressNow(currentUser);
+});
+
+onAuthStateChanged(auth, async function (user) {
+    if (!user || !user.emailVerified) {
+        // Not signed in (or email not verified): back to the home page
+        window.location.replace("../index.html");
+        return;
+    }
+    currentUser = user;
+
+    // Load this account's progress from Firestore. The page already read localStorage while loading,
+    // so if the account's saved progress is different, reload once to show the right data.
+    await withTimeout(ensureUserProgress(user), 5000);
+    var stored = parseInt(localStorage.getItem("sp-done"), 10) || 0;
+    if (typeof done !== "undefined" && done !== stored && !sessionStorage.getItem("sp-sync-reload")) {
+        sessionStorage.setItem("sp-sync-reload", "1");
+        window.location.reload();
+        return;
+    }
+    sessionStorage.removeItem("sp-sync-reload");
+
+    var name = user.displayName || (user.email ? user.email.split("@")[0] : "SignPlay Learner");
+    document.getElementById("user-name").textContent = name;
+    spApplyAvatar(document.getElementById("user-avatar"), user, name);
+
+    // Personalize the compact avatar in the top navigation.
+    var navAvatar = document.getElementById("profile-menu-btn");
+    if (navAvatar) navAvatar.textContent = (name.trim().charAt(0) || "S").toUpperCase();
+
+    document.documentElement.classList.remove("auth-pending");
+});
+
+document.getElementById("logout-btn").addEventListener("click", async function () {
+    try { await endSession(currentUser); } catch (e) {}
+    try { await signOut(auth); } catch (e) {}
+    window.location.href = "../index.html";
+});
+</script>
+
 </body>
 </html>

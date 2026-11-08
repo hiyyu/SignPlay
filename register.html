@@ -699,7 +699,7 @@ body {
 
         <p class="login-link">
             Already have an account?
-            <a href="login.html">Sign in</a>
+            <a href="login.html" onclick="openLogin(event)">Sign in</a>
         </p>
 
     </section>
@@ -708,6 +708,16 @@ body {
 
 
 <script>
+
+// SWITCH TO LOGIN INSIDE SAME POPUP
+function openLogin(e) {
+    e.preventDefault();
+    if (window.parent !== window) {
+        window.parent.postMessage({ type: "signplay-open-auth", page: "login" }, window.location.origin);
+    } else {
+        window.location.href = "login.html";
+    }
+}
 
 // CLOSE POPUP
 function closePopup() {
@@ -730,56 +740,6 @@ function closePopup() {
 }
 
 
-// REGISTER FORM VALIDATION
-const registerForm = document.getElementById("registerForm");
-
-registerForm.addEventListener("submit", function(e) {
-
-    e.preventDefault();
-
-    const password =
-        document.getElementById("password").value;
-
-    const confirmPassword =
-        document.getElementById("confirmPassword").value;
-
-    const message =
-        document.getElementById("message");
-
-    if (password.length < 8) {
-
-        message.style.color = "#ff6b57";
-        message.textContent =
-            "Password must contain at least 8 characters!";
-
-        return;
-    }
-
-    if (password !== confirmPassword) {
-
-        message.style.color = "#ff6b57";
-        message.textContent =
-            "Passwords do not match!";
-
-        return;
-    }
-
-    message.style.color = "#1fb5a8";
-
-    message.textContent =
-        "Form validated! Authentication setup is still needed.";
-
-});
-
-
-// GOOGLE SIGN-UP
-document.getElementById("googleBtn").addEventListener("click", function() {
-
-    alert("Google sign-up will be available after Firebase Authentication is connected.");
-
-});
-
-
 // CLOSE WITH ESCAPE KEY
 document.addEventListener("keydown", function(e) {
 
@@ -789,6 +749,104 @@ document.addEventListener("keydown", function(e) {
 
 });
 
+</script>
+
+
+<script type="module">
+import { auth, googleProvider } from "./firebase-config.js";
+import {
+    createUserWithEmailAndPassword,
+    updateProfile,
+    sendEmailVerification,
+    signOut,
+    signInWithPopup
+} from "https://www.gstatic.com/firebasejs/13.2.0/firebase-auth.js";
+
+const form = document.getElementById("registerForm");
+const message = document.getElementById("message");
+const submitBtn = form.querySelector(".register-btn");
+const googleBtn = document.getElementById("googleBtn");
+
+function show(text, color) {
+    message.style.color = color;
+    message.textContent = text;
+}
+
+function friendlyError(err) {
+    switch (err.code) {
+        case "auth/email-already-in-use": return "An account with this email already exists. Try signing in instead.";
+        case "auth/invalid-email": return "That email address doesn't look right.";
+        case "auth/weak-password": return "Password is too weak. Use at least 8 characters.";
+        case "auth/network-request-failed": return "Network error. Check your connection.";
+        case "auth/popup-closed-by-user":
+        case "auth/cancelled-popup-request": return "Google sign-up was cancelled.";
+        case "auth/popup-blocked": return "Your browser blocked the Google popup. Please allow popups and try again.";
+        case "auth/operation-not-allowed": return "This sign-up method isn't enabled in Firebase yet.";
+        case "auth/unauthorized-domain": return "This domain isn't authorised in Firebase (Authentication > Settings > Authorized domains).";
+        default: return "Something went wrong (" + (err.code || "unknown") + ").";
+    }
+}
+
+function goToLearning() {
+    if (window.parent !== window) {
+        window.parent.postMessage({ type: "signplay-auth-success" }, window.location.origin);
+    } else {
+        window.location.href = "dashboard.html";
+    }
+}
+
+form.addEventListener("submit", async function (e) {
+    e.preventDefault();
+
+    const name = document.getElementById("fullname").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value;
+    const confirmPassword = document.getElementById("confirmPassword").value;
+
+    if (!name) {
+        show("Please enter your name.", "#ff6b57");
+        return;
+    }
+
+    if (password.length < 8) {
+        show("Password must contain at least 8 characters!", "#ff6b57");
+        return;
+    }
+
+    if (password !== confirmPassword) {
+        show("Passwords do not match!", "#ff6b57");
+        return;
+    }
+
+    submitBtn.disabled = true;
+    show("Creating your account...", "#5b3fd1");
+
+    try {
+        const cred = await createUserWithEmailAndPassword(auth, email, password);
+        await updateProfile(cred.user, { displayName: name });
+        await sendEmailVerification(cred.user);
+        await signOut(auth);
+        form.reset();
+        show("Account created! We sent a verification link to " + email + ". Please verify your email, then log in.", "#1fb5a8");
+    } catch (err) {
+        show(friendlyError(err), "#ff6b57");
+        submitBtn.disabled = false;
+    }
+});
+
+googleBtn.addEventListener("click", async function () {
+    googleBtn.disabled = true;
+    show("Opening Google...", "#5b3fd1");
+
+    try {
+        await signInWithPopup(auth, googleProvider);
+        show("Welcome! Starting your adventure...", "#1fb5a8");
+        goToLearning();
+    } catch (err) {
+        show(friendlyError(err), "#ff6b57");
+        googleBtn.disabled = false;
+    }
+});
 </script>
 
 </body>

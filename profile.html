@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="en" class="auth-pending">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SignPlay! – My Profile</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-gradient: linear-gradient(180deg, #fdf6e6 0%, #fbf0d9 50%, #f8e9cc 100%);
+  --ink: #3b2f1d;
+  --muted: #7a6e56;
+  --card: #fffaf0;
+  --line: #ecd79c;
+  --sun: #f7bf3a;
+  --sun-shadow: #c98a0a;
+  --coral: #ff6b57;
+  --teal: #1fb5a8;
+  --violet: #7454bd;
+  --sky: #3aa0ff;
+  --track: #f3e3b8;
+  --panel-bg: linear-gradient(160deg, #fffaf0 0%, #fdf3dc 55%, #faebc9 100%);
+  --panel-border: #ecd79c;
+  --panel-ink: #3b2f1d;
+  --panel-muted: #7a6e56;
+  --panel-line: #eddcb0;
+}
+html { scroll-behavior: smooth; }
+html.auth-pending body { visibility: hidden; }
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+body {
+  margin: 0;
+  min-height: 100vh;
+  padding-bottom: 60px;
+  background: var(--bg-gradient);
+  background-attachment: fixed;
+  color: var(--ink);
+  font: 400 1.02rem/1.6 'Nunito', system-ui, sans-serif;
+}
+h1, h2, h3, .brand, .pname, .stat b, .bd b {
+  font-family: 'Baloo 2', system-ui, sans-serif;
+  line-height: 1.1;
+  margin-top: 0;
+}
+
+/* Shared SignPlay header — matched to learningpath.html */
+.top-bar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(43, 40, 88, 0.96);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: #fff7e6;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 20px;
+  border-bottom: 3px solid #39336f;
+  box-shadow: 0 4px 18px rgba(35, 28, 83, 0.22);
+}
+.brand {
+  text-decoration: none;
+  font-weight: 800;
+  font-size: 1.8rem;
+  color: #f5a50a;
+  text-shadow: 0 2px 0 #fbe3a6;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+  margin: 0;
+}
+.brand span { color: #ff5757; }
+.main-nav { display: flex; align-items: center; gap: 10px; margin-left: auto; margin-right: 8px; }
+.nav-link {
+  color: #fff7e6;
+  text-decoration: none;
+  font-weight: 800;
+  font-size: .92rem;
+  padding: 8px 17px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  transition: background .2s, color .2s, border-color .2s;
+}
+.nav-link:hover { background: rgba(255,255,255,.12); border-color: rgba(255,255,255,.18); }
+.nav-link.active { color: #2b2458; background: #ffc83d; border-color: #ffc83d; box-shadow: 0 2px 0 #d99c19; }
+.top-actions { display: flex; align-items: center; gap: 10px; }
+.profile-menu-wrap { position: relative; }
+.nav-avatar {
+  width: 42px; height: 42px; border-radius: 50%;
+  border: 2px solid #ffe7a3;
+  background: linear-gradient(135deg, #ff8b78, #e85d91);
+  color: #fff; font-family: 'Baloo 2', sans-serif; font-size: 1.15rem;
+  font-weight: 800; display: grid; place-items: center; cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0,0,0,.18);
+  transition: transform .18s, box-shadow .18s;
+}
+.nav-avatar:hover, .nav-avatar[aria-expanded='true'] { transform: translateY(-1px); box-shadow: 0 0 0 4px rgba(255,200,61,.2); }
+.profile-dropdown {
+  position: absolute; top: calc(100% + 12px); right: 0; width: 242px;
+  padding: 8px; background: #202b43; color: #f8fafc;
+  border: 1px solid rgba(255,255,255,.12); border-radius: 14px;
+  box-shadow: 0 14px 34px rgba(15,23,42,.32);
+  opacity: 0; visibility: hidden; transform: translateY(-8px);
+  transition: opacity .18s, transform .18s, visibility .18s; z-index: 80;
+}
+.profile-dropdown.open { opacity: 1; visibility: visible; transform: translateY(0); }
+.profile-menu-item {
+  width: 100%; min-height: 42px; display: flex; align-items: center; gap: 11px;
+  padding: 9px 11px; border: 0; border-radius: 9px; background: transparent;
+  color: #f8fafc; text-decoration: none; text-align: left;
+  font: 700 .9rem 'Nunito', sans-serif; cursor: pointer;
+}
+.profile-menu-item:hover { background: rgba(255,255,255,.1); }
+.profile-menu-item .menu-icon { width: 20px; text-align: center; font-size: 1.05rem; }
+.menu-divider { height: 1px; background: rgba(255,255,255,.13); margin: 5px 4px; }
+.sound-switch { width: 38px; height: 21px; border-radius: 999px; margin-left: auto; background: #64748b; position: relative; transition: background .2s; }
+.sound-switch::after { content: ''; position: absolute; top: 3px; left: 3px; width: 15px; height: 15px; border-radius: 50%; background: #fff; transition: transform .2s; }
+.sound-switch.on { background: #22c55e; }
+.sound-switch.on::after { transform: translateX(17px); }
+.logout-menu-item { color: #fecaca; }
+.logout-menu-item:hover { background: rgba(248,113,113,.13); }
+
+/* Page layout and headings */
+main { position: relative; z-index: 1; padding-bottom: 60px; }
+.wrap { max-width: 1440px; margin: 0 auto; padding: 20px 20px 0; }
+.page-intro { padding: 16px 4px 20px; }
+.page-intro .eyebrow { margin: 0 0 5px; color: #b77909; font-size: .82rem; font-weight: 900; letter-spacing: .12em; }
+.page-intro h1 { font-size: clamp(2rem, 4vw, 2.8rem); color: var(--ink); margin: 0; }
+.page-intro p:last-child { margin: 5px 0 0; color: var(--muted); font-weight: 600; }
+.grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 20px; align-items: stretch; }
+.profile-grid { grid-template-columns: minmax(0, 1fr); }
+.profile-page { max-width: 1240px; }
+.full { grid-column: 1 / -1; }
+
+/* Warm learning-path panels */
+.card {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background: var(--panel-bg);
+  border: 1px solid var(--panel-border);
+  border-radius: 22px;
+  padding: 24px 26px;
+  color: var(--panel-ink);
+  box-shadow: 0 8px 24px rgba(168, 124, 40, .16), inset 0 1px 0 rgba(255,255,255,.85);
+}
+.card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image: radial-gradient(rgba(201,150,40,.10) 1.1px, transparent 1.5px);
+  background-size: 22px 22px;
+  opacity: .8;
+}
+.card > * { position: relative; }
+.card h2 { color: var(--panel-ink); font-size: 1.55rem; margin: 0 0 16px; }
+.card .head { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 16px; }
+.card .head h2 { margin: 0; }
+.pill { font-weight: 800; font-size: .85rem; padding: 4px 12px; border-radius: 999px; background: #fff5d9; border: 1px solid var(--panel-line); color: #80601d; white-space: nowrap; }
+
+/* Buttons */
+
+/* Buttons — Soft Level 1 style */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font: 800 1.02rem 'Baloo 2', sans-serif;
+  padding: 10px 24px;
+  border-radius: 999px;
+  text-decoration: none;
+
+  border: 2px solid #dca832;
+  box-shadow: 0 4px 0 #e9bd58;
+
+  background: #fffaf0;
+  color: #4a3510;
+  cursor: pointer;
+
+  transition: transform .12s, box-shadow .12s, background .12s;
+}
+
+.btn:hover {
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 #e9bd58;
+}
+
+.btn:active {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 #e9bd58;
+}
+
+.btn:disabled {
+  opacity: .6;
+  cursor: not-allowed;
+}
+
+.btn.main {
+  background: #ffc83d;
+  color: #4a3510;
+}
+
+.btn.danger {
+  background: #ff6b57;
+  border-color: #d65b43;
+  box-shadow: 0 4px 0 #e58b70;
+  color: #fff;
+}
+
+.btn.small {
+  padding: 6px 18px;
+  font-size: .95rem;
+  box-shadow: 0 3px 0 #e9bd58;
+}
+
+
+/* Player identity */
+.profile { display: flex; gap: 18px; align-items: center; }
+.avatar {
+  width: 84px; height: 84px; border-radius: 50%; flex-shrink: 0;
+  background: linear-gradient(135deg, #ff8b78, #e85d91);
+  border: 4px solid #fff3d2; display: flex; align-items: center; justify-content: center;
+  font: 800 2.4rem 'Baloo 2', sans-serif; color: #fff; overflow: hidden;
+  box-shadow: 0 4px 12px rgba(140, 91, 35, .16);
+}
+.pname { font-weight: 800; font-size: 1.5rem; line-height: 1.15; word-break: break-word; margin: 0; }
+.pmail { color: var(--muted); font-size: .95rem; word-break: break-all; }
+.chips { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+.chip { display: inline-block; font-weight: 800; font-size: .8rem; padding: 3px 12px; border-radius: 999px; background: #e0f4e8; color: #236b43; border: 1px solid #a9d7b8; }
+.chip.rank { background: #fff0c2; color: #9a6a00; border-color: #f0cb69; }
+.actions { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 22px; }
+.plv { margin-top: 18px; }
+.plv .row { display: flex; justify-content: space-between; gap: 12px; font-weight: 800; font-size: .9rem; margin-bottom: 6px; color: var(--panel-ink); }
+
+/* Stats */
+.stats { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 12px; }
+.stat { background: rgba(255,250,240,.8); border: 1px solid var(--panel-line); border-radius: 17px; padding: 15px 8px; text-align: center; box-shadow: inset 0 1px 0 rgba(255,255,255,.9); }
+.stat b { display: block; font-weight: 800; font-size: 1.75rem; line-height: 1.1; margin-bottom: 4px; }
+.stat span { font-size: .82rem; color: var(--muted); font-weight: 800; }
+.stat.xp b { color: #c98a0a; }
+.stat.st b { color: #16856f; }
+.stat.sk b { color: #e65f4d; }
+.stat.bd b { color: #9870c7; }
+.stat.bs b { color: #c64c38; }
+.stat.lv b { color: #3189ce; }
+
+/* Progress bars */
+.lv { margin-bottom: 18px; }
+.lv:last-child { margin-bottom: 0; }
+.lvh { display: flex; justify-content: space-between; gap: 12px; font-weight: 800; margin-bottom: 7px; color: var(--panel-ink); }
+.lvh small { color: var(--muted); font-weight: 800; }
+.bar { height: 14px; border-radius: 999px; background: var(--track); overflow: hidden; border: 1px solid #e5d5a8; }
+.fill { height: 100%; width: 0; border-radius: 999px; transition: width .8s cubic-bezier(.2,.7,.2,1); }
+.f1 { background: linear-gradient(90deg,#64c89a,#249c70); }
+.f2 { background: linear-gradient(90deg,#b79be5,#8060c1); }
+.f3 { background: linear-gradient(90deg,#ff9c82,#f06b58); }
+.f4 { background: linear-gradient(90deg,#ffdc69,#efa91c); }
+
+/* Badges and activity */
+.badges { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px,1fr)); gap: 12px; }
+.bd { background: rgba(255,250,240,.82); border: 1px solid var(--panel-line); border-radius: 17px; padding: 14px 8px; text-align: center; box-shadow: inset 0 1px 0 rgba(255,255,255,.9); }
+.bd .ic { width: 56px; height: 56px; margin: 0 auto 7px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; background: #f7bf3a; border: 2px solid #d39a24; }
+.bd.locked .ic { background: #eee5d1; border-color: #d8c9a7; filter: grayscale(1); opacity: .58; }
+.bd b { display: block; font-weight: 800; font-size: .98rem; line-height: 1.15; margin: 0; }
+.bd small { display: block; font-size: .75rem; color: var(--muted); font-weight: 700; margin-top: 3px; }
+.feed { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+.feed li { display: flex; gap: 12px; align-items: center; background: rgba(255,250,240,.82); border: 1px solid var(--panel-line); border-radius: 15px; padding: 11px 14px; }
+.feed .fi { font-size: 1.6rem; }
+.feed .ft { font-weight: 700; }
+.feed .ft b { color: #a87813; }
+.feed small { display: block; color: var(--muted); font-weight: 700; font-size: .8rem; }
+.feed-empty { color: var(--muted); text-align: center; padding: 10px; }
+.next { margin-top: 14px; font-weight: 700; color: var(--muted); }
+.linkbtn { background: none; border: 0; color: #9b6d0e; font: 800 .95rem 'Nunito',sans-serif; cursor: pointer; padding: 6px 0; margin-top: 8px; }
+.linkbtn:hover { color: #67480b; text-decoration: underline; }
+
+/* Profile editing and account settings */
+.field label { display: block; font-weight: 800; margin-bottom: 6px; color: var(--panel-ink); }
+.field input { width: 100%; height: 48px; padding: 0 14px; border: 1px solid #e2cf9e; border-radius: 12px; background: #fffdf7; color: var(--ink); font: 700 1rem 'Nunito',sans-serif; }
+.field input:focus { border-color: #1fb5a8; outline: none; box-shadow: 0 0 0 3px rgba(31,181,168,.15); }
+.avs { display: flex; flex-wrap: wrap; gap: 10px; margin: 8px 0 4px; }
+.avs button { width: 56px; height: 56px; border-radius: 50%; border: 3px solid transparent; font-size: 1.7rem; cursor: pointer; display: flex; align-items: center; justify-content: center; font-family: 'Baloo 2',sans-serif; font-weight: 800; color: #fff; padding: 0; transition: transform .15s, box-shadow .15s; }
+.avs button:hover { transform: translateY(-2px); }
+.avs button[aria-pressed='true'] { border-color: #5b4318; box-shadow: 0 0 0 3px #f7bf3a; }
+.msg { font-weight: 800; font-size: .9rem; margin-top: 12px; min-height: 1.2em; }
+.hint { color: var(--muted); font-size: .9rem; margin: 4px 0 0; }
+.editgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+.account p { margin: 0 0 14px; color: var(--muted); }
+.note { text-align: center; color: var(--muted); font-size: .9rem; margin: 22px 0 0; }
+[hidden] { display: none !important; }
+
+@media (max-width: 760px) {
+  .grid { grid-template-columns: 1fr; }
+  .profile { flex-direction: row; text-align: left; align-items: center; }
+  .chips { justify-content: flex-start; }
+  .actions { justify-content: flex-start; }
+  .editgrid { grid-template-columns: 1fr; }
+}
+@media (max-width: 560px) {
+  .top-bar { padding: 9px 12px; gap: 8px; }
+  .brand { font-size: 1.55rem; }
+  .main-nav { gap: 3px; margin-right: 2px; }
+  .nav-link { font-size: .82rem; padding: 7px 10px; }
+  .nav-avatar { width: 38px; height: 38px; }
+  .wrap { padding: 16px 12px 0; }
+  .page-intro { padding: 12px 3px 17px; }
+  .card { padding: 19px 16px; border-radius: 19px; }
+  .stats { gap: 8px; }
+  .stat { padding: 12px 5px; }
+  .stat b { font-size: 1.5rem; }
+  .stat span { font-size: .75rem; }
+  .btn { padding: 9px 17px; font-size: .96rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+}
+</style>
+<style>
+
+/* === Shared SignPlay navigation: identical on Dashboard, Learn and Profile === */
+.top-bar {
+  position: sticky; top: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; padding: 10px 20px;
+  color: #fff7e6; background: rgba(43, 40, 88, .97);
+  border-bottom: 3px solid #39336f;
+  box-shadow: 0 4px 18px rgba(35, 28, 83, .22);
+  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+}
+.top-bar .brand {
+  display: flex; align-items: center; gap: 0; white-space: nowrap;
+  margin: 0; text-decoration: none;
+  font-family: 'Baloo 2', sans-serif; font-size: 1.8rem; font-weight: 800;
+  line-height: 1; color: #ffc83d; text-shadow: 0 2px 0 #fbe3a6;
+}
+.top-bar .brand span { color: #ff6b57; }
+.top-bar .main-nav {
+  display: flex; align-items: center; justify-content: flex-end;
+  gap: 10px; margin-left: auto; margin-right: 8px;
+}
+.top-bar .nav-link {
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 8px 17px; border: 1px solid transparent; border-radius: 999px;
+  color: #fff7e6; background: transparent; text-decoration: none;
+  font-family: 'Nunito', sans-serif; font-size: .92rem; font-weight: 800;
+  line-height: 1.4; white-space: nowrap;
+  transition: background .2s, color .2s, border-color .2s;
+}
+.top-bar .nav-link:hover { background: rgba(255,255,255,.12); border-color: rgba(255,255,255,.18); }
+.top-bar .nav-link.active {
+  color: #2b2458; background: #ffc83d; border-color: #ffc83d;
+  box-shadow: 0 2px 0 #d99c19;
+}
+.top-bar .top-actions { display: flex; align-items: center; gap: 10px; }
+.top-bar .profile-menu-wrap { position: relative; }
+.top-bar .nav-avatar {
+  display: grid; place-items: center; width: 42px; height: 42px; padding: 0;
+  border: 2px solid #ffe7a3; border-radius: 50%; cursor: pointer;
+  background: linear-gradient(135deg, #ff8b78, #e85d91); color: #fff;
+  font-family: 'Baloo 2', sans-serif; font-size: 1.15rem; font-weight: 800;
+  box-shadow: 0 2px 8px rgba(0,0,0,.18);
+  transition: transform .18s, box-shadow .18s;
+}
+.top-bar .nav-avatar:hover, .top-bar .nav-avatar[aria-expanded='true'] {
+  transform: translateY(-1px); box-shadow: 0 0 0 4px rgba(255,200,61,.2);
+}
+.top-bar .profile-dropdown {
+  position: absolute; top: calc(100% + 12px); right: 0; z-index: 110;
+  width: 242px; padding: 8px; color: #f8fafc; background: #202b43;
+  border: 1px solid rgba(255,255,255,.12); border-radius: 14px;
+  box-shadow: 0 14px 34px rgba(15,23,42,.32);
+}
+@media (max-width: 620px) {
+  .top-bar { gap: 6px; padding: 9px 12px; }
+  .top-bar .brand { font-size: 1.5rem; }
+  .top-bar .main-nav { gap: 2px; margin-right: 2px; }
+  .top-bar .nav-link { padding: 7px 9px; font-size: .8rem; }
+  .top-bar .nav-avatar { width: 38px; height: 38px; }
+}
+
+</style>
+<style>
+
+/* === SignPlay shared header: identical across Dashboard, Learn and Profile === */
+.top-bar {
+  position: sticky !important; top: 0 !important; z-index: 100 !important;
+  display: flex !important; align-items: center !important; justify-content: space-between !important;
+  gap: 12px !important; padding: 10px 20px !important;
+  color: #fff7e6 !important; background: rgba(43, 40, 88, .97) !important;
+  border-bottom: 3px solid #39336f !important;
+  box-shadow: 0 4px 18px rgba(35, 28, 83, .22) !important;
+  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+}
+.top-bar .brand {
+  display: flex !important; align-items: center !important; gap: 0 !important;
+  margin: 0 !important; padding: 0 !important; white-space: nowrap !important;
+  text-decoration: none !important; font-family: 'Baloo 2', sans-serif !important;
+  font-size: 1.8rem !important; font-weight: 800 !important; line-height: 1 !important;
+  color: #ffc83d !important; text-shadow: 0 2px 0 #fbe3a6 !important;
+}
+.top-bar .brand span { color: #ff6b57 !important; }
+.top-bar .main-nav {
+  display: flex !important; align-items: center !important; justify-content: flex-end !important;
+  gap: 10px !important; margin-left: auto !important; margin-right: 8px !important;
+}
+.top-bar .nav-link {
+  display: inline-flex !important; align-items: center !important; justify-content: center !important;
+  padding: 8px 17px !important; border: 1px solid transparent !important; border-radius: 999px !important;
+  color: #fff7e6 !important; background: transparent !important; text-decoration: none !important;
+  font-family: 'Nunito', sans-serif !important; font-size: .92rem !important; font-weight: 800 !important;
+  line-height: 1.4 !important; white-space: nowrap !important;
+}
+.top-bar .nav-link:hover { background: rgba(255,255,255,.12) !important; border-color: rgba(255,255,255,.18) !important; }
+.top-bar .nav-link.active {
+  color: #2b2458 !important; background: #ffc83d !important; border-color: #ffc83d !important;
+  box-shadow: 0 2px 0 #d99c19 !important;
+}
+.top-bar .top-actions { display: flex !important; align-items: center !important; gap: 10px !important; }
+.top-bar .profile-menu-wrap { position: relative !important; }
+.top-bar .nav-avatar {
+  display: grid !important; place-items: center !important; width: 42px !important; height: 42px !important;
+  padding: 0 !important; border: 2px solid #ffe7a3 !important; border-radius: 50% !important;
+  cursor: pointer !important; background: linear-gradient(135deg, #ff8b78, #e85d91) !important;
+  color: #fff !important; font-family: 'Baloo 2', sans-serif !important; font-size: 1.15rem !important;
+  font-weight: 800 !important; box-shadow: 0 2px 8px rgba(0,0,0,.18) !important;
+}
+.top-bar .nav-avatar:hover, .top-bar .nav-avatar[aria-expanded='true'] {
+  transform: translateY(-1px); box-shadow: 0 0 0 4px rgba(255,200,61,.2) !important;
+}
+.top-bar .profile-dropdown {
+  position: absolute !important; top: calc(100% + 12px) !important; right: 0 !important; z-index: 110 !important;
+  width: 242px !important; padding: 8px !important; color: #f8fafc !important; background: #202b43 !important;
+  border: 1px solid rgba(255,255,255,.12) !important; border-radius: 14px !important;
+  box-shadow: 0 14px 34px rgba(15,23,42,.32) !important;
+  opacity: 0 !important; visibility: hidden !important; transform: translateY(-8px) !important;
+  transition: opacity .18s, transform .18s, visibility .18s !important;
+}
+.top-bar .profile-dropdown.open { opacity: 1 !important; visibility: visible !important; transform: translateY(0) !important; }
+.top-bar .profile-menu-item {
+  width: 100% !important; min-height: 42px !important; display: flex !important; align-items: center !important;
+  gap: 11px !important; padding: 9px 11px !important; border: 0 !important; border-radius: 9px !important;
+  background: transparent !important; color: #f8fafc !important; text-decoration: none !important;
+  text-align: left !important; font: 700 .9rem 'Nunito', sans-serif !important; cursor: pointer !important;
+}
+.top-bar .profile-menu-item:hover { background: rgba(255,255,255,.1) !important; }
+.top-bar .profile-menu-item .menu-icon { width: 20px !important; text-align: center !important; font-size: 1.05rem !important; }
+.top-bar .menu-divider { height: 1px !important; background: rgba(255,255,255,.13) !important; margin: 5px 4px !important; }
+.top-bar .sound-switch { width: 38px !important; height: 21px !important; border-radius: 999px !important; margin-left: auto !important; background: #64748b !important; position: relative !important; }
+.top-bar .sound-switch::after { content: ''; position: absolute; top: 3px; left: 3px; width: 15px; height: 15px; border-radius: 50%; background: #fff; transition: transform .2s; }
+.top-bar .sound-switch.on { background: #22c55e !important; }
+.top-bar .sound-switch.on::after { transform: translateX(17px); }
+.top-bar .logout-menu-item { color: #fecaca !important; }
+@media (max-width: 620px) {
+  .top-bar { gap: 6px !important; padding: 9px 12px !important; }
+  .top-bar .brand { font-size: 1.5rem !important; }
+  .top-bar .main-nav { gap: 2px !important; margin-right: 2px !important; }
+  .top-bar .nav-link { padding: 7px 9px !important; font-size: .8rem !important; }
+  .top-bar .nav-avatar { width: 38px !important; height: 38px !important; }
+}
+
+</style>
+</head>
+<body>
+
+<!-- Shared SignPlay navigation -->
+<header class="top-bar">
+  <a class="brand" href="index.html" aria-label="SignPlay home">Sign<span>Play</span>!</a>
+  <nav class="main-nav" aria-label="Main navigation">
+    <a class="nav-link" href="dashboard.html">Dashboard</a>
+    <a class="nav-link" href="learn/learningpath.html">Learn</a>
+  </nav>
+  <div class="top-actions">
+    <div class="profile-menu-wrap">
+      <button class="nav-avatar" id="profile-menu-btn" type="button" aria-label="Open profile menu" aria-haspopup="true" aria-expanded="false" aria-controls="profile-dropdown">S</button>
+      <div class="profile-dropdown" id="profile-dropdown" role="menu" aria-label="Profile menu">
+        <a class="profile-menu-item" href="profile.html" role="menuitem"><span class="menu-icon">👤</span><span>View Profile</span></a>
+        <div class="menu-divider"></div>
+        <button class="profile-menu-item sound-menu-item" id="sound-btn" type="button" role="menuitemcheckbox" aria-checked="true"><span class="menu-icon">🔊</span><span>Sound</span><span class="sound-switch on" id="sound-switch" aria-hidden="true"></span></button>
+        <div class="menu-divider"></div>
+        <button class="profile-menu-item logout-menu-item" id="headerLogoutBtn" type="button" role="menuitem"><span class="menu-icon">↪</span><span>Log out</span></button>
+      </div>
+    </div>
+  </div>
+</header>
+<main class="wrap profile-page">
+  <div class="page-intro"><p class="eyebrow">YOUR SIGNPLAY ACCOUNT</p><h1>My Profile</h1><p>Manage your player identity and account settings.</p></div>
+  <div class="grid profile-grid">
+    <section class="card full" aria-label="Player profile">
+      <div class="profile">
+        <div class="avatar" id="avatar">S</div>
+        <div><div class="pname" id="pname">SignPlay Learner</div><div class="pmail" id="pmail"></div><div class="chips"><span class="chip">✓ Email verified</span><span class="chip rank" id="rankChip">ROOKIE</span></div></div>
+      </div>
+      <div class="plv"><div class="row"><span id="plvLabel">Level 1</span><span id="plvXp">0/300</span></div><div class="bar"><div class="fill f4" id="plvFill"></div></div></div>
+      <div class="actions"><a class="btn main" href="learn/learningpath.html">Continue learning →</a><a class="btn" href="dashboard.html">Back to dashboard</a></div>
+    </section>
+
+    <section class="card full" id="editCard" aria-label="Edit profile">
+      <div class="head"><h2>Edit profile</h2></div>
+      <div class="editgrid">
+        <div class="field"><label for="nameInput">Display name</label><input id="nameInput" type="text" maxlength="30" autocomplete="nickname" placeholder="Your name"><p class="hint">Up to 30 characters.</p></div>
+        <div class="field"><label id="avLabel">Avatar</label><div class="avs" id="avPicker" role="group" aria-labelledby="avLabel"></div><p class="hint">Saved to your account.</p></div>
+      </div>
+      <div class="actions"><button class="btn main" id="saveProfile" type="button">Save changes</button><button class="btn" id="cancelEdit" type="button">Cancel</button></div>
+      <p class="msg" id="editMsg" role="status"></p>
+    </section>
+
+    <section class="card full account" aria-label="Account">
+      <h2>Account</h2><p>Manage your sign-in, or use a different account.</p>
+      <div class="actions" style="margin-top:0"><button class="btn" id="resetPwBtn" type="button" hidden>Send password reset email</button><button class="btn" id="switchBtn" type="button">Switch account</button><button class="btn danger" id="logoutBtn" type="button">Log out</button></div>
+      <p class="msg" id="acctMsg" role="status"></p>
+    </section>
+  </div>
+  <p class="note">Your profile name is saved to your Firebase account. Your selected avatar is saved in this browser.</p>
+</main>
+
+<script src="game-data.js"></script>
+<script>
+(function(){
+  const button=document.getElementById('profile-menu-btn');
+  const menu=document.getElementById('profile-dropdown');
+  if(!button||!menu)return;
+  const close=()=>{menu.classList.remove('open');button.setAttribute('aria-expanded','false')};
+  button.addEventListener('click',e=>{e.stopPropagation();const open=menu.classList.toggle('open');button.setAttribute('aria-expanded',String(open))});
+  menu.addEventListener('click',e=>e.stopPropagation());document.addEventListener('click',close);
+  document.addEventListener('keydown',e=>{if(e.key==='Escape')close()});
+  const sound=document.getElementById('sound-btn'),sw=document.getElementById('sound-switch');
+  let enabled=localStorage.getItem('sp-sound-enabled')!=='false';
+  function paint(){sw.classList.toggle('on',enabled);sound.setAttribute('aria-checked',String(enabled));sound.querySelector('.menu-icon').textContent=enabled?'🔊':'🔇'}
+  paint();sound.addEventListener('click',()=>{enabled=!enabled;localStorage.setItem('sp-sound-enabled',String(enabled));paint()});
+})();
+</script>
+
+<script type="module">
+import { auth } from "./firebase-config.js";
+import {
+    onAuthStateChanged,
+    signOut,
+    updateProfile,
+    sendPasswordResetEmail
+} from "https://www.gstatic.com/firebasejs/13.2.0/firebase-auth.js";
+import { ensureUserProgress, saveProfileData, endSession, withTimeout } from "./sync.js";
+
+const $ = id => document.getElementById(id);
+let currentUser = null;
+let pickedAvatar = -1;
+let feedExpanded = false;
+
+function displayName(user) {
+    return user.displayName || (user.email ? user.email.split("@")[0] : "SignPlay Learner");
+}
+
+function loadProgress() {
+    let done = 0, streak = 1;
+    try {
+        const d = parseInt(localStorage.getItem("sp-done"), 10);
+        if (!isNaN(d)) done = Math.min(30, Math.max(0, d));
+        const sv = JSON.parse(localStorage.getItem("sp-streak") || "null");
+        if (sv && sv.count) streak = sv.count;
+    } catch (e) {}
+    return { done, streak };
+}
+
+function esc(t) {
+    const d = document.createElement("div");
+    d.textContent = t;
+    return d.innerHTML;
+}
+
+/* ---------- rendering ---------- */
+function renderProfile(user) {
+    const name = displayName(user);
+    $("pname").textContent = name;
+    $("pmail").textContent = user.email || "";
+    spApplyAvatar($("avatar"), user, name);
+    const navAvatar = $("profile-menu-btn");
+    if (navAvatar) navAvatar.textContent = (name.trim().charAt(0) || "S").toUpperCase();
+}
+
+function renderProgress() {
+    const { done } = loadProgress();
+    const xp = xpOf(done);
+    const level = Math.min(7, 1 + Math.floor(xp / XP_PER_LEVEL));
+    const inLevel = level >= 7 ? XP_PER_LEVEL : xp % XP_PER_LEVEL;
+    $("rankChip").textContent = RANKS[level - 1];
+    $("plvLabel").textContent = "Level " + level;
+    $("plvXp").textContent = level >= 7 ? "MAX" : inLevel + "/" + XP_PER_LEVEL;
+    requestAnimationFrame(() => { $("plvFill").style.width = Math.round(inLevel / XP_PER_LEVEL * 100) + "%"; });
+}
+
+/* ---------- edit profile ---------- */
+function buildAvatarPicker(user) {
+    const picker = $("avPicker");
+    picker.innerHTML = "";
+
+    const initial = document.createElement("button");
+    initial.type = "button";
+    initial.dataset.i = "-1";
+    initial.title = user.photoURL ? "Use my Google photo" : "Use my initial";
+    initial.setAttribute("aria-label", initial.title);
+    if (user.photoURL) {
+        initial.style.background = "#fff";
+        initial.textContent = "📷";
+    } else {
+        initial.textContent = displayName(user).charAt(0).toUpperCase();
+    }
+    picker.appendChild(initial);
+
+    SP_AVATARS.forEach((a, i) => {
+        const b = document.createElement("button");
+        b.type = "button";
+        b.dataset.i = String(i);
+        b.textContent = a.e;
+        b.style.background = a.bg;
+        b.setAttribute("aria-label", "Avatar " + a.e);
+        picker.appendChild(b);
+    });
+    refreshPicked();
+}
+
+function refreshPicked() {
+    $("avPicker").querySelectorAll("button").forEach(b => {
+        b.setAttribute("aria-pressed", String(parseInt(b.dataset.i, 10) === pickedAvatar));
+    });
+}
+
+$("avPicker").addEventListener("click", e => {
+    const b = e.target.closest("button");
+    if (!b) return;
+    pickedAvatar = parseInt(b.dataset.i, 10);
+    refreshPicked();
+});
+
+function setEditMsg(text, color) {
+    $("editMsg").style.color = color;
+    $("editMsg").textContent = text;
+}
+
+function openEdit() {
+    const a = spGetAvatar(currentUser.uid);
+    pickedAvatar = a ? SP_AVATARS.indexOf(a) : -1;
+    $("nameInput").value = displayName(currentUser);
+    buildAvatarPicker(currentUser);
+    setEditMsg("", "");
+    $("editCard").hidden = false;
+
+}
+
+function closeEdit() {
+    openEdit(); // Discard unsaved edits and restore the saved profile values.
+}
+
+$("cancelEdit").addEventListener("click", closeEdit);
+
+$("saveProfile").addEventListener("click", async () => {
+    const name = $("nameInput").value.trim();
+    if (!name) { setEditMsg("Please enter a display name.", "#ff6b57"); return; }
+    if (name.length > 30) { setEditMsg("Name must be 30 characters or less.", "#ff6b57"); return; }
+
+    $("saveProfile").disabled = true;
+    setEditMsg("Saving...", "#5b3fd1");
+
+    try {
+        if (name !== currentUser.displayName) {
+            await updateProfile(currentUser, { displayName: name });
+        }
+        spSetAvatar(currentUser.uid, pickedAvatar);
+        renderProfile(currentUser);
+        try {
+            await saveProfileData(currentUser, { displayName: name, avatar: pickedAvatar });
+            setEditMsg("Saved! ✨", "#1fb5a8");
+        } catch (syncErr) {
+            setEditMsg("Saved on this device, but couldn't sync to your account (" + (syncErr.code || "unknown error") + ").", "#ff6b57");
+        }
+    } catch (err) {
+        setEditMsg("Couldn't save (" + (err.code || "unknown error") + "). Please try again.", "#ff6b57");
+    }
+    $("saveProfile").disabled = false;
+});
+
+/* ---------- header logout ---------- */
+$("headerLogoutBtn").addEventListener("click", async () => {
+    try { await endSession(currentUser); } catch (e) {}
+    try { await signOut(auth); } catch (e) {}
+    window.location.href = "index.html";
+});
+
+/* ---------- account ---------- */
+$("resetPwBtn").addEventListener("click", async () => {
+    const msg = $("acctMsg");
+    $("resetPwBtn").disabled = true;
+    try {
+        await sendPasswordResetEmail(auth, currentUser.email);
+        msg.style.color = "#1fb5a8";
+        msg.textContent = "Password reset email sent to " + currentUser.email + ". Check your inbox (and spam).";
+    } catch (err) {
+        msg.style.color = "#ff6b57";
+        msg.textContent = err.code === "auth/too-many-requests"
+            ? "Too many requests. Please wait a bit and try again."
+            : "Couldn't send the email (" + (err.code || "unknown error") + ").";
+    }
+    $("resetPwBtn").disabled = false;
+});
+
+$("logoutBtn").addEventListener("click", async () => {
+    try { await endSession(currentUser); } catch (e) {}
+    try { await signOut(auth); } catch (e) {}
+    window.location.href = "index.html";
+});
+
+$("switchBtn").addEventListener("click", async () => {
+    try { await endSession(currentUser); } catch (e) {}
+    try { await signOut(auth); } catch (e) {}
+    window.location.href = "index.html?login=1";
+});
+
+/* ---------- auth guard ---------- */
+onAuthStateChanged(auth, async user => {
+    if (!user || !user.emailVerified) {
+        window.location.replace("index.html");
+        return;
+    }
+    currentUser = user;
+
+    // Load this account's progress + avatar from Firestore before drawing the page
+    await withTimeout(ensureUserProgress(user), 5000);
+
+    // Password reset only makes sense for email/password accounts
+    const hasPassword = user.providerData.some(p => p.providerId === "password");
+    $("resetPwBtn").hidden = !hasPassword;
+    if (!hasPassword) {
+        $("acctMsg").style.color = "";
+        $("acctMsg").textContent = "You sign in with Google, so your password is managed by your Google account.";
+    }
+
+    renderProfile(user);
+    renderProgress();
+    openEdit();
+    document.documentElement.classList.remove("auth-pending");
+});
+</script>
+</body>
+</html>
