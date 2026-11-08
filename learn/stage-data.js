@@ -13,7 +13,7 @@
 
   function S(id, title, goal, signs) {
     return {
-      id: id, level: Math.ceil(id / 10), title: title, goal: goal, xp: 50, pass: 70, review: [],
+      id: id, level: Math.ceil(id / 10), title: title, goal: goal, xp: 50, pass: 50, review: [],
       signs: signs.map(function (a) { return { w: a[0], v: "", t: a[1], m: a[2] }; })
     };
   }
