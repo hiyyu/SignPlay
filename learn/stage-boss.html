@@ -74,7 +74,7 @@ h1{font-size:clamp(2rem,7vw,2.6rem);margin:10px 0 8px}h2{font-size:1.7rem;margin
    scen:  a short scenario. {intro, steps:[{q, o:[...], a, e: explanation}]}
    timer: seconds allowed per webcam prompt (0 = no timer). */
 var STAGES={
-10:{id:10,level:1,title:"The Survival Challenge",goal:"Meet a new Deaf friend and get through your first conversation.",xp:150,pass:80,timer:0,
+10:{id:10,level:1,title:"The Survival Challenge",goal:"Meet a new Deaf friend and get through your first conversation.",xp:150,pass:50,timer:0,
  badge:{n:"Level 1 Champion",e:"🏅"},
  quiz:[
   {q:"Which sign is this?",v:"",t:"Fist on your chest, rubbing in a circle.",o:["Sorry","Please","Thank you","Help"],a:0},
@@ -91,7 +91,7 @@ var STAGES={
   {q:"You didn’t understand a sign. What now?",o:["Pretend you understood","Sign SORRY, then PLEASE and ask them to repeat","Say “never mind”","Look away"],a:1,e:"Asking again politely is always welcome."},
   {q:"You need to leave. How do you finish?",o:["Just walk off","Sign THANK YOU, then GOODBYE","Wave without looking","Text them later only"],a:1,e:"A thank you and goodbye ends it kindly."}]}},
 
-20:{id:20,level:2,title:"The Community Challenge",goal:"Shop, order food and sort out a small scheduling problem.",xp:200,pass:80,timer:0,
+20:{id:20,level:2,title:"The Community Challenge",goal:"Shop, order food and sort out a small scheduling problem.",xp:200,pass:50,timer:0,
  badge:{n:"Level 2 Champion",e:"🥈"},
  quiz:[
   {q:"At the shop, which sign asks how much something costs?",v:"",o:["Price / how much","Weather","Sorry","Library"],a:0},
@@ -107,7 +107,7 @@ var STAGES={
   {q:"At the café, how do you attract the waiter’s attention?",o:["Wave and wait for eye contact","Shout","Throw a napkin","Tap the table loudly for a minute"],a:0,e:"A visible wave works. Wait for eye contact."},
   {q:"Your friend can’t come at 1pm. What do you do?",o:["Sign TIME + CHANGE and suggest a new time","Say nothing","Cancel without telling","Sign GOODBYE"],a:0,e:"Offer a new time clearly."}]}},
 
-30:{id:30,level:3,title:"The Fluent Masterclass",goal:"A fast conversation. Use questions, directions and classifiers with a timer.",xp:300,pass:80,timer:20,
+30:{id:30,level:3,title:"The Fluent Masterclass",goal:"A fast conversation. Use questions, directions and classifiers with a timer.",xp:300,pass:50,timer:20,
  badge:{n:"Fluent Master",e:"🏆"},
  quiz:[
   {q:"Which face goes with a Yes/No question?",v:"",o:["Eyebrows up","Eyebrows down","Eyes closed","No change"],a:0},
