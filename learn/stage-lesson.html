@@ -108,7 +108,7 @@ var $=function(i){return document.getElementById(i)};
 var S,stream=null;
 function reset(){S={st:0,i:0,seen:{},done:{},rate:{},qc:0}}
 function stop(){if(stream){stream.getTracks().forEach(function(t){t.stop()});stream=null}}
-function demo(s,id){return '<div class="demo">'+(s.v?'<video '+(id?'id="'+id+'" ':'')+'src="'+s.v+'" '+(id?'':'controls ')+'autoplay loop muted playsinline></video>':'<div><b>▶</b><small>Video: “'+s.w+'”</small></div>')+'</div>'}
+function demo(s,id){return '<div class="demo">'+(s.v?'<video '+(id?'id="'+id+'" ':'')+'src="'+s.v+'" '+(id?'':'controls ')+'autoplay loop muted playsinline></video>':'<div><b>▶</b><small>Demo video coming soon</small><small> · “'+s.w+'”</small></div>')+'</div>'}
 function showCam(){var c=$("cam");if(!c||!stream)return;var v=document.createElement("video");v.autoplay=true;v.muted=true;v.playsInline=true;v.srcObject=stream;c.insertBefore(v,c.firstChild);$("cmsg").textContent="";var b=document.querySelector('[data-a="cam"]');if(b){b.textContent="Camera on";b.disabled=true}}
 function camOn(){if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){$("cmsg").textContent="Camera not available here";return}
   navigator.mediaDevices.getUserMedia({video:{facingMode:"user"}}).then(function(s){stream=s;showCam()}).catch(function(){$("cmsg").textContent="Camera blocked. Allow access to imitate."})}

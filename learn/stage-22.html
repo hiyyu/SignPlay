@@ -95,7 +95,7 @@ function ans(k){return k==="yn"?0:1}
 function reset(){S={st:0,i:0,rc:0,pc:0,mg:0,
   Q:shuf(D.sents).slice(0,5),P:shuf(D.sents).slice(0,4),G:shuf(D.sents).slice(0,4).map(function(s){var o=shuf(D.sents.filter(function(x){return x.k!==s.k})).slice(0,2);return{s:s,o:shuf([s].concat(o))}})}}
 function stop(){if(stream){stream.getTracks().forEach(function(t){t.stop()});stream=null}}
-function demo(x){return '<div class="demo">'+(x.v?'<video src="'+x.v+'" autoplay loop muted playsinline></video>':'<div><b>▶</b><small>Demo video: '+(x.w||'“'+x.s+'”')+'</small></div>')+'</div>'}
+function demo(x){return '<div class="demo">'+(x.v?'<video src="'+x.v+'" autoplay loop muted playsinline></video>':'<div><b>▶</b><small>Demo video coming soon</small><small> · '+(x.w||'“'+x.s+'”')+'</small></div>')+'</div>'}
 function showCam(){var c=$("cam");if(!c||!stream)return;var v=document.createElement("video");v.autoplay=true;v.muted=true;v.playsInline=true;v.srcObject=stream;c.insertBefore(v,c.firstChild);$("cmsg").textContent="";var b=document.querySelector('[data-a="cam"]');if(b){b.textContent="Camera on";b.disabled=true}}
 function camOn(){if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){$("cmsg").textContent="Camera not available here";return}
   navigator.mediaDevices.getUserMedia({video:{facingMode:"user"}}).then(function(s){stream=s;showCam()}).catch(function(){$("cmsg").textContent="Camera blocked. You can still use the self-check."})}

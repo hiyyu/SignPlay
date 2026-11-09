@@ -154,7 +154,7 @@ function prep(si){
 }
 function stop(){if(stream){stream.getTracks().forEach(function(t){t.stop()});stream=null}}
 function go(st,ph,i){stop();S.st=st;S.ph=ph||0;S.i=i||0;S.k=-1;S.att=0;if(!S.ph)S.seen={};if(st>=1&&st<=D.sets.length)prep(st-1);draw();window.scrollTo(0,0)}
-function demo(s){return '<div class="demo">'+(s.v?'<video src="'+s.v+'" autoplay loop muted playsinline></video>':'<div><b>▶</b><small>Demo video: “'+s.w+'”</small></div>')+'</div>'}
+function demo(s){return '<div class="demo">'+(s.v?'<video src="'+s.v+'" autoplay loop muted playsinline></video>':'<div><b>▶</b><small>Demo video coming soon</small><small> · “'+s.w+'”</small></div>')+'</div>'}
 function total(){var n=0;S.Q.forEach(function(q){n+=q.length});S.P.forEach(function(p){n+=p.length});n+=S.G.length;return Math.round((S.rc+S.pc+S.mg)/n*100)}
 function mo(s){return s.motion?'<span class="mo">↻ motion</span>':""}
 function fb(t,c){var f=$("fb");if(f){f.textContent=t;f.style.color=c||"var(--ink)"}}
