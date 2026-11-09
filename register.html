@@ -767,6 +767,40 @@ const message = document.getElementById("message");
 const submitBtn = form.querySelector(".register-btn");
 const googleBtn = document.getElementById("googleBtn");
 
+
+// ----- Email checks (a real inbox can only be proven by the verification email; this stops obvious fakes) -----
+const DISPOSABLE = [
+    "mailinator.com", "guerrillamail.com", "guerrillamail.net", "sharklasers.com", "grr.la", "10minutemail.com",
+    "10minutemail.net", "tempmail.com", "temp-mail.org", "temp-mail.io", "tempmailo.com", "yopmail.com", "yopmail.net",
+    "trashmail.com", "trashmail.net", "getnada.com", "nada.email", "dispostable.com", "maildrop.cc", "fakeinbox.com",
+    "throwawaymail.com", "mohmal.com", "emailondeck.com", "mintemail.com", "tempinbox.com", "spambox.us", "mailnesia.com",
+    "moakt.com", "burnermail.io", "tempr.email", "discard.email", "mytemp.email", "fakemail.net", "mail.tm", "inboxkitten.com",
+    "minuteinbox.com", "emailfake.com", "crazymailing.com", "tmail.ws", "tmpmail.org", "tmpmail.net", "1secmail.com"
+];
+const RESERVED = ["example.com", "example.net", "example.org", "test.com", "test.test", "fake.com", "fakemail.com", "email.com", "asdf.com", "abc.com", "domain.com", "mail.com.com"];
+const TYPOS = {
+    "gmial.com": "gmail.com", "gmai.com": "gmail.com", "gamil.com": "gmail.com", "gmail.con": "gmail.com", "gmail.co": "gmail.com",
+    "gmail.cm": "gmail.com", "gmaill.com": "gmail.com", "gmali.com": "gmail.com", "gnail.com": "gmail.com", "gmil.com": "gmail.com",
+    "hotmial.com": "hotmail.com", "hotmail.con": "hotmail.com", "hotmai.com": "hotmail.com", "hotnail.com": "hotmail.com",
+    "yahooo.com": "yahoo.com", "yaho.com": "yahoo.com", "yahoo.con": "yahoo.com", "yhoo.com": "yahoo.com",
+    "outlok.com": "outlook.com", "outlook.con": "outlook.com", "outllok.com": "outlook.com", "iclod.com": "icloud.com", "icloud.con": "icloud.com"
+};
+
+// Returns an error message, or "" when the email looks fine
+function emailProblem(email) {
+    if (!email || email.length > 254) return "Please enter your email address.";
+    if (/\s/.test(email)) return "An email address can't contain spaces.";
+    const m = /^([A-Za-z0-9._%+\-]+)@([A-Za-z0-9\-]+(?:\.[A-Za-z0-9\-]+)*\.[A-Za-z]{2,})$/.exec(email);
+    if (!m) return "That email address doesn't look right.";
+    const local = m[1], domain = m[2].toLowerCase();
+    if (local.length > 64 || local.startsWith(".") || local.endsWith(".") || local.indexOf("..") !== -1) return "That email address doesn't look right.";
+    if (domain.split(".").some(function (part) { return !part || part.startsWith("-") || part.endsWith("-"); })) return "That email address doesn't look right.";
+    if (TYPOS[domain]) return "Did you mean " + local + "@" + TYPOS[domain] + "?";
+    if (DISPOSABLE.indexOf(domain) !== -1) return "Temporary / disposable email addresses can't be used. Please use your real email.";
+    if (RESERVED.indexOf(domain) !== -1 || /^(test|fake|example|asdf|qwerty)\d*@/i.test(email)) return "Please use your real email address.";
+    return "";
+}
+
 function show(text, color) {
     message.style.color = color;
     message.textContent = text;
@@ -805,6 +839,12 @@ form.addEventListener("submit", async function (e) {
 
     if (!name) {
         show("Please enter your name.", "#ff6b57");
+        return;
+    }
+
+    const emailErr = emailProblem(email);
+    if (emailErr) {
+        show(emailErr, "#ff6b57");
         return;
     }
 

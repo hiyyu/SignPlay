@@ -10,6 +10,7 @@
 //   - before logging out      -> save it to Firestore, then clear it from this browser
 
 import { auth } from "./firebase-config.js";
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-auth.js";
 import {
     getFirestore,
     doc,
@@ -258,4 +259,26 @@ export async function endSession(user) {
 // Used by the game page: a fingerprint of the current game progress in this browser
 export function gameFingerprint() {
     return gameStr(readGame());
+}
+
+// ----- Helpers for pages that don't have their own sign-in code (the stage pages) -----
+
+function authReady() {
+    if (typeof auth.authStateReady === "function") return auth.authStateReady();
+    return new Promise(function (resolve) {
+        const off = onAuthStateChanged(auth, function () { off(); resolve(); });
+    });
+}
+
+// The signed-in, email-verified player (or null)
+export async function currentVerifiedUser() {
+    try { await authReady(); } catch (e) {}
+    const u = auth.currentUser;
+    return u && u.emailVerified ? u : null;
+}
+
+// Save the current player's progress to Firestore (used right after passing a stage)
+export async function saveCurrentProgress() {
+    const u = await currentVerifiedUser();
+    if (u) await saveProgressNow(u);
 }

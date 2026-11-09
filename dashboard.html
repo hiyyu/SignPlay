@@ -416,6 +416,15 @@ main { position: relative; z-index: 1; padding-bottom: 60px; }
 .tab[aria-selected="true"] { background: var(--sun); color: #3b2f1d; border-color: var(--sun-shadow); box-shadow: 0 3px 0 var(--sun-shadow); }
 .tab:focus-visible { outline: 3px solid var(--sky); outline-offset: 2px; }
 .tabpanel[hidden] { display: none !important; }
+/* Stage results (30 stage tiles with stars) */
+.stagegrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(70px, 1fr)); gap: 10px; }
+.sg { background: rgba(255,250,240,.82); border: 1px solid var(--panel-line); border-radius: 15px; padding: 8px 4px 7px; text-align: center; box-shadow: inset 0 1px 0 rgba(255,255,255,.9); }
+.sg b { display: block; font: 800 1.15rem 'Baloo 2', system-ui, sans-serif; line-height: 1.1; }
+.sg small { display: block; font-size: .78rem; font-weight: 800; color: var(--muted); min-height: 1.1em; letter-spacing: .5px; }
+.sg.cleared { background: #fff3cf; border-color: var(--sun-shadow); }
+.sg.next { border: 2px dashed var(--teal, #1fb5a8); }
+.sg.locked { opacity: .55; }
+.sg.boss b::after { content: " 👑"; font-size: .8rem; }
 @media (max-width: 520px) { .tab { padding: 8px 14px; font-size: .95rem; } }
 .case-total { margin-bottom: 18px; }
 .case-total .lvh span { font-size: 1.05rem; }
@@ -494,6 +503,12 @@ main { position: relative; z-index: 1; padding-bottom: 60px; }
       <div class="lv"><div class="lvh"><span>Level 1 · Foundations</span><small id="t1">0/10</small></div><div class="bar"><div class="fill f1" id="b1"></div></div></div>
       <div class="lv"><div class="lvh"><span>Level 2 · Everyday Life</span><small id="t2">0/10</small></div><div class="bar"><div class="fill f2" id="b2"></div></div></div>
       <div class="lv"><div class="lvh"><span>Level 3 · Conversational Fluency</span><small id="t3">0/10</small></div><div class="bar"><div class="fill f3" id="b3"></div></div></div>
+    </section>
+
+    <!-- Stage results -->
+    <section class="card full" aria-label="Stage results">
+      <div class="head"><h2>⭐ Stage results</h2><span class="pill" id="starCount">0/90 stars</span></div>
+      <div class="stagegrid" id="stageGrid"></div>
     </section>
 
     <!-- Badges -->
@@ -641,8 +656,43 @@ function renderProfile(user) {
     if (navAvatar) navAvatar.textContent = (name.trim().charAt(0) || "S").toUpperCase();
 }
 
+function loadStars() {
+    try {
+        const o = JSON.parse(localStorage.getItem("sp-stars") || "{}") || {};
+        const out = {};
+        Object.keys(o).forEach(k => { const n = parseInt(k, 10), v = Number(o[k]); if (n >= 1 && n <= 30 && v >= 1 && v <= 3) out[n] = Math.round(v); });
+        return out;
+    } catch (e) { return {}; }
+}
+
+function renderStageGrid(done) {
+    const stars = loadStars();
+    let total = 0;
+    Object.keys(stars).forEach(k => { if (Number(k) <= done) total += stars[k]; });
+    $("starCount").textContent = total + "/90 stars";
+
+    let html = "";
+    for (let i = 1; i <= 30; i++) {
+        const boss = i % 10 === 0;
+        let cls = "sg" + (boss ? " boss" : ""), sub;
+        if (i <= done) {
+            cls += " cleared";
+            sub = stars[i] ? "⭐".repeat(stars[i]) : "✓";
+        } else if (i === done + 1) {
+            cls += " next";
+            sub = "Next";
+        } else {
+            cls += " locked";
+            sub = "🔒";
+        }
+        html += '<div class="' + cls + '" title="Stage ' + i + '"><b>' + i + '</b><small>' + sub + '</small></div>';
+    }
+    $("stageGrid").innerHTML = html;
+}
+
 function renderProgress() {
     const { done, streak } = loadProgress();
+    renderStageGrid(done);
     const xp = xpOf(done);
     const pl = Math.min(7, 1 + Math.floor(xp / XP_PER_LEVEL));
     const inLvl = pl >= 7 ? XP_PER_LEVEL : xp % XP_PER_LEVEL;
