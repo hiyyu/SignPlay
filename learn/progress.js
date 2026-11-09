@@ -69,6 +69,32 @@
       m.appendChild(box);
     },
 
+    // Demo video for a sign, found by name: SignPlay/videos/<name>.mp4
+    // (hello.mp4, thank-you.mp4, letter-a.mp4, number-10.mp4, dir-help-out.mp4, lesson-26-1.mp4, q-yesno.mp4 ...)
+    videoPath: function (s) {
+      if (!s) return "";
+      var base = "../videos/", id = (window.D && D.id) || 0;
+      function slug(w) { return String(w).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, ""); }
+      if (s.verb && s.dir) return base + "dir-" + slug(s.verb) + "-" + s.dir + ".mp4";
+      if (id === 22) {
+        if (s.w === "Yes/No question") return base + "q-yesno.mp4";
+        if (s.w === "Wh- question") return base + "q-wh.mp4";
+        if (s.s === "Are you hungry?") return base + "q-hungry.mp4";
+        return "";
+      }
+      if (window.D && D.lessons) {
+        var i = D.lessons.indexOf(s);
+        return i >= 0 ? base + "lesson-" + id + "-" + (i + 1) + ".mp4" : "";
+      }
+      if (id % 10 === 0) return "";                 // boss stages: no automatic video
+      if (s.w) {
+        if (id === 1) return base + "letter-" + slug(s.w) + ".mp4";
+        if (id === 2) return base + "number-" + slug(s.w) + ".mp4";
+        return base + slug(s.w) + ".mp4";
+      }
+      return "";
+    },
+
     // Locked stages can't be opened by typing the address
     guard: function () {
       var id = (window.D && D.id) || 0;
@@ -161,6 +187,16 @@
 
   window.SPFx = { play: play, confetti: confetti };
 
+  // If a video file isn't there yet, show the placeholder instead of a blank box
+  document.addEventListener("error", function (e) {
+    var v = e.target;
+    if (!v || v.tagName !== "VIDEO") return;
+    var box = v.parentNode;
+    if (box && box.classList && box.classList.contains("demo")) {
+      box.innerHTML = '<div><b>\u25B6</b><small>Demo video coming soon</small></div>';
+    }
+  }, true);
+
   // --- wire up after the page's own script has defined go() and fb() ---
   var skipped = false;
   document.addEventListener("click", function (e) {
@@ -173,6 +209,16 @@
 
   document.addEventListener("DOMContentLoaded", function () {
     if (window.SPProgress) SPProgress.guard();
+    var _demo = window.demo;
+    if (typeof _demo === "function") {
+      window.demo = function (x, id) {
+        if (x && !x.v) {
+          var p = SPProgress.videoPath(x);
+          if (p) { var y = {}; for (var k in x) y[k] = x[k]; y.v = p; x = y; }
+        }
+        return _demo.call(this, x, id);
+      };
+    }
     var _go = window.go;
     if (typeof _go === "function") {
       window.go = function (n) {
