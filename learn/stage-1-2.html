@@ -18,6 +18,7 @@ button{font:800 1.1rem "Baloo 2",sans-serif;cursor:pointer;color:inherit}
 button:focus-visible{outline:3px solid #3aa0ff;outline-offset:3px}
 .top{position:sticky;top:env(safe-area-inset-top,0px);z-index:10;background:#2a2272;color:#fff6dc;display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;padding:10px 16px;border-bottom:4px solid #0f0c2e}
 body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:#2a2272;z-index:20}
+#xp{margin-right:auto}
 .sw{display:flex;border:2px solid #fff6dc;border-radius:99px;overflow:hidden;margin-right:auto}
 .sw button{background:none;border:0;color:#fff6dc;font-size:.95rem;padding:0 14px}.sw button[aria-pressed=true]{background:var(--sun);color:#1f1b4d}
 .chip{font:800 .95rem "Baloo 2",sans-serif;background:#fff6dc;color:#1f1b4d;border-radius:99px;padding:0 12px}
@@ -63,7 +64,6 @@ h1{font-size:clamp(2rem,7vw,2.6rem);margin:10px 0 8px}h2{font-size:1.6rem;margin
 </head>
 <body>
 <header class="top">
-  <div class="sw" role="group" aria-label="Preview stage"><button data-a="sw" data-k="0" aria-pressed="true">Stage 1</button><button data-a="sw" data-k="1" aria-pressed="false">Stage 2</button></div>
   <span class="chip" id="xp">+50 XP</span>
   <div class="dots" id="dots" aria-hidden="true"></div>
 </header>
@@ -190,8 +190,7 @@ function draw(){
 function after(fn,ms){setTimeout(fn,ms||900)}
 document.addEventListener("click",function(e){
   var b=e.target.closest("[data-a]");if(!b||b.disabled)return;var a=b.dataset.a,k=+b.dataset.k,n=D.sets.length,si=S.st-1;
-  if(a==="sw"){D=Ds[k];reset();draw();window.scrollTo(0,0)}
-  else if(a==="next")go(1);
+  if(a==="next")go(1);
   else if(a==="tile"){S.k=k;S.seen[k]=1;draw()}
   else if(a==="lcont")go(S.st,1);
   else if(a==="rc"){var q=S.Q[si][S.i],ok=q.o[k]===q.s;if(ok)S.rc++;b.classList.add(ok?"ok":"no");fb(ok?"Correct!":"It was “"+q.s.w+"”",ok?"var(--green)":"var(--coral)");document.querySelectorAll(".opt").forEach(function(x){x.disabled=true});
