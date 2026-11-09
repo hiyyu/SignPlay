@@ -947,6 +947,8 @@ svg.scene {
   line-height: 1.45;
   margin: 0 0 16px;
 }
+.sheet-video { margin: 0 0 12px; padding: 8px 12px; border-radius: 12px; background: #fff4d6; border: 1.5px dashed #e0b84a; color: #7a5a10; font-weight: 700; font-size: 0.9rem; }
+.sheet-video[hidden] { display: none; }
 .sheet-reward {
   font-family: 'Baloo 2', sans-serif;
   font-weight: 800;
@@ -1243,6 +1245,8 @@ svg.scene {
   <nav class="main-nav" aria-label="Main navigation">
     <a class="nav-link" href="../dashboard.html">Dashboard</a>
     <a class="nav-link active" href="./learningpath.html" aria-current="page">Learn</a>
+    <a class="nav-link" href="../gestigo-app/index.html">Mystery <span class="long">Gameplay</span><span class="short">Game</span></a>
+  </nav>
   </nav>
 
   <div class="top-actions">
@@ -1458,6 +1462,7 @@ svg.scene {
   <h2 class="sheet-title" id="sheet-title"></h2>
   <p class="sheet-desc" id="sheet-desc"></p>
   <div class="sheet-reward" id="sheet-reward"></div>
+  <div class="sheet-video" id="sheet-video" hidden></div>
   <button class="sheet-action" id="sheet-action"></button>
 </aside>
  
@@ -1478,6 +1483,7 @@ svg.scene {
 <canvas id="confetti-canvas"></canvas>
  
 <script src="../game-data.js"></script>
+<script src="stage-data.js"></script>
 <script>
 // Web Audio API Synthesizer (Instant feedback, zero external MP3 dependencies)
 var audioCtx = null;
@@ -1953,6 +1959,47 @@ function updateDashboard() {
  
 }
  
+
+// ---- Demo-video availability ("coming soon" note in the stage sheet) ----
+// Lists the demo videos a stage expects (same file names the stage pages use) and checks which exist.
+// Stages that are reading/review only (bosses, 29) have no demo videos, so no note is shown.
+var videoStatusCache = {};
+function slugV(w) { return String(w).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, ""); }
+function stageVideoFiles(s) {
+  var base = "../videos/", out = [], i;
+  if (s % 10 === 0 || s === 29) return out;
+  if (s === 1) { for (i = 0; i < 26; i++) out.push(base + "letter-" + String.fromCharCode(97 + i) + ".mp4"); return out; }
+  if (s === 2) { for (i = 1; i <= 10; i++) out.push(base + "number-" + i + ".mp4"); return out; }
+  if (s === 21) { ["give", "help", "tell"].forEach(function (v) { out.push(base + "dir-" + v + "-out.mp4", base + "dir-" + v + "-in.mp4"); }); return out; }
+  if (s === 22) return [base + "q-yesno.mp4", base + "q-wh.mp4", base + "q-hungry.mp4"];
+  if (s >= 26 && s <= 28) return [base + "lesson-" + s + "-1.mp4"];
+  var d = window.STAGE_DATA && STAGE_DATA[s];
+  if (d) d.signs.forEach(function (x) { out.push(base + slugV(x.w) + ".mp4"); });
+  return out;
+}
+function videoStatus(s) {
+  if (videoStatusCache[s]) return videoStatusCache[s];
+  var files = stageVideoFiles(s);
+  if (!files.length || location.protocol === "file:") return (videoStatusCache[s] = Promise.resolve({ state: "n/a", have: 0, total: 0 }));
+  return (videoStatusCache[s] = Promise.all(files.map(function (f) {
+    return fetch(f, { method: "HEAD" }).then(function (r) { return r.ok; }).catch(function () { return false; });
+  })).then(function (r) {
+    var have = r.filter(Boolean).length;
+    return { state: have === files.length ? "all" : have === 0 ? "none" : "some", have: have, total: files.length };
+  }));
+}
+function showVideoNote(s) {
+  var el = document.getElementById("sheet-video");
+  el.hidden = true;
+  videoStatus(s).then(function (v) {
+    if (activeStageModal !== s || v.state === "all" || v.state === "n/a") return;
+    el.textContent = v.state === "none"
+      ? "\uD83C\uDFAC Demo videos coming soon for this stage"
+      : "\uD83C\uDFAC Some demo videos are still coming soon (" + v.have + "/" + v.total + " ready)";
+    el.hidden = false;
+  });
+}
+
 // Open Stage Details Sheet
 function openStageSheet(s) {
   activeStageModal = s;
@@ -1985,6 +2032,7 @@ function openStageSheet(s) {
     actionBtn.textContent = "Start Stage (+" + rewardXP + " XP)";
   }
  
+  showVideoNote(s);
   document.getElementById("shade").classList.add("open");
   document.getElementById("sheet").classList.add("open");
   playSound('tap');

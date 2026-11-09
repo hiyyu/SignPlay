@@ -27,6 +27,9 @@
 
       // The learning path reads this once, plays the celebration, then deletes it
       set("sp-celebrate", JSON.stringify({ stage: stage, isNew: isNew, pct: pct, stars: stars }));
+
+      // Save to the signed-in account right away (don't wait until the learning path opens)
+      try { import("../sync.js").then(function (m) { return m.saveCurrentProgress(); }).catch(function () {}); } catch (e) {}
       if (window.SPFx) { setTimeout(function () { SPFx.play("win"); SPFx.confetti(); }, 150); }
       return isNew;
     },
@@ -193,7 +196,8 @@
     if (!v || v.tagName !== "VIDEO") return;
     var box = v.parentNode;
     if (box && box.classList && box.classList.contains("demo")) {
-      box.innerHTML = '<div><b>\u25B6</b><small>Demo video coming soon</small></div>';
+      var w = v.getAttribute("data-w") || "";
+      box.innerHTML = '<div><b>\u25B6</b><small>Demo video coming soon</small>' + (w ? '<small> \u00B7 \u201C' + w + '\u201D</small>' : '') + '</div>';
     }
   }, true);
 
@@ -240,5 +244,37 @@
         return r;
       };
     }
+  });
+})();
+
+/* ===== Account check for the stage pages =====
+   - Only signed-in players (with a verified email) can use a stage page; otherwise go to the home page.
+   - Loads this account's saved progress first. If it differs from what this page started with
+     (for example a different account on the same browser), the page reloads once to show the right data.
+   The page stays hidden for a moment while this runs. */
+(function () {
+  if (location.protocol === "file:") return;
+  var style = document.createElement("style");
+  style.id = "sp-auth-wait";
+  style.textContent = "html.sp-auth-wait body{visibility:hidden}";
+  document.head.appendChild(style);
+  document.documentElement.classList.add("sp-auth-wait");
+  function show() { document.documentElement.classList.remove("sp-auth-wait"); }
+
+  var startDone = window.SPProgress ? SPProgress.done() : 0;
+  import("../sync.js").then(async function (m) {
+    var user = await m.currentVerifiedUser();
+    if (!user) { location.replace("../index.html"); return; }
+    await m.withTimeout(m.ensureUserProgress(user), 5000);
+    if (window.SPProgress && SPProgress.done() !== startDone && !sessionStorage.getItem("sp-stage-reload")) {
+      sessionStorage.setItem("sp-stage-reload", "1");
+      location.reload();
+      return;
+    }
+    sessionStorage.removeItem("sp-stage-reload");
+    show();
+  }).catch(function (err) {
+    console.warn("SignPlay account check skipped:", err);
+    show();
   });
 })();

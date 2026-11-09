@@ -472,6 +472,12 @@ main { position: relative; z-index: 1; padding-bottom: 60px; }
   .nav-link .short { display: inline; }
 }
 </style>
+<style>
+.pwform { margin-top: 18px; padding-top: 18px; border-top: 1px dashed var(--panel-line); max-width: 460px; }
+.pwform h3 { margin: 0 0 12px; font-family: 'Baloo 2', system-ui, sans-serif; font-size: 1.25rem; }
+.pwform .field { margin-bottom: 12px; }
+.pwform[hidden] { display: none !important; }
+</style>
 </head>
 <body>
 
@@ -505,6 +511,7 @@ main { position: relative; z-index: 1; padding-bottom: 60px; }
         <div><div class="pname" id="pname">SignPlay Learner</div><div class="pmail" id="pmail"></div><div class="chips"><span class="chip">✓ Email verified</span><span class="chip rank" id="rankChip">ROOKIE</span></div></div>
       </div>
       <div class="plv"><div class="row"><span id="plvLabel">Level 1</span><span id="plvXp">0/300</span></div><div class="bar"><div class="fill f4" id="plvFill"></div></div></div>
+      <div class="plv"><div class="row"><span id="gpLabel">🕵️ Rookie Sleuth</span><span id="gpXp">0 XP</span></div><div class="bar"><div class="fill f4" id="gpFill"></div></div><div class="muted" id="gpSub" style="font-size:.85rem;margin-top:6px"></div></div>
       <div class="actions"><a class="btn main" href="learn/learningpath.html">Continue learning →</a><a class="btn" href="dashboard.html">Back to dashboard</a></div>
     </section>
 
@@ -520,8 +527,22 @@ main { position: relative; z-index: 1; padding-bottom: 60px; }
 
     <section class="card full account" aria-label="Account">
       <h2>Account</h2><p>Manage your sign-in, or use a different account.</p>
-      <div class="actions" style="margin-top:0"><button class="btn" id="resetPwBtn" type="button" hidden>Send password reset email</button><button class="btn" id="switchBtn" type="button">Switch account</button><button class="btn danger" id="logoutBtn" type="button">Log out</button></div>
+      <div class="actions" style="margin-top:0"><button class="btn main" id="changePwBtn" type="button" hidden aria-expanded="false" aria-controls="pwForm">Change password</button><button class="btn" id="resetPwBtn" type="button" hidden>Send password reset email</button><button class="btn" id="switchBtn" type="button">Switch account</button><button class="btn danger" id="logoutBtn" type="button">Log out</button></div>
       <p class="msg" id="acctMsg" role="status"></p>
+
+      <!-- Change password (email/password accounts only) -->
+      <form id="pwForm" class="pwform" hidden autocomplete="off">
+        <h3>Change password</h3>
+        <div class="field"><label for="curPw">Current password</label><input id="curPw" type="password" autocomplete="current-password" required></div>
+        <div class="field"><label for="newPw">New password</label><input id="newPw" type="password" minlength="8" autocomplete="new-password" required></div>
+        <div class="field"><label for="newPw2">Confirm new password</label><input id="newPw2" type="password" minlength="8" autocomplete="new-password" required></div>
+        <p class="hint">At least 8 characters.</p>
+        <div class="actions" style="margin-top:12px">
+          <button class="btn main" id="pwSave" type="submit">Update password</button>
+          <button class="btn" id="pwCancel" type="button">Cancel</button>
+        </div>
+        <p class="msg" id="pwMsg" role="status"></p>
+      </form>
     </section>
   </div>
   <p class="note">Your profile name is saved to your Firebase account. Your selected avatar is saved in this browser.</p>
@@ -550,7 +571,10 @@ import {
     onAuthStateChanged,
     signOut,
     updateProfile,
-    sendPasswordResetEmail
+    sendPasswordResetEmail,
+    EmailAuthProvider,
+    reauthenticateWithCredential,
+    updatePassword
 } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-auth.js";
 import { ensureUserProgress, saveProfileData, endSession, withTimeout } from "./sync.js";
 
@@ -599,6 +623,15 @@ function renderProgress() {
     $("plvLabel").textContent = "Level " + level;
     $("plvXp").textContent = level >= 7 ? "MAX" : inLevel + "/" + XP_PER_LEVEL;
     requestAnimationFrame(() => { $("plvFill").style.width = Math.round(inLevel / XP_PER_LEVEL * 100) + "%"; });
+
+    // Mystery Gameplay rank (from the game's saved progress)
+    const g = spGameStats();
+    let gPct = 100;
+    if (g.nextRank) gPct = Math.round((g.xp - g.rank.minXp) / (g.nextRank.minXp - g.rank.minXp) * 100);
+    $("gpLabel").textContent = "🕵️ " + g.rank.title;
+    $("gpXp").textContent = g.nextRank ? g.xp + "/" + g.nextRank.minXp + " XP" : g.xp + " XP (max)";
+    $("gpSub").textContent = "Mystery: " + g.stagesDone + "/30 stages · " + g.stars + "/90 stars";
+    requestAnimationFrame(() => { $("gpFill").style.width = Math.max(0, Math.min(100, gPct)) + "%"; });
 }
 
 /* ---------- edit profile ---------- */
@@ -715,6 +748,63 @@ $("resetPwBtn").addEventListener("click", async () => {
     $("resetPwBtn").disabled = false;
 });
 
+/* ---------- change password ---------- */
+function setPwMsg(text, color) { $("pwMsg").style.color = color; $("pwMsg").textContent = text; }
+
+function closePwForm() {
+    $("pwForm").hidden = true;
+    $("pwForm").reset();
+    setPwMsg("", "");
+    $("changePwBtn").setAttribute("aria-expanded", "false");
+}
+
+$("changePwBtn").addEventListener("click", () => {
+    if ($("pwForm").hidden) {
+        $("pwForm").hidden = false;
+        $("changePwBtn").setAttribute("aria-expanded", "true");
+        $("curPw").focus();
+    } else {
+        closePwForm();
+    }
+});
+$("pwCancel").addEventListener("click", closePwForm);
+
+$("pwForm").addEventListener("submit", async e => {
+    e.preventDefault();
+    const cur = $("curPw").value;
+    const next = $("newPw").value;
+    const again = $("newPw2").value;
+
+    if (!cur) { setPwMsg("Please enter your current password.", "#ff6b57"); return; }
+    if (next.length < 8) { setPwMsg("The new password must be at least 8 characters.", "#ff6b57"); return; }
+    if (next !== again) { setPwMsg("The new passwords do not match.", "#ff6b57"); return; }
+    if (next === cur) { setPwMsg("The new password must be different from the current one.", "#ff6b57"); return; }
+
+    $("pwSave").disabled = true;
+    setPwMsg("Updating...", "#5b3fd1");
+
+    try {
+        // Firebase wants a recent sign-in before changing a password, so confirm the current one first
+        const cred = EmailAuthProvider.credential(currentUser.email, cur);
+        await reauthenticateWithCredential(currentUser, cred);
+        await updatePassword(currentUser, next);
+        $("pwForm").reset();
+        setPwMsg("Password updated! Use the new password next time you log in. ✨", "#1fb5a8");
+        setTimeout(closePwForm, 2500);
+    } catch (err) {
+        const msgs = {
+            "auth/wrong-password": "Your current password is incorrect.",
+            "auth/invalid-credential": "Your current password is incorrect.",
+            "auth/weak-password": "That password is too weak. Try a longer one.",
+            "auth/too-many-requests": "Too many attempts. Please wait a bit and try again.",
+            "auth/requires-recent-login": "Please log out and log in again, then change your password.",
+            "auth/network-request-failed": "Network error. Check your connection."
+        };
+        setPwMsg(msgs[err.code] || ("Couldn't update the password (" + (err.code || "unknown error") + ")."), "#ff6b57");
+    }
+    $("pwSave").disabled = false;
+});
+
 $("logoutBtn").addEventListener("click", async () => {
     try { await endSession(currentUser); } catch (e) {}
     try { await signOut(auth); } catch (e) {}
@@ -741,6 +831,7 @@ onAuthStateChanged(auth, async user => {
     // Password reset only makes sense for email/password accounts
     const hasPassword = user.providerData.some(p => p.providerId === "password");
     $("resetPwBtn").hidden = !hasPassword;
+    $("changePwBtn").hidden = !hasPassword;
     if (!hasPassword) {
         $("acctMsg").style.color = "";
         $("acctMsg").textContent = "You sign in with Google, so your password is managed by your Google account.";
