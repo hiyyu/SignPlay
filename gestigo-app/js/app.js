@@ -933,7 +933,7 @@ class GestigoApp {
       localStorage.removeItem('gestigo_level3_alibis');
       localStorage.removeItem('gestigo_level3_asked');
       localStorage.removeItem('gestigo_level3_clues');
-      localStorage.removeItem('gestigo_level3_recovered_book');
+      localStorage.removeItem('gestigo_level3_book_recovered');
     }
     this.unlockedStages = [1];
     this.completedStages = {};

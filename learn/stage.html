@@ -92,7 +92,7 @@ function reset(){S={st:0,i:0,rc:0,pc:0,mg:0,att:0,done:false,
   P:shuf(D.signs).slice(0,4),G:shuf(D.signs).slice(0,4),sel:null,left:null,gm:0,gn:0}
   S.right=shuf(S.G);S.gone={};S.tried={};S.left=shuf(S.G)}
 function stop(){if(stream){stream.getTracks().forEach(function(t){t.stop()});stream=null}}
-function demo(s){return '<div class="demo">'+(s.v?'<video src="'+s.v+'" autoplay loop muted playsinline></video>':'<div><b>▶</b><small>Demo video: “'+s.w+'”</small></div>')+'</div>'}
+function demo(s){return '<div class="demo">'+(s.v?'<video src="'+s.v+'" autoplay loop muted playsinline></video>':'<div><b>▶</b><small>Demo video coming soon</small><small> · “'+s.w+'”</small></div>')+'</div>'}
 function go(n,i){stop();S.st=n;S.i=i||0;draw();window.scrollTo(0,0)}
 function total(){return Math.round((S.rc+S.pc+S.mg)/(D.signs.length+S.P.length+S.G.length)*100)}
 function draw(){
