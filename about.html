@@ -329,12 +329,22 @@ document.getElementById("contactForm").addEventListener("submit", async function
   hint.textContent = "Sending your message...";
 
   try {
-    await emailjs.send("service_pljt2eo", "template_9cgezta", {
-      name: name,
-      email: email,
-      message: message
-    });
+  const time = new Date().toLocaleString("en-MY", {
+    timeZone: "Asia/Kuala_Lumpur",
+    day: "2-digit",
+    month: "long",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: true
+  });
 
+  await emailjs.send("service_pljt2eo", "template_9cgezta", {
+    name: name,
+    email: email,
+    message: message,
+    time: time
+  });
     hint.textContent = "Message sent successfully! Thank you for contacting SignPlay.";
     form.reset();
   } catch (error) {
