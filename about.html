@@ -219,22 +219,22 @@ footer a:hover{color:var(--sun)}
     <div class="team">
       <article class="member">
         <div class="av" aria-hidden="true">N1</div>
-        <h3>Nur Aqilah Shaheerah Binti Md.Azhar</h3><span class="role">Project Lead & AI Engineer</span>
-        <p>Oversees the overall project direction and ensures successful delivery of SignPlay's learning experience.</p>
+        <h3>Nur Aqilah Shaheerah</h3><span class="role">Project Lead & AI Engineer</span>
+        <p>Oversees the overall project direction, leads AI and computer vision integration, and ensures the successful development and deployment of SignPlay.</p>
       </article>
       <article class="member">
         <div class="av" aria-hidden="true">N2</div>
-        <h3>Amni Batrisya Binti Hanuar</h3><span class="role">Learning Experience Developer & Narrative Designer</span>
+        <h3>Amni Batrisya</h3><span class="role">Learning Experience Developer & Narrative Designer</span>
         <p>Designs engaging sign language learning experiences, interactive lessons, and intuitive dashboards that bring SignPlay's educational journey to life.</p>
       </article>
       <article class="member">
         <div class="av" aria-hidden="true">N3</div>
-        <h3>Nurin Maisarah Binti Nor Azwan</h3><span class="role">Game Development & Project Strategy Lead</span>
+        <h3>Nurin Maisarah</h3><span class="role">Game Development & Project Strategy Lead</span>
         <p>Leads the development of immersive mystery gameplay, coordinates project operations, and ensures seamless integration of storytelling and interactive game mechanics.</p>
       </article>
       <article class="member">
         <div class="av" aria-hidden="true">N4</div>
-        <h3>Amni Nabilah Binti Rosli</h3><span class="role">Quality Assurance & Communications Lead</span>
+        <h3>Amni Nabilah</h3><span class="role">Quality Assurance & Communications Lead</span>
         <p>Leads project presentations, communicates SignPlay's vision and impact, and develops compelling demonstrations that showcase its innovation and educational value.</p>
       </article>
     </div>
@@ -302,7 +302,7 @@ document.getElementById("yr").textContent=new Date().getFullYear();
 const TO = "aqilahshaheerah28@gmail.com";
 
 emailjs.init({
-  publicKey: "service_pljt2eo"
+  publicKey: "RlRpa2VbZXqaEE2_M"
 });
 
 document.getElementById("mailLink").textContent = TO;
@@ -329,7 +329,7 @@ document.getElementById("contactForm").addEventListener("submit", async function
   hint.textContent = "Sending your message...";
 
   try {
-    await emailjs.send("service_pljt2eo", "YOUR_ACTUAL_TEMPLATE_ID", {
+    await emailjs.send("service_pljt2eo", "template_9cgezta", {
       name: name,
       email: email,
       message: message
@@ -338,8 +338,8 @@ document.getElementById("contactForm").addEventListener("submit", async function
     hint.textContent = "Message sent successfully! Thank you for contacting SignPlay.";
     form.reset();
   } catch (error) {
-    console.error("Email sending failed:", error);
-    hint.textContent = "Unable to send your message. Please try again.";
+  console.error("EmailJS Error:", error);
+  hint.textContent = "Unable to send message. Please check the browser console.";
   } finally {
     button.disabled = false;
   }
