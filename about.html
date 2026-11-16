@@ -1,0 +1,349 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>About SignPlay</title>
+<meta name="description" content="SignPlay makes learning sign language interactive, rewarding and accessible. Meet the team, our mission, and how to reach us.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f7f5ff;--surface:#ffffff;--ink:#1f1b4d;--muted:#5d5985;--line:#e4dff7;
+  --violet:#5b3fd1;--deep:#2a2272;--sun:#ffc83d;--coral:#ff6b57;--teal:#1fb5a8;--sky:#3aa0ff;
+  --soft:#efeaff;--shadow:0 1px 2px rgba(42,34,114,.06),0 8px 24px rgba(42,34,114,.08);
+}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#15123a;--surface:#201b57;--ink:#fff6dc;--muted:#b9b4e6;--line:#35307a;--soft:#2a2572;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.25);}}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:84px}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 1.05rem/1.65 Nunito,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4{font-family:"Baloo 2",system-ui,sans-serif;line-height:1.15;margin:0;letter-spacing:-.01em}
+a{color:inherit}
+a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid var(--sky);outline-offset:3px}
+.wrap{max-width:1120px;margin:0 auto;padding:0 24px}
+
+/* top bar */
+.bar{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--surface) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.bar .wrap{display:flex;align-items:center;justify-content:space-between;height:68px;gap:16px}
+.brand{font:800 1.6rem "Baloo 2",sans-serif;text-decoration:none;letter-spacing:-.02em}
+.brand b{color:var(--violet)}
+.brand i{font-style:normal;color:var(--coral)}
+nav ul{display:flex;gap:6px;list-style:none;margin:0;padding:0;align-items:center}
+nav a{display:block;padding:8px 14px;border-radius:999px;text-decoration:none;font-weight:700;font-size:.98rem;color:var(--muted);transition:background .15s,color .15s}
+nav a:hover{background:var(--soft);color:var(--ink)}
+nav a.cta{background:var(--violet);color:#fff;margin-left:6px}
+nav a.cta:hover{background:var(--deep);color:#fff}
+
+/* hero */
+.hero{background:radial-gradient(900px 420px at 85% 0%,#6d51e8 0%,transparent 60%),linear-gradient(160deg,var(--deep),#3a2f9e);color:#fff6dc;padding:88px 0 96px;position:relative;overflow:hidden}
+.hero .wrap{display:grid;grid-template-columns:1.2fr .8fr;gap:48px;align-items:center}
+.eyebrow{display:inline-block;font:700 .85rem Nunito,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:var(--sun);margin-bottom:14px}
+.hero h1{font-size:clamp(2.6rem,6vw,4.4rem);font-weight:800;color:#fff}
+.hero h1 em{font-style:normal;color:var(--sun)}
+.hero p{font-size:1.2rem;max-width:34em;margin:18px 0 30px;color:#e7e1ff}
+.btns{display:flex;gap:12px;flex-wrap:wrap}
+.btn{display:inline-block;font:700 1.02rem "Baloo 2",sans-serif;padding:12px 26px;border-radius:999px;text-decoration:none;border:2px solid transparent;transition:transform .12s,background .15s,box-shadow .15s;cursor:pointer}
+.btn:hover{transform:translateY(-2px)}
+.btn.main{background:var(--sun);color:#1f1b4d;box-shadow:0 6px 18px rgba(255,200,61,.35)}
+.btn.ghost{border-color:rgba(255,246,220,.55);color:#fff6dc}
+.btn.ghost:hover{background:rgba(255,255,255,.1)}
+.facts{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.fact{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);border-radius:18px;padding:20px 20px 18px}
+.fact b{display:block;font:800 2.4rem "Baloo 2",sans-serif;color:var(--sun);line-height:1}
+.fact span{font-size:.95rem;color:#e7e1ff}
+
+/* sections */
+section{padding:88px 0}
+.head{max-width:640px;margin-bottom:44px}
+.head .eyebrow{color:var(--violet)}
+.head h2{font-size:clamp(2rem,4vw,2.8rem);font-weight:800}
+.head p{color:var(--muted);margin:14px 0 0;font-size:1.1rem}
+
+/* about */
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:start}
+.about-grid p{margin:0 0 16px;color:var(--muted)}
+.about-grid p:first-child{color:var(--ink);font-size:1.2rem}
+.modes{display:grid;gap:16px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:26px;box-shadow:var(--shadow)}
+.mode{display:flex;gap:18px;align-items:flex-start}
+.ico{flex:none;width:48px;height:48px;border-radius:14px;display:grid;place-items:center;background:var(--soft);color:var(--violet)}
+.ico svg{width:26px;height:26px}
+.card h3{font-size:1.3rem;margin-bottom:6px}
+.card p{margin:0;color:var(--muted);font-size:1rem}
+
+/* team */
+.team-wrap{background:var(--surface);border-block:1px solid var(--line)}
+.team{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+.member{text-align:center;padding:30px 20px 26px;background:var(--bg);border:1px solid var(--line);border-radius:22px;transition:transform .15s,box-shadow .15s}
+.member:hover{transform:translateY(-4px);box-shadow:var(--shadow)}
+.av{width:96px;height:96px;border-radius:50%;margin:0 auto 16px;display:grid;place-items:center;font:800 2rem "Baloo 2",sans-serif;color:#fff}
+.member:nth-child(1) .av{background:linear-gradient(135deg,#5b3fd1,#8b6cf5)}
+.member:nth-child(2) .av{background:linear-gradient(135deg,#ff6b57,#ff9a6b)}
+.member:nth-child(3) .av{background:linear-gradient(135deg,#1fb5a8,#52d3b8)}
+.member:nth-child(4) .av{background:linear-gradient(135deg,#3aa0ff,#7cc0ff)}
+.member h3{font-size:1.25rem}
+.role{display:block;margin:4px 0 12px;font-weight:800;font-size:.85rem;letter-spacing:.08em;text-transform:uppercase;color:var(--violet)}
+.member p{margin:0;color:var(--muted);font-size:.97rem}
+
+/* mission */
+.mission{background:linear-gradient(160deg,var(--deep),#3a2f9e);color:#fff6dc}
+.mission .head .eyebrow{color:var(--sun)}
+.mission .head p{color:#e7e1ff}
+.quote{font:700 clamp(1.5rem,3vw,2.2rem)/1.3 "Baloo 2",sans-serif;max-width:26em;margin:0 0 48px;color:#fff}
+.quote em{font-style:normal;color:var(--sun)}
+.pillars{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.pillar{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);border-radius:20px;padding:28px}
+.pillar .n{font:800 .9rem Nunito,sans-serif;letter-spacing:.14em;color:var(--sun)}
+.pillar h3{font-size:1.4rem;margin:10px 0 8px;color:#fff}
+.pillar p{margin:0;color:#e7e1ff;font-size:1rem}
+
+/* contact */
+.contact-grid{display:grid;grid-template-columns:.85fr 1.15fr;gap:40px;align-items:start}
+.info{display:grid;gap:14px}
+.info .card{display:flex;gap:16px;align-items:center;padding:20px 22px}
+.info small{display:block;color:var(--muted);font-weight:700;font-size:.82rem;letter-spacing:.06em;text-transform:uppercase}
+.info a,.info span.v{font-weight:800;text-decoration:none;word-break:break-word}
+.info a:hover{color:var(--violet)}
+form.card{display:grid;gap:16px;padding:30px}
+label{display:grid;gap:6px;font-weight:800;font-size:.92rem}
+input,textarea{font:inherit;font-weight:600;color:var(--ink);background:var(--bg);border:1.5px solid var(--line);border-radius:12px;padding:12px 14px;width:100%}
+textarea{min-height:140px;resize:vertical}
+input:focus,textarea:focus{border-color:var(--violet);outline:none;box-shadow:0 0 0 4px rgba(91,63,209,.15)}
+form .btn{justify-self:start;background:var(--violet);color:#fff;border:0;padding:13px 30px}
+form .btn:hover{background:var(--deep)}
+.hint{margin:0;color:var(--muted);font-size:.9rem}
+
+/* footer */
+footer{background:var(--deep);color:#cfc8f5;padding:36px 0;font-size:.95rem}
+footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:center}
+footer a{text-decoration:none;font-weight:700;margin-left:18px}
+footer a:hover{color:var(--sun)}
+
+@media(max-width:900px){
+  .hero .wrap,.about-grid,.contact-grid{grid-template-columns:1fr}
+  .team{grid-template-columns:1fr 1fr}
+  .pillars{grid-template-columns:1fr}
+  section{padding:64px 0}
+  .hero{padding:60px 0 68px}
+  nav li.hide-s{display:none}
+}
+@media(max-width:520px){
+  .team{grid-template-columns:1fr}
+  .facts{grid-template-columns:1fr 1fr}
+  nav a{padding:8px 10px;font-size:.9rem}
+  footer a{margin:0 18px 0 0}
+}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+
+<header class="bar">
+  <div class="wrap">
+    <a class="brand" href="index.html" aria-label="SignPlay home"><b>Sign</b><i>Play</i></a>
+    <nav aria-label="Main">
+      <ul>
+        <li class="hide-s"><a href="#about">About</a></li>
+        <li class="hide-s"><a href="#team">Team</a></li>
+        <li class="hide-s"><a href="#mission">Mission</a></li>
+        <li><a href="#contact">Contact</a></li>
+        <li><a class="cta" href="learn/learningpath.html">Start learning</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main>
+<!-- HERO -->
+<div class="hero">
+  <div class="wrap">
+    <div>
+      <span class="eyebrow">About SignPlay</span>
+      <h1>Learning sign language, <em>made playful</em></h1>
+      <p>SignPlay is a game-based web app that helps anyone pick up the basics of sign language, with a camera that gives instant feedback on every sign.</p>
+      <div class="btns">
+        <a class="btn main" href="learn/learningpath.html">Start learning</a>
+        <a class="btn ghost" href="#mission">Our mission</a>
+      </div>
+    </div>
+    <div class="facts" aria-label="SignPlay at a glance">
+      <div class="fact"><b>30</b><span>stages to master</span></div>
+      <div class="fact"><b>3</b><span>levels, from greetings to conversation</span></div>
+      <div class="fact"><b>111</b><span>signs checked by your webcam</span></div>
+      <div class="fact"><b>2</b><span>ways to learn: Learn Mode and Game Mode</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="wrap">
+    <div class="head">
+      <span class="eyebrow">Who we are</span>
+      <h2>About SignPlay</h2>
+    </div>
+    <div class="about-grid">
+      <div>
+        <p>Many people want to communicate with the Deaf community, but find few ways to start. SignPlay turns that first step into something enjoyable and rewarding.</p>
+        <p>Learners work through short, focused stages: watch a demo, practise with the camera, then prove it in a quiz or a game. Stars, XP and badges keep progress visible and motivation high, and every account saves its progress so learners can continue anywhere.</p>
+        <p>SignPlay runs in the browser. There is nothing to install, and the sign checker runs on the learner's own device.</p>
+      </div>
+      <div class="modes">
+        <div class="card mode">
+          <div class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 21V5"/></svg></div>
+          <div><h3>Learn Mode</h3><p>30 stages in 3 levels, with demos, practice, quizzes and a boss stage at the end of each level.</p></div>
+        </div>
+        <div class="card mode">
+          <div class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></div>
+          <div><h3>Game Mode</h3><p>A mystery game where signs are the clues. Learners practise what they know while solving the case.</p></div>
+        </div>
+        <div class="card mode">
+          <div class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 7l-7 5 7 5z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg></div>
+          <div><h3>Instant camera feedback</h3><p>Your webcam checks the sign you make, so you get feedback even when you practise alone.</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TEAM -->
+<section id="team" class="team-wrap">
+  <div class="wrap">
+    <div class="head">
+      <span class="eyebrow">The people</span>
+      <h2>Meet the team</h2>
+      <p>Four of us built SignPlay, from the learning experience to the sign recognition behind it.</p>
+    </div>
+    <div class="team">
+      <article class="member">
+        <div class="av" aria-hidden="true">N1</div>
+        <h3>Nur Aqilah Shaheerah Binti Md.Azhar</h3><span class="role">Project Lead & AI Engineer</span>
+        <p>Oversees the overall project direction and ensures successful delivery of SignPlay's learning experience.</p>
+      </article>
+      <article class="member">
+        <div class="av" aria-hidden="true">N2</div>
+        <h3>Amni Batrisya Binti Hanuar</h3><span class="role">Learning Experience Developer & Narrative Designer</span>
+        <p>Designs engaging sign language learning experiences, interactive lessons, and intuitive dashboards that bring SignPlay's educational journey to life.</p>
+      </article>
+      <article class="member">
+        <div class="av" aria-hidden="true">N3</div>
+        <h3>Nurin Maisarah Binti Nor Azwan</h3><span class="role">Game Development & Project Strategy Lead</span>
+        <p>Leads the development of immersive mystery gameplay, coordinates project operations, and ensures seamless integration of storytelling and interactive game mechanics.</p>
+      </article>
+      <article class="member">
+        <div class="av" aria-hidden="true">N4</div>
+        <h3>Amni Nabilah Binti Rosli</h3><span class="role">Quality Assurance & Communications Lead</span>
+        <p>Leads project presentations, communicates SignPlay's vision and impact, and develops compelling demonstrations that showcase its innovation and educational value.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- MISSION -->
+<section id="mission" class="mission">
+  <div class="wrap">
+    <div class="head">
+      <span class="eyebrow">Why we exist</span>
+      <h2>Our mission</h2>
+    </div>
+    <p class="quote">To close the communication gap between the Deaf community and everyone else, by making sign language <em>fun to learn</em> and easy to start.</p>
+    <div class="pillars">
+      <div class="pillar"><span class="n">01</span><h3>Inclusive</h3><p>More people who can sign means more everyday spaces where Deaf and hearing people can talk to each other.</p></div>
+      <div class="pillar"><span class="n">02</span><h3>Interactive</h3><p>Learning sticks when you practise. Games, rewards and instant feedback keep learners coming back.</p></div>
+      <div class="pillar"><span class="n">03</span><h3>Accessible</h3><p>Runs in the browser, on the devices people already have. No special equipment needed.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="wrap">
+    <div class="head">
+      <span class="eyebrow">Get in touch</span>
+      <h2>Contact us</h2>
+      <p>Questions, feedback or ideas for new signs? We would love to hear from you.</p>
+    </div>
+    <div class="contact-grid">
+      <div class="info">
+        <div class="card">
+          <div class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></svg></div>
+          <div><small>Email</small><a href="mailto:aqilahshaheerah28@gmail.com" id="mailLink">aqilahshaheerah28@gmail.com</a></div>
+        </div>
+        <div class="card">
+          <div class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+          <div><small>Based in</small><span class="v">Perak, Malaysia</span></div>
+        </div>
+      </div>
+      <form class="card" id="contactForm" novalidate>
+        <label>Your name<input name="name" autocomplete="name" required></label>
+        <label>Your email<input name="email" type="email" autocomplete="email" required></label>
+        <label>Message<textarea name="msg" required></textarea></label>
+        <button class="btn" type="submit">Send message</button>
+        <p class="hint" id="formHint" role="status">  Send us a message directly. We'll get back to you as soon as possible!</p>
+      </form>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>© <span id="yr"></span> SignPlay. Learn, play and sign with confidence.</span>
+    <span><a href="index.html">Home</a><a href="learn/learningpath.html">Learn</a><a href="#contact">Contact</a></span>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script>
+document.getElementById("yr").textContent=new Date().getFullYear();
+
+const TO = "aqilahshaheerah28@gmail.com";
+
+emailjs.init({
+  publicKey: "service_pljt2eo"
+});
+
+document.getElementById("mailLink").textContent = TO;
+document.getElementById("mailLink").href = "mailto:" + TO;
+
+document.getElementById("contactForm").addEventListener("submit", async function(e) {
+  e.preventDefault();
+
+  const form = e.currentTarget;
+  const hint = document.getElementById("formHint");
+  const button = form.querySelector('button[type="submit"]');
+
+  const name = form.elements.namedItem("name").value.trim();
+  const email = form.elements.namedItem("email").value.trim();
+  const message = form.elements.namedItem("msg").value.trim();
+
+  if (!name || !email || !message ||
+      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    hint.textContent = "Please complete all fields with a valid email.";
+    return;
+  }
+
+  button.disabled = true;
+  hint.textContent = "Sending your message...";
+
+  try {
+    await emailjs.send("service_pljt2eo", "YOUR_ACTUAL_TEMPLATE_ID", {
+      name: name,
+      email: email,
+      message: message
+    });
+
+    hint.textContent = "Message sent successfully! Thank you for contacting SignPlay.";
+    form.reset();
+  } catch (error) {
+    console.error("Email sending failed:", error);
+    hint.textContent = "Unable to send your message. Please try again.";
+  } finally {
+    button.disabled = false;
+  }
+});
+</script>
+</body>
+</html>
