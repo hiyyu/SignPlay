@@ -64,6 +64,7 @@ h1{font-size:clamp(2rem,7vw,2.6rem);margin:10px 0 8px}h2{font-size:1.7rem;margin
 </header>
 <main id="m"></main>
 <script src="progress.js"></script>
+<script type="module" src="sign-judge.js"></script>
 
 <script>
 /* ===== STAGE 21 DATA: Direction & Spatial Verbs =====
@@ -87,7 +88,7 @@ function reset(){var I=D.items;S={st:0,i:0,rc:0,pc:0,mg:0,att:0,
   Q:shuf(I).map(function(s){var same=I.filter(function(x){return x.verb===s.verb&&x!==s}),other=shuf(I.filter(function(x){return x.verb!==s.verb})).slice(0,4-1-same.length);return{s:s,o:shuf([s].concat(same,other))}}),
   P:shuf(I).slice(0,4),G:shuf(I).slice(0,4)}}
 function stop(){if(stream){stream.getTracks().forEach(function(t){t.stop()});stream=null}}
-function demo(s){return '<div class="demo">'+(s.v?'<video src="'+s.v+'" autoplay loop muted playsinline></video>':'<div><b>▶</b><small>Demo video coming soon</small><small> · “'+s.s+'”</small></div>')+'</div>'}
+function demo(s){return '<div class="demo">'+(s.v?'<video src="'+s.v+'" autoplay loop muted playsinline></video>':'<div><b>▶</b><small>Demo video: “'+s.s+'”</small></div>')+'</div>'}
 /* Arrow: Me on the left, You on the right. "out" points toward You, "in" points toward Me. */
 function arrow(d){var o=d==="out";return '<svg class="arr" viewBox="0 0 240 60" role="img" aria-label="'+(o?"Movement goes from you to the other person":"Movement comes from the other person to you")+'"><circle cx="30" cy="30" r="24" fill="#1fb5a8"/><text x="30" y="36" text-anchor="middle" fill="#1f1b4d">Me</text><circle cx="210" cy="30" r="24" fill="#ff6b57"/><text x="210" y="36" text-anchor="middle" fill="#1f1b4d">You</text><path d="'+(o?"M64 30H168":"M176 30H72")+'" stroke="currentColor" stroke-width="6" stroke-linecap="round"/><path d="'+(o?"M154 14L172 30L154 46":"M90 14L72 30L90 46")+'" fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/></svg>'}
 function showCam(){var c=$("cam");if(!c||!stream)return;var v=document.createElement("video");v.autoplay=true;v.muted=true;v.playsInline=true;v.srcObject=stream;c.insertBefore(v,c.firstChild);$("cmsg").textContent="";var b=document.querySelector('[data-a="cam"]');if(b){b.textContent="Camera on";b.disabled=true}}
@@ -131,9 +132,7 @@ document.addEventListener("click",function(e){
   else if(a==="rc"){var q=S.Q[S.i],ok=q.o[k]===q.s;if(ok)S.rc++;b.classList.add(ok?"ok":"no");fb(ok?"Correct!":"It was “"+q.s.s+"”",ok?"var(--green)":"var(--coral)");document.querySelectorAll(".opt").forEach(function(x){x.disabled=true});
     after(function(){S.i<S.Q.length-1?go(2,S.i+1):go(3)},1100)}
   else if(a==="cam")camOn();
-  else if(a==="chk"){S.att++;
-    if(S.att<2){fb("Almost! Hint: "+S.P[S.i].m,"var(--coral)")}
-    else{S.pc++;fb("Great sign!","var(--green)");after(function(){S.i<S.P.length-1?go(3,S.i+1):go(4)},900)}}
+  else if(a==="chk"){SPProgress.presenceCheck(b,function(){S.pc++;fb("Great sign!","var(--green)");after(function(){S.i<S.P.length-1?go(3,S.i+1):go(4)},900)},S.P[S.i].m)}
   else if(a==="pskip"){S.i<S.P.length-1?go(3,S.i+1):go(4)}
   else if(a==="pd"){var s=S.G[S.i],ok2=b.dataset.d===s.dir;if(ok2)S.mg++;b.classList.add(ok2?"ok":"no");
     document.querySelectorAll(".opt").forEach(function(x){x.disabled=true});

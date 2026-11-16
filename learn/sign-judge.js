@@ -154,12 +154,8 @@ async function predict(data) {
     .map(([word, p]) => ({ word, p }));
 }
 
-// video: the <video> element showing the webcam
-// targets: array of acceptable words, e.g. ["Hello"] or ["Goodbye"]
-// Returns { ok, top } or { error }
-async function check(video, targets, onStatus = () => {}) {
-  await init();
-  if (!video || video.readyState < 2) return { error: "Turn on the camera first." };
+// Records ~2.5 s of the webcam and turns it into landmark frames
+async function capture(video, onStatus) {
   for (let n = 2; n > 0; n--) {
     onStatus("Hands down... starting in " + n);
     await sleep(1000);
@@ -187,12 +183,42 @@ async function check(video, targets, onStatus = () => {}) {
     frames.push(frameVector(shots[i].img, shots[i].ts));
   }
   shots.forEach(s => s.img.close());
+  return frames;
+}
+
+// share of frames in which at least one hand was seen (0 to 1)
+function handsSeen(frames) {
+  if (!frames.length) return 0;
+  const n = frames.filter(f => f.subarray(0, 126).some(v => v !== 0)).length;
+  return n / frames.length;
+}
+const MIN_HANDS = 0.3;
+
+// For signs the model doesn't know: only checks that hands were really in view
+async function presence(video, onStatus = () => {}) {
+  await init();
+  if (!video || video.readyState < 2) return { error: "Turn on the camera first." };
+  const frames = await capture(video, onStatus);
+  const seen = handsSeen(frames);
+  return { ok: seen >= MIN_HANDS, seen };
+}
+
+// video: the <video> element showing the webcam
+// targets: array of acceptable words, e.g. ["Hello"] or ["Goodbye"]
+// Returns { ok, top } or { error }
+async function check(video, targets, onStatus = () => {}) {
+  await init();
+  if (!video || video.readyState < 2) return { error: "Turn on the camera first." };
+  const frames = await capture(video, onStatus);
+  if (handsSeen(frames) < MIN_HANDS) return { error: "I couldn't see your hands. Keep them in view while you sign." };
   const data = preprocess(frames);
   if (!data) return { error: "I couldn't see your hands and shoulders. Move back a little." };
   const top = await predict(data);
   const want = targets.map(norm);
-  return { ok: top.some(t => want.includes(t.word)), top };
+  // the word must be the best guess, or a close second/third (not just anywhere in the top 3)
+  const ok = top.some((t, i) => want.includes(t.word) && (i === 0 || t.p >= 0.12));
+  return { ok, top };
 }
 
-window.SignJudge = { init, supports, check, norm };
+window.SignJudge = { init, supports, check, presence, norm };
 init().catch(() => {});

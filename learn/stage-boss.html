@@ -175,7 +175,7 @@ function realCheck(b){
   b.disabled=true;
   fb("Loading the checker...");
   SignJudge.supports(c.g[0]).then(function(sup){
-    if(!sup){b.disabled=false;if(judge()){passed()}else{fb("Almost! Hint: "+c.m,"var(--coral)")}return}
+    if(!sup){b.disabled=false;SPProgress.presenceCheck(b,passed,c.m);return}
     return SignJudge.check(vid,c.g,function(t){fb(t)}).then(function(r){
       b.disabled=false;
       if(r.error){fb(r.error,"var(--coral)");return}
@@ -190,8 +190,7 @@ document.addEventListener("click",function(e){
     after(function(){S.i<S.Q.length-1?go(1,S.i+1):go(2)},1100)}
   else if(a==="cam")camOn();
   else if(a==="chk"&&window.SignJudge&&D.chain[S.i].g&&document.querySelector("#cam video")){realCheck(b)}
-  else if(a==="chk"){if(judge()){clearInterval(tm);S.cc++;fb("Great sign!","var(--green)");after(nextChain,900)}
-    else fb("Almost! Hint: "+D.chain[S.i].m,"var(--coral)")}
+  else if(a==="chk"){SPProgress.presenceCheck(b,function(){clearInterval(tm);S.cc++;fb("Great sign!","var(--green)");after(nextChain,900)},D.chain[S.i].m)}
   else if(a==="pskip"){nextChain()}
   else if(a==="sc"){var s=D.scen.steps[S.i],ok2=k===s.a;if(ok2)S.sc++;b.classList.add(ok2?"ok":"no");fb((ok2?"Yes! ":"Not quite. ")+s.e,ok2?"var(--green)":"var(--coral)");document.querySelectorAll(".opt").forEach(function(x){x.disabled=true});
     after(function(){S.i<D.scen.steps.length-1?go(3,S.i+1):go(4)},1800)}

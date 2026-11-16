@@ -69,6 +69,7 @@ h1{font-size:clamp(2rem,7vw,2.6rem);margin:10px 0 8px}h2{font-size:1.6rem;margin
 </header>
 <main id="m"></main>
 <script src="progress.js"></script>
+<script type="module" src="sign-judge.js"></script>
 
 <script>
 /* ===== STAGE DATA (type "sets"): a stage is a list of sets; each set is a short round ===== */
@@ -154,7 +155,7 @@ function prep(si){
 }
 function stop(){if(stream){stream.getTracks().forEach(function(t){t.stop()});stream=null}}
 function go(st,ph,i){stop();S.st=st;S.ph=ph||0;S.i=i||0;S.k=-1;S.att=0;if(!S.ph)S.seen={};if(st>=1&&st<=D.sets.length)prep(st-1);draw();window.scrollTo(0,0)}
-function demo(s){return '<div class="demo">'+(s.v?'<video src="'+s.v+'" autoplay loop muted playsinline></video>':'<div><b>▶</b><small>Demo video coming soon</small><small> · “'+s.w+'”</small></div>')+'</div>'}
+function demo(s){return '<div class="demo">'+(s.v?'<video src="'+s.v+'" autoplay loop muted playsinline></video>':'<div><b>▶</b><small>Demo video: “'+s.w+'”</small></div>')+'</div>'}
 function total(){var n=0;S.Q.forEach(function(q){n+=q.length});S.P.forEach(function(p){n+=p.length});n+=S.G.length;return Math.round((S.rc+S.pc+S.mg)/n*100)}
 function mo(s){return s.motion?'<span class="mo">↻ motion</span>':""}
 function fb(t,c){var f=$("fb");if(f){f.textContent=t;f.style.color=c||"var(--ink)"}}
@@ -198,9 +199,7 @@ document.addEventListener("click",function(e){
   else if(a==="cam"){
     if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){$("cmsg").textContent="Camera not available here";return}
     navigator.mediaDevices.getUserMedia({video:{facingMode:"user"}}).then(function(s){stream=s;var v=document.createElement("video");v.autoplay=true;v.muted=true;v.playsInline=true;v.srcObject=s;$("cam").insertBefore(v,$("cam").firstChild);$("cmsg").textContent="";b.textContent="Camera on";b.disabled=true}).catch(function(){$("cmsg").textContent="Camera blocked. Allow access, or use the simulated check."})}
-  else if(a==="chk"){S.att++;
-    if(S.att<2){fb("Almost! Check the handshape again: "+S.P[si][S.i].t,"var(--coral)")}
-    else{S.pc++;S.att=0;fb("Great sign!","var(--green)");after(nextP,900)}}
+  else if(a==="chk"){SPProgress.presenceCheck(b,function(){S.pc++;S.att=0;fb("Great sign!","var(--green)");after(nextP,900)},S.P[si][S.i].t)}
   else if(a==="pskip"){S.att=0;nextP()}
   else if(a==="pl"){S.sel=b.dataset.w;draw()}
   else if(a==="pr"){if(!S.sel){fb("Pick a description first");return}
