@@ -78,7 +78,23 @@ section{padding:88px 0}
 .team{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
 .member{text-align:center;padding:30px 20px 26px;background:var(--bg);border:1px solid var(--line);border-radius:22px;transition:transform .15s,box-shadow .15s}
 .member:hover{transform:translateY(-4px);box-shadow:var(--shadow)}
-.av{width:96px;height:96px;border-radius:50%;margin:0 auto 16px;display:grid;place-items:center;font:800 2rem "Baloo 2",sans-serif;color:#fff}
+.av {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  margin: 0 auto 16px;
+  display: grid;
+  place-items: center;
+  font: 800 2rem "Baloo 2", sans-serif;
+  color: #fff;
+  overflow: hidden;
+}
+.av img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
 .member:nth-child(1) .av{background:linear-gradient(135deg,#5b3fd1,#8b6cf5)}
 .member:nth-child(2) .av{background:linear-gradient(135deg,#ff6b57,#ff9a6b)}
 .member:nth-child(3) .av{background:linear-gradient(135deg,#1fb5a8,#52d3b8)}
@@ -218,22 +234,30 @@ footer a:hover{color:var(--sun)}
     </div>
     <div class="team">
       <article class="member">
-        <div class="av" aria-hidden="true">N1</div>
+        <div class="av">
+          <img src="members\aqilah.png" alt="Nur Aqilah Shaheerah">
+        </div>
         <h3>Nur Aqilah Shaheerah</h3><span class="role">Project Lead & AI Engineer</span>
         <p>Oversees the overall project direction, leads AI and computer vision integration, and ensures the successful development and deployment of SignPlay.</p>
       </article>
       <article class="member">
-        <div class="av" aria-hidden="true">N2</div>
+        <div class="av">
+          <img src="members\amni.png" alt="Amni Batrisya">
+        </div>
         <h3>Amni Batrisya</h3><span class="role">Learning Experience Developer & Narrative Designer</span>
         <p>Designs engaging sign language learning experiences, interactive lessons, and intuitive dashboards that bring SignPlay's educational journey to life.</p>
       </article>
       <article class="member">
-        <div class="av" aria-hidden="true">N3</div>
+        <div class="av">
+          <img src="members\nurin.png" alt="Nurin Maisarah">
+        </div>
         <h3>Nurin Maisarah</h3><span class="role">Game Development & Project Strategy Lead</span>
         <p>Leads the development of immersive mystery gameplay, coordinates project operations, and ensures seamless integration of storytelling and interactive game mechanics.</p>
       </article>
       <article class="member">
-        <div class="av" aria-hidden="true">N4</div>
+        <div class="av">
+          <img src="members\meni.png" alt="Amni Nabilah">
+        </div>
         <h3>Amni Nabilah</h3><span class="role">Quality Assurance & Communications Lead</span>
         <p>Leads project presentations, communicates SignPlay's vision and impact, and develops compelling demonstrations that showcase its innovation and educational value.</p>
       </article>
